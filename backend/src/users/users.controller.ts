@@ -1,7 +1,6 @@
-//Rôle : Gère les routes API (endpoints) pour les utilisateurs.
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from '../schemas/user.schema';
+import { User } from '../schemas/user.schema'; // Importez User et UserRole
 
 @Controller('users')
 export class UsersController {
@@ -17,5 +16,9 @@ export class UsersController {
     return this.usersService.create(user);
   }
 
-  // Ajoutez d'autres routes selon vos besoins
+  // Route spéciale pour créer un superAdmin (à utiliser une seule fois)
+  @Post('super-admin')
+  async createSuperAdmin(@Body() user: User): Promise<User> {
+    return this.usersService.createSuperAdmin(user);
+  }
 }
