@@ -1,5 +1,6 @@
 //user.schema.ts
-import { Schema, Document } from 'mongoose';
+import { Schema, Document, model, CallbackError } from 'mongoose';
+import * as bcrypt from 'bcrypt';
 
 export enum UserRole {
   SUPER_ADMIN = 'superAdmin',
@@ -9,7 +10,15 @@ export enum UserRole {
   VISITOR = 'visiteur',
 }
 
-export const UserSchema = new Schema({
+export interface IUser extends Document {
+  name: string;
+  email: string;
+  password: string;
+  role: UserRole;
+  comparePassword(candidatePassword: string): Promise<boolean>;
+}
+
+export const UserSchema = new Schema<IUser>({
   name: { type: String, required: true },
   email: {
     type: String,
@@ -23,18 +32,27 @@ export const UserSchema = new Schema({
     enum: Object.values(UserRole),
     default: UserRole.VISITOR,
   },
+}, { collection: 'users' });  // Spécification du nom de la collection
+
+UserSchema.pre<IUser>('save', async function (next: (err?: CallbackError) => void) {
+  if (!this.isModified('password')) return next(); // Ne pas hacher si le mot de passe n’a pas changé
+  try {
+    const saltRounds = 10;
+    this.password = await bcrypt.hash(this.password, saltRounds);
+    next();
+  } catch (error) {
+    next(error instanceof Error ? error : new Error(String(error)));
+  }
 });
 
-export interface User extends Document {
-  name: string;
-  email: string;
-  password: string;
-  role: UserRole;
-}
+UserSchema.methods.comparePassword = async function (
+  this: IUser,
+  candidatePassword: string
+): Promise<boolean> {
+  return bcrypt.compare(candidatePassword, this.password);
+};
 
-export class UserModel {
-  name: string;
-  email: string;
-  password: string;
-  role: UserRole;
-}
+export const User = model<IUser>('User', UserSchema);
+
+// ✅ Exportation du type UserDocument pour utiliser comme type
+export type UserDocument = IUser;
