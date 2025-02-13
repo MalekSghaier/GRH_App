@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, ConflictException } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from '../schemas/user.schema'; // Importez User et UserRole
+import { User } from '../schemas/user.schema';
 
 @Controller('users')
 export class UsersController {
@@ -13,12 +13,25 @@ export class UsersController {
 
   @Post()
   async create(@Body() user: User): Promise<User> {
-    return this.usersService.create(user);
+    try {
+      return await this.usersService.create(user);
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw new ConflictException(error.message);
+      }
+      throw error;
+    }
   }
 
-  // Route spéciale pour créer un superAdmin (à utiliser une seule fois)
   @Post('super-admin')
   async createSuperAdmin(@Body() user: User): Promise<User> {
-    return this.usersService.createSuperAdmin(user);
+    try {
+      return await this.usersService.createSuperAdmin(user);
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw new ConflictException(error.message);
+      }
+      throw error;
+    }
   }
 }

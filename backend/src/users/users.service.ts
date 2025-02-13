@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { User, UserRole } from '../schemas/user.schema'; // Importez User et UserRole
+import { Model, mongo, Error as MongooseError } from 'mongoose';
+import { User, UserRole } from '../schemas/user.schema';
 
 @Injectable()
 export class UsersService {
@@ -12,15 +12,33 @@ export class UsersService {
   }
 
   async create(user: User): Promise<User> {
-    // Si le rôle n'est pas fourni, la valeur par défaut sera "visiteur" (définie dans le schéma)
-    const createdUser = new this.userModel(user);
-    return createdUser.save();
+    try {
+      const createdUser = new this.userModel(user);
+      return await createdUser.save();
+    } catch (error: unknown) {
+      this.handleError(error);
+    }
   }
 
-  // Méthode pour créer un superAdmin (à utiliser une seule fois)
   async createSuperAdmin(user: User): Promise<User> {
-    user.role = UserRole.SUPER_ADMIN; // Forcer le rôle superAdmin
-    const createdUser = new this.userModel(user);
-    return createdUser.save();
+    user.role = UserRole.SUPER_ADMIN;
+    try {
+      const createdUser = new this.userModel(user);
+      return await createdUser.save();
+    } catch (error: unknown) {
+      this.handleError(error);
+    }
+  }
+
+  private handleError(error: unknown): never {
+    if (error instanceof mongo.MongoServerError && error.code === 11000) {
+      throw new ConflictException('Cet email est déjà utilisé');
+    } 
+    if (error instanceof MongooseError.ValidationError) {
+      throw new BadRequestException(
+        Object.values(error.errors).map((err) => err.message).join(', ')
+      );
+    }
+    throw new InternalServerErrorException('Une erreur interne est survenue');
   }
 }
