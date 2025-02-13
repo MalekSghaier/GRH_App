@@ -1,3 +1,4 @@
+//user.schema.ts
 import { Schema, Document } from 'mongoose';
 
 export enum UserRole {
