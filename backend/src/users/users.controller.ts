@@ -43,10 +43,11 @@ export class UsersController {
   }
 
 
-    // ✅ Ajout d'une route protégée pour récupérer les infos de l'utilisateur connecté
+    // Ajout d'une route protégée pour récupérer les infos de l'utilisateur connecté
     @Get('profile')
     @UseGuards(AuthGuard('jwt')) // Protection JWT
     getProfile(@Req() req: Request) {
       return req.user; // Retourne l'utilisateur authentifié
     }
 }
+
