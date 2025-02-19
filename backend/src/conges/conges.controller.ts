@@ -39,14 +39,17 @@ export class CongesController {
   // ✅ Modifier un congé (admin uniquement)
   @Put(':id')
   @UseGuards(AuthGuard('jwt'), AdminGuard)
-  update(@Param('id') id: string, @Body() data: Partial<IConge>) {
-    return this.congesService.update(id, data);
+  async update(@Param('id') id: string, @Body() data: Partial<IConge>) {
+    await this.congesService.update(id, data);
+    return { message: 'Congé mis à jour avec succès' };
   }
 
   // ✅ Supprimer un congé (admin uniquement)
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'), AdminGuard)
-  delete(@Param('id') id: string) {
-    return this.congesService.delete(id);
+  async delete(@Param('id') id: string) {
+    await this.congesService.delete(id);
+    return { message: 'Congé supprimé avec succès' };
   }
+
 }
