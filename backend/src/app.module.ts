@@ -7,7 +7,8 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { AdminsModule } from './admins/admins.module';
-import { CompaniesModule } from './companies/companies.module'; // Importez CompaniesModule
+import { CompaniesModule } from './companies/companies.module'; 
+import { CongesModule } from './conges/conges.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { CompaniesModule } from './companies/companies.module'; // Importez Comp
     UsersModule,
     AuthModule,
     AdminsModule, 
-    CompaniesModule, // Ajoutez CompaniesModule ici
+    CompaniesModule, 
+    CongesModule, 
 
   ],
   controllers: [AppController],
