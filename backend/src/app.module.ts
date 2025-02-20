@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { AdminsModule } from './admins/admins.module';
 import { CompaniesModule } from './companies/companies.module'; 
 import { CongesModule } from './conges/conges.module';
+import { DocumentsModule } from './documents/documents.module';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { CongesModule } from './conges/conges.module';
     AuthModule,
     AdminsModule, 
     CompaniesModule, 
-    CongesModule, 
+    CongesModule, DocumentsModule, 
 
   ],
   controllers: [AppController],
