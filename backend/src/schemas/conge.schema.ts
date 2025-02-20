@@ -6,6 +6,7 @@ export interface IConge extends Document {
   endDate: Date;
   reason: string;
   status: 'pending' | 'approved' | 'rejected';
+  requestDate: Date;
 }
 
 export const CongeSchema = new Schema<IConge>({
@@ -13,7 +14,8 @@ export const CongeSchema = new Schema<IConge>({
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
   reason: { type: String, required: true },
-  status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' }
+  status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+  requestDate: { type: Date, default: Date.now } // Ajout de la date de création automatique
 });
 
 export const Conge = model<IConge>('Conge', CongeSchema);
