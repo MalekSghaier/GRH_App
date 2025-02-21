@@ -11,10 +11,9 @@ import {
   import { CompaniesService } from './companies.service';
   import { Company } from '../schemas/company.schema';
   import { AuthGuard } from '@nestjs/passport';
-  import { RolesGuard } from '../auth/roles.guard';
-  
+  import {SuperAdminAdminRolesGuard} from '../auth/SuperAdmin_Admin_roles.guard';
   @Controller('companies')
-  @UseGuards(AuthGuard('jwt'), RolesGuard) // Protection JWT + Vérification du rôle SuperAdmin
+  @UseGuards(AuthGuard('jwt'),SuperAdminAdminRolesGuard) // Protection JWT + Vérification du rôle SuperAdmin
   export class CompaniesController {
     constructor(private readonly companiesService: CompaniesService) {}
   
