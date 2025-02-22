@@ -1,4 +1,4 @@
-//users.service.ts
+  // users.service.ts
 import { Injectable, ConflictException, BadRequestException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, mongo, Error as MongooseError } from 'mongoose';
@@ -7,6 +7,10 @@ import { User, UserRole, UserDocument } from '../schemas/user.schema';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+
+  async findByUsername(username: string) {
+    return this.userModel.findOne({ username }).exec();
+  }
 
   async findAll(): Promise<UserDocument[]> {
     return this.userModel.find().exec();
@@ -39,6 +43,8 @@ export class UsersService {
     if (!user) throw new NotFoundException(`Utilisateur avec email ${email} non trouvé`);
     return user;
   }
+
+  
   
   async findById(id: string): Promise<UserDocument> {
     const user = await this.userModel.findById(id).exec();
@@ -47,7 +53,7 @@ export class UsersService {
   }
 
   async findAdmins(): Promise<UserDocument[]> {
-    return this.userModel.find({ role: UserRole.ADMIN }).exec(); // Assurez-vous d'utiliser le rôle correctement
+    return this.userModel.find({ role: UserRole.ADMIN }).exec();
   }
   
   async updateAdmin(id: string, userData: Partial<UserDocument>): Promise<UserDocument> {
@@ -78,6 +84,25 @@ export class UsersService {
     }).exec();
   }
 
+  async updateProfile(id: string, userData: Partial<Pick<UserDocument, 'name' | 'email'>>): Promise<UserDocument> {
+    const allowedFields: (keyof UserDocument)[] = ['name', 'email'];
+    const updateData: Partial<Pick<UserDocument, 'name' | 'email'>> = {};
+
+    for (const key of Object.keys(userData) as Array<keyof typeof userData>) {
+      if (allowedFields.includes(key)) {
+        updateData[key] = userData[key]; // Filtrage des champs autorisés
+      }
+    }
+
+    const updatedUser = await this.userModel.findByIdAndUpdate(id, updateData, { new: true }).exec();
+    if (!updatedUser) {
+      throw new NotFoundException(`Utilisateur avec ID ${id} non trouvé`);
+    }
+    return updatedUser;
+  }
+
+
+  
   private handleError(error: unknown): never {
     if (error instanceof mongo.MongoServerError && error.code === 11000) {
       throw new ConflictException('Cet email est déjà utilisé');

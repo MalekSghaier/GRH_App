@@ -1,15 +1,53 @@
 //users.controller.ts
-import { Controller, Get, Post, Body, ConflictException, UseGuards ,Req,NotFoundException ,Put, Delete,Param} from '@nestjs/common';
+import { Controller, Get, Post, Body, ConflictException, UseGuards ,NotFoundException ,Put, Delete,Param} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDocument } from '../schemas/user.schema'; // ✅ Utilisation de UserDocument
 import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard'; // Import du guard admin
-import { Request } from 'express';
+import { Request } from '@nestjs/common';
+import { Request as ExpressRequest } from 'express';
+
+
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
+  @Get('my-info')
+  @UseGuards(AuthGuard('jwt')) // Protection avec JWT
+  async getMyInfo(@Request() req: ExpressRequest): Promise<UserDocument> {
+    const userId = req.user?.id; // Le type de `userId` est maintenant `string | undefined`
+  
+    if (!userId) {
+      throw new NotFoundException("Utilisateur non trouvé");
+    }
+  
+    // Vérification explicite que `userId` est bien une chaîne de caractères (string)
+    if (typeof userId !== 'string') {
+      throw new NotFoundException("ID d'utilisateur invalide");
+    }
+  
+    const user = await this.usersService.findById(userId);
+    if (!user) {
+      throw new NotFoundException("Utilisateur non trouvé");
+    }
+  
+    return user;
+  }  
+
+
+  @Put('my-info')
+  @UseGuards(AuthGuard('jwt')) // Protection avec JWT
+  async updateMyProfile(@Request() req: ExpressRequest, @Body() userData: Partial<UserDocument>): Promise<UserDocument> {
+    const userId = req.user?.id; // Récupération de l'ID de l'utilisateur connecté
+    if (!userId) {
+      throw new NotFoundException("Utilisateur non trouvé");
+    }
+    return this.usersService.updateProfile(userId, userData); // Met à jour les informations de l'utilisateur
+  }
+
+
+  
   @Get()
   @UseGuards(AuthGuard('jwt')) // ✅ Protection avec JWT
   async findAll(): Promise<UserDocument[]> {
@@ -70,11 +108,32 @@ export class UsersController {
   }
 
 
-    // Ajout d'une route protégée pour récupérer les infos de l'utilisateur connecté
-  @Get('profile')
-  //@UseGuards(AuthGuard('jwt')) // Protection JWT
-  getProfile(@Req() req: Request) {
-    return req.user; // Retourne l'utilisateur authentifié
-  }
+  
 }
+
+
+
+ // @Put('profile')
+ // @UseGuards(AuthGuard('jwt')) // Protection avec JWT
+ // async updateProfile(@Req() req: Request, @Body() userData: Partial<UserDocument>): Promise<UserDocument> {
+ // const userId = req.user?.id; // Récupération de l'ID du token JWT
+ // if (!userId) {
+ //   throw new NotFoundException("Utilisateur non trouvé");
+ // }
+ // return this.usersService.updateProfile(userId, userData);
+ // }
+
+
+
+  //@Put('profile')
+  //@UseGuards(AuthGuard('jwt')) // Protection avec JWT
+  //async updateProfile(@Req() req: Request, @Body() userData: Partial<UserDocument>): Promise<UserDocument> {
+  //  const userId = req.user?.id; // Récupération de l'ID de l'utilisateur connecté
+  //  if (!userId) {
+  //    throw new NotFoundException("Utilisateur non trouvé");
+  //  }
+  //  return this.usersService.updateProfile(userId, userData); // Met à jour les informations de l'utilisateur
+  //}
+
+//}
 
