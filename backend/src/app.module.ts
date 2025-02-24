@@ -10,6 +10,7 @@ import { AdminsModule } from './admins/admins.module';
 import { CompaniesModule } from './companies/companies.module'; 
 import { CongesModule } from './conges/conges.module';
 import { DocumentsModule } from './documents/documents.module';
+import { DocumentRequestsModule } from './document-requests/document-requests.module';
 
 @Module({
   imports: [
@@ -19,7 +20,9 @@ import { DocumentsModule } from './documents/documents.module';
     AuthModule,
     AdminsModule, 
     CompaniesModule, 
-    CongesModule, DocumentsModule, 
+    CongesModule,
+    DocumentsModule, 
+    DocumentRequestsModule, 
 
   ],
   controllers: [AppController],

@@ -1,0 +1,39 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
+
+export type DocumentRequestDocument = DocumentRequest & Document;
+
+export enum DocumentType {
+  EMPLOYMENT_CONTRACT = 'Contrat de travail',
+  WORK_CERTIFICATE = 'Attestation de travail',
+  INTERNSHIP_CERTIFICATE = 'Attestation de stage',
+  PAYSLIPS = 'Bulletins de paie',
+  FINAL_BALANCE = 'Solde de tout compte',
+  ATTENDANCE_CERTIFICATE = 'Attestation de présence',
+  SALARY_ADVANCE = 'Demande d’avance sur salaire',
+  RECOMMENDATION_LETTER = 'Lettre de recommandation',
+  DUPLICATE_DOCUMENT = 'Duplicata de documents perdus',
+}
+
+@Schema({ timestamps: true })
+export class DocumentRequest {
+  @Prop({ required: true })
+  fullName: string;
+
+  @Prop({ required: true })
+  jobPosition: string;
+
+  @Prop({ required: true, enum: ['CDI', 'CDD', 'Stage'] })
+  contractType: string;
+
+  @Prop({ required: true })
+  professionalEmail: string;
+
+  @Prop({ required: true, enum: DocumentType })
+  documentType: DocumentType;
+
+  @Prop({ required: true })
+  userId: string; 
+}
+
+export const DocumentRequestSchema = SchemaFactory.createForClass(DocumentRequest);

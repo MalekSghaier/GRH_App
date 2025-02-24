@@ -9,7 +9,7 @@ export class DocumentEntity extends Document {
   @Prop({ required: true })
   fileUrl: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })  // ✅ Correction ici
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })  
   uploadedBy: MongooseSchema.Types.ObjectId;
 }
 

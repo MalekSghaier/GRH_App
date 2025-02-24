@@ -1,3 +1,4 @@
+//employee-intern.guard.ts
 import { CanActivate, ExecutionContext, Injectable, ForbiddenException } from '@nestjs/common';
 import { Request } from 'express';
 import { UserRole } from '../schemas/user.schema';
