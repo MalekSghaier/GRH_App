@@ -1,7 +1,15 @@
+// company.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, CallbackError } from 'mongoose'; // Ajouter Document et CallbackError
+import * as bcrypt from 'bcrypt';
 
-export type CompanyDocument = Company & Document;
+// Définir une interface pour les méthodes de Mongoose
+export interface CompanyMethods {
+  comparePassword(candidatePassword: string): Promise<boolean>;
+}
+
+// Définir le type CompanyDocument qui combine Company, Document et CompanyMethods
+export type CompanyDocument = Company & Document & CompanyMethods;
 
 @Schema({ timestamps: true })
 export class Company {
@@ -18,13 +26,40 @@ export class Company {
   phone: string;
 
   @Prop({ required: true, unique: true })
-  taxId: string; // Immatricule fiscale
+  taxId: string;
   
   @Prop()
-  logo: string; // URL de l'image (PNG, JPG, JPEG)
+  logo: string;
 
   @Prop()
-  signature: string; // URL de l'image ou PDF (PNG, JPG, JPEG, PDF)
+  signature: string;
+
+  @Prop({ required: true })
+  password: string;
+
+  @Prop({ required: true, unique: true })
+  email: string;
 }
 
+// Créer le schéma
 export const CompanySchema = SchemaFactory.createForClass(Company);
+
+// Ajouter la méthode comparePassword au schéma
+CompanySchema.methods.comparePassword = async function (
+  this: CompanyDocument,
+  candidatePassword: string,
+): Promise<boolean> {
+  return bcrypt.compare(candidatePassword, this.password);
+};
+
+// Middleware pour hacher le mot de passe avant de sauvegarder
+CompanySchema.pre<CompanyDocument>('save', async function (next: (err?: CallbackError) => void) {
+  if (!this.isModified('password')) return next();
+  try {
+    const saltRounds = 10;
+    this.password = await bcrypt.hash(this.password, saltRounds);
+    next();
+  } catch (error) {
+    next(error as CallbackError); // Typer explicitement l'erreur
+  }
+});

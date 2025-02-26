@@ -1,21 +1,31 @@
-//auth.service.ts
+// auth.service.ts
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
+import { CompaniesService } from '../companies/companies.service';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 import { UserDocument } from '../schemas/user.schema';
+import { CompanyDocument } from '../schemas/company.schema'; // Ajouter l'import
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
+    private readonly companiesService: CompaniesService, // Injection correcte
     private readonly jwtService: JwtService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<UserDocument | null> {
     const user = await this.usersService.findByEmail(email);
-    if (user && (await bcrypt.compare(password, user.password))) {
-      return user; // Retourne l'utilisateur si le mot de passe est correct
+    if (user && (await user.comparePassword(password))) {
+      return user;
+    }
+    return null;
+  }
+
+  async validateCompany(email: string, password: string): Promise<CompanyDocument | null> {
+    const company = await this.companiesService.findByEmail(email);
+    if (company && (await company.comparePassword(password))) {
+      return company;
     }
     return null;
   }
@@ -23,8 +33,16 @@ export class AuthService {
   login(user: UserDocument): { access_token: string; role: string } {
     const payload = { email: user.email, sub: user._id, role: user.role };
     return {
-      access_token: this.jwtService.sign(payload), // `sign` est synchrone
+      access_token: this.jwtService.sign(payload),
       role: user.role,
+    };
+  }
+
+  loginCompany(company: CompanyDocument): { access_token: string; role: string } {
+    const payload = { email: company.email, sub: company._id, role: 'admin' };
+    return {
+      access_token: this.jwtService.sign(payload),
+      role: 'admin',
     };
   }
 }

@@ -19,6 +19,15 @@ export class CompaniesService {
     }
   }
 
+
+  async findByEmail(email: string): Promise<CompanyDocument> {
+    const company = await this.companyModel.findOne({ email }).exec();
+    if (!company) {
+      throw new NotFoundException(`Compagnie avec email ${email} non trouvée`);
+    }
+    return company;
+  }
+
   async findAll(): Promise<Company[]> {
     return this.companyModel.find().exec();
   }
