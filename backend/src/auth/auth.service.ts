@@ -4,13 +4,13 @@ import { UsersService } from '../users/users.service';
 import { CompaniesService } from '../companies/companies.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserDocument } from '../schemas/user.schema';
-import { CompanyDocument } from '../schemas/company.schema'; // Ajouter l'import
+import { CompanyDocument } from '../schemas/company.schema'; 
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly companiesService: CompaniesService, // Injection correcte
+    private readonly companiesService: CompaniesService, 
     private readonly jwtService: JwtService,
   ) {}
 

@@ -37,10 +37,10 @@ export class InternshipApplication {
   company: string;
 
   @Prop({ required: true })
-  cv: string; // Nom du fichier CV
+  cv: string; 
 
   @Prop({ required: true })
-  coverLetter: string; // Nom du fichier lettre de motivation
+  coverLetter: string; 
 }
 
 export const InternshipApplicationSchema = SchemaFactory.createForClass(InternshipApplication);

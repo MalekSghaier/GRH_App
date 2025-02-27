@@ -11,13 +11,12 @@ export class DocumentsService {
   constructor(@InjectModel(Document.name) private documentModel: Model<DocumentDocument>) {}
 
   async uploadDocument(title: string, fileUrl: string, uploadedBy: UserPayload): Promise<DocumentDocument> {
-    console.log("UserPayload reçu:", uploadedBy); // DEBUG
+    console.log("UserPayload reçu:", uploadedBy); 
 
-    if (uploadedBy.role !== UserRole.ADMIN.toString()) { // Correction ici
+    if (uploadedBy.role !== UserRole.ADMIN.toString()) {
       throw new ForbiddenException("Seuls les administrateurs peuvent ajouter des documents.");
     }
 
-    // ✅ Correction : Utiliser `create` pour éviter l'erreur .save() sur une valeur potentiellement non définie
     const newDocument = await this.documentModel.create({ title, fileUrl, uploadedBy: uploadedBy.id });
 
     return newDocument;

@@ -1,5 +1,5 @@
 //express.d.ts
-import { UserPayload } from './user-payload'; // Assurez-vous que le chemin est correct
+import { UserPayload } from './user-payload'; 
 
 declare module 'express' {
   interface Request {

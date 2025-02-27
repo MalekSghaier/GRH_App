@@ -1,19 +1,10 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Put,
-    Delete,
-    Body,
-    Param,
-    UseGuards,
-  } from '@nestjs/common';
+import {Controller,Get,Post,Put,Delete,Body,Param,UseGuards,} from '@nestjs/common';
   import { CompaniesService } from './companies.service';
   import { Company } from '../schemas/company.schema';
   import { AuthGuard } from '@nestjs/passport';
   import {SuperAdminAdminRolesGuard} from '../auth/SuperAdmin_Admin_roles.guard';
   @Controller('companies')
-  @UseGuards(AuthGuard('jwt'),SuperAdminAdminRolesGuard) // Protection JWT + Vérification du rôle SuperAdmin
+  @UseGuards(AuthGuard('jwt'),SuperAdminAdminRolesGuard) 
   export class CompaniesController {
     constructor(private readonly companiesService: CompaniesService) {}
   

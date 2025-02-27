@@ -90,7 +90,7 @@ export class UsersService {
 
     for (const key of Object.keys(userData) as Array<keyof typeof userData>) {
       if (allowedFields.includes(key)) {
-        updateData[key] = userData[key]; // Filtrage des champs autorisés
+        updateData[key] = userData[key]; 
       }
     }
 

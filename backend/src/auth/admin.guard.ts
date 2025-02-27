@@ -7,7 +7,7 @@ import { UserRole } from '../schemas/user.schema';  // Importer UserRole
 interface User {
   id: string;
   email: string;
-  role: UserRole;  // Assurez-vous que le type correspond à UserRole
+  role: UserRole;  
 }
 
 @Injectable()

@@ -2,12 +2,12 @@
 import { CanActivate, ExecutionContext, Injectable, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { UserRole } from '../schemas/user.schema';  // Importer UserRole
+import { UserRole } from '../schemas/user.schema';  
 
 interface User {
   id: string;
   email: string;
-  role: UserRole;  // Assurez-vous que le type correspond à UserRole
+  role: UserRole;  
 }
 
 @Injectable()

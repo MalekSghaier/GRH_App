@@ -36,7 +36,7 @@ export class DocumentsController {
     @UploadedFile() file: Express.Multer.File,
     @Req() req: Request,
     @Body() body: { title: string, fileUrl?: string }
-  ): Promise<DocumentDocument> {  // ✅ Ajout du type de retour
+  ): Promise<DocumentDocument> {  // Ajout du type de retour
     const user = req.user as UserPayload;
     if (!user || !user.id) throw new UnauthorizedException('Utilisateur non authentifié');
 
@@ -54,13 +54,13 @@ export class DocumentsController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'), AdminGuard)
-  async findAll(): Promise<DocumentDocument[]> {  // ✅ Ajout du type de retour
+  async findAll(): Promise<DocumentDocument[]> {  //  Ajout du type de retour
     return this.documentsService.findAll();
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'), AdminGuard)
-  async deleteDocument(@Param('id') id: string, @Req() req: Request): Promise<{ message: string }> {  // ✅ Ajout du type de retour
+  async deleteDocument(@Param('id') id: string, @Req() req: Request): Promise<{ message: string }> {  // Ajout du type de retour
     const user = req.user as UserPayload;
     if (!user || !user.id) throw new UnauthorizedException('Utilisateur non authentifié');
 

@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, ForbiddenException } from '@nestjs/common';
 import { Request } from 'express';
-import { UserRole } from '../schemas/user.schema';  // Vérifie que ce type est bien défini dans user.schema.ts
+import { UserRole } from '../schemas/user.schema'; 
 
 interface User {
   id: string;

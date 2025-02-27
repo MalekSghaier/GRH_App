@@ -16,7 +16,7 @@ export class RolesGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<Request>();
-    const user = request.user as User | undefined; // Typage sécurisé
+    const user = request.user as User | undefined; 
 
     if (!user || user.role !== 'superAdmin') {
       throw new ForbiddenException("Accès refusé. Seuls les superAdmins sont autorisés.");

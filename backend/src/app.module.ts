@@ -16,7 +16,7 @@ import { WorkApplicationsModule } from './work-applications/work-applications.mo
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),  // Charge .env globalement
+    ConfigModule.forRoot({ isGlobal: true }),  
     MongooseModule.forRoot('mongodb://localhost:27017/GRH'),
     UsersModule,
     AuthModule,
@@ -25,8 +25,8 @@ import { WorkApplicationsModule } from './work-applications/work-applications.mo
     CongesModule,
     DocumentsModule, 
     DocumentRequestsModule,
-     InternshipApplicationsModule,
-     WorkApplicationsModule, 
+    InternshipApplicationsModule,
+    WorkApplicationsModule, 
 
   ],
   controllers: [AppController],

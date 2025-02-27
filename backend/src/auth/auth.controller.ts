@@ -2,7 +2,7 @@
 import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
-import { CompaniesService } from '../companies/companies.service'; // Ajouter l'import
+import { CompaniesService } from '../companies/companies.service'; 
 import { UserDocument } from '../schemas/user.schema';
 import { CompanyDocument } from '../schemas/company.schema';
 
@@ -11,7 +11,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
-    private readonly companiesService: CompaniesService, // Ajouter le service
+    private readonly companiesService: CompaniesService, 
   ) {}
 
   @Post('login')
@@ -38,11 +38,11 @@ export class AuthController {
 
   @Post('register/user')
   async registerUser(@Body() user: UserDocument) {
-    return await this.usersService.create(user); // Ajouter await
+    return await this.usersService.create(user); 
   }
 
   @Post('register/company')
   async registerCompany(@Body() company: CompanyDocument) {
-    return await this.companiesService.create(company); // Ajouter await
+    return await this.companiesService.create(company); 
   }
 }

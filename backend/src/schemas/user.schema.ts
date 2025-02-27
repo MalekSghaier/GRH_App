@@ -32,7 +32,7 @@ export const UserSchema = new Schema<IUser>({
     enum: Object.values(UserRole),
     default: UserRole.VISITOR,
   },
-}, { collection: 'users' });  // Spécification du nom de la collection
+}, { collection: 'users' });
 
 UserSchema.pre<IUser>('save', async function (next: (err?: CallbackError) => void) {
   if (!this.isModified('password')) return next(); // Ne pas hacher si le mot de passe n’a pas changé
@@ -54,5 +54,4 @@ UserSchema.methods.comparePassword = async function (
 
 export const User = model<IUser>('User', UserSchema);
 
-// ✅ Exportation du type UserDocument pour utiliser comme type
 export type UserDocument = IUser;

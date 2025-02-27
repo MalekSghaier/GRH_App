@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Schema as MongooseSchema } from 'mongoose';  // 👈 Ajout de Schema as MongooseSchema
+import { Document, Schema as MongooseSchema } from 'mongoose';  
 
 @Schema()
 export class DocumentEntity extends Document {
