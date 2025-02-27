@@ -47,6 +47,13 @@ export class UsersController {
   }
 
 
+  @Get(':id/qrcode')
+  @UseGuards(AuthGuard('jwt')) 
+  async getUserQrCode(@Param('id') id: string): Promise<{ qrCode: string }> {
+    const qrCode = await this.usersService.generateQrCode(id);
+    return { qrCode }; // Retourner le QR Code en JSON
+  }
+
   
   @Get()
   @UseGuards(AuthGuard('jwt')) 

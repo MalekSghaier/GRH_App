@@ -3,11 +3,42 @@ import { Injectable, ConflictException, BadRequestException, InternalServerError
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, mongo, Error as MongooseError } from 'mongoose';
 import { User, UserRole, UserDocument } from '../schemas/user.schema';
+import * as QRCode from 'qrcode';
+import { ObjectId } from 'mongodb'; // Assurez-vous d'importer ObjectId
+
+
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
+  async generateQrCode(userId: string): Promise<string> {
+    const user = await this.findById(userId);
+    if (!user) throw new NotFoundException(`Utilisateur avec ID ${userId} non trouvé`);
+  
+    // Vérification explicite que `user._id` est bien de type ObjectId
+    if (!(user._id instanceof ObjectId)) {
+      throw new InternalServerErrorException('ID utilisateur invalide');
+    }
+  
+    const userJson = {
+      id: user._id.toString(), // Conversion directe
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
+  
+    const jsonString: string = JSON.stringify(userJson);
+  
+    try {
+      const qrCodeDataUrl: string = await QRCode.toDataURL(jsonString);
+      return qrCodeDataUrl;
+    } catch (err) {
+      throw new InternalServerErrorException(`Erreur lors de la génération du QR Code: ${err instanceof Error ? err.message : 'Erreur inconnue'}`);
+    }
+  }
+
+  
   async findByUsername(username: string) {
     return this.userModel.findOne({ username }).exec();
   }
