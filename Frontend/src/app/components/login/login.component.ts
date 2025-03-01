@@ -8,8 +8,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule], 
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -43,4 +42,5 @@ export class LoginComponent {
     }
   }
     
+
 }

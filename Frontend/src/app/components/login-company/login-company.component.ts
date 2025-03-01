@@ -7,10 +7,9 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login-company',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule], 
-  templateUrl: './login-compagny.component.html',
-  styleUrl: './login-compagny.component.css'  
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './login-company.component.html',
+  styleUrl: './login-company.component.css'
 })
 export class LoginCompanyComponent {
   loginCampagnyForm: FormGroup;
@@ -41,4 +40,5 @@ export class LoginCompanyComponent {
         }
       });
   }
+
 }
