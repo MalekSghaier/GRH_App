@@ -1,22 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { ApiService } from './services/api.service';
-import { CommonModule } from '@angular/common'; // Importer CommonModule
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  template: `<h1>Test API Angular + NestJS</h1>
-             <pre>{{ data | json }}</pre>`,
-  standalone: true,
-  imports: [CommonModule] // Ajouter CommonModule ici
+  imports: [RouterOutlet],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
-  data: any;
-
-  constructor(private apiService: ApiService) {}
-
-  ngOnInit() {
-    this.apiService.getData().subscribe(response => {
-      this.data = response;
-    });
-  }
+export class AppComponent {
+  title = 'Frontend';
 }
