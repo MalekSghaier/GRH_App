@@ -16,6 +16,7 @@ import { ToastrService } from 'ngx-toastr'; // Importation de Toastr
 export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string = '';
+  successMessage: string = ''; // Nouveau message de succès
 
   constructor(
     private fb: FormBuilder,
@@ -31,23 +32,33 @@ export class LoginComponent {
 
   login() {
     if (this.loginForm.invalid) {
+      this.errorMessage = 'Email ou mot de passe incorrect';
+      this.successMessage = '';
       this.toastr.error('Email ou mot de passe incorrect', 'Erreur');
       return;
     }
-
+  
     this.http.post('http://localhost:3000/auth/login', this.loginForm.value)
       .subscribe({
         next: (response: any) => {
           localStorage.setItem('token', response.token);
-          this.toastr.success(
-            "Ravi de vous retrouver ! Gérez vos demandes et accédez à vos documents en toute sérénité.",
-            "Bienvenue"
-          );
-          this.router.navigate(['/dashboard']);
+          
+          // Afficher le message de succès
+         this.successMessage = "Ravi de vous retrouver ! Gérez vos demandes et accédez à vos documents en toute sérénité.";
+          this.errorMessage = ''; 
+          this.toastr.success(this.successMessage, "Bienvenue");
+  
+          // Attendre 1,5 seconde avant de rediriger vers le dashboard
+          setTimeout(() => {
+            this.router.navigate(['/dashboard']);
+          }, 1500);
         },
         error: () => {
-          this.toastr.error('Email ou mot de passe incorrect', 'Erreur');
+          this.errorMessage = 'Email ou mot de passe incorrect';
+          this.successMessage = '';
+          this.toastr.error(this.errorMessage, 'Erreur');
         }
       });
   }
+  
 }

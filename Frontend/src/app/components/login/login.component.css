@@ -128,4 +128,11 @@ img{
     margin-top: 1px; /* Espacement avec l'input */
 }
 
+.success-message {
+    font-size: 12px; /* Taille plus petite */
+    color: green; /* Couleur verte pour le succès */
+    margin-top: 5px; /* Espacement avec l'input */
+}
+
+
   
