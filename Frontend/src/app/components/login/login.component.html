@@ -17,16 +17,24 @@
                 <input type="email" placeholder="Email" formControlName="email">
                 <i class='bx bx-envelope'></i>
             </div>
+            <!-- Message d'erreur pour l'email -->
+            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" style="color: red;">
+                Veuillez entrer une adresse e-mail valide.
+            </div>
     
             <div class="input-box">
                 <input type="password" placeholder="Password" formControlName="password">
                 <i class='bx bx-lock-alt'></i>
             </div>
+            <!-- Message d'erreur pour le mot de passe -->
+            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" style="color: red;">
+                Le mot de passe est requis.
+            </div>
     
             <button class="btn" type="submit" [disabled]="loginForm.invalid">S'identifier</button>
 
             <div class="register">
-                <p><a href="#" >S'inscrire</a></p>
+                <p><a href="#">S'inscrire</a></p>
             </div>
     
             <div class="register">
@@ -36,6 +44,5 @@
             <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
         </form>
     </div>
-    
 </body>
 </html>
