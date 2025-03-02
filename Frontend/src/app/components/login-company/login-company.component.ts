@@ -47,7 +47,7 @@ export class LoginCompanyComponent {
   
           // Attendre 1,5 seconde avant de rediriger vers le dashboard
           setTimeout(() => {
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/admin-dashboard']);
           }, 1500);
         },
         error: (err) => {
