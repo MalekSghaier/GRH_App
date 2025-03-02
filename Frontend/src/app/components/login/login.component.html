@@ -18,18 +18,18 @@
                 <i class='bx bx-envelope'></i>
             </div>
             <!-- Message d'erreur pour l'email -->
-            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" style="color: red;">
+            <p *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
                 Veuillez entrer une adresse e-mail valide.
-            </div>
+            </p>
     
             <div class="input-box">
                 <input type="password" placeholder="Password" formControlName="password">
                 <i class='bx bx-lock-alt'></i>
             </div>
             <!-- Message d'erreur pour le mot de passe -->
-            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" style="color: red;">
+            <p *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
                 Le mot de passe est requis.
-            </div>
+            </p>
     
             <button class="btn" type="submit" [disabled]="loginForm.invalid">S'identifier</button>
 
