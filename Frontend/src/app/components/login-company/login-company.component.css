@@ -122,13 +122,15 @@ img{
     color: #04fff0;
 }
 
-.success-snackbar {
-    background-color: #4CAF50;
-    color: white;
-  }
-  
-  .error-snackbar {
-    background-color: #F44336;
-    color: white;
-  }
+.error-message {
+    font-size: 12px; 
+    color: rgb(247, 95, 95);
+    margin-top: 1px; 
+}
+
+.success-message {
+    font-size: 12px;
+    color: green;
+    margin-top: 5px; 
+}
   

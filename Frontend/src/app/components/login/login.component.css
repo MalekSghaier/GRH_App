@@ -123,15 +123,15 @@ img{
 }
 
 .error-message {
-    font-size: 12px; /* Taille plus petite */
-    color: rgb(247, 95, 95); /* Couleur du texte */
-    margin-top: 1px; /* Espacement avec l'input */
+    font-size: 12px; 
+    color: rgb(247, 95, 95);
+    margin-top: 1px; 
 }
 
 .success-message {
-    font-size: 12px; /* Taille plus petite */
-    color: green; /* Couleur verte pour le succès */
-    margin-top: 5px; /* Espacement avec l'input */
+    font-size: 12px;
+    color: green;
+    margin-top: 5px; 
 }
 
 

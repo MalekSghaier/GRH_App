@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { ToastrService } from 'ngx-toastr'; // Importation de Toastr
+import { ToastrService } from 'ngx-toastr'; 
 
 @Component({
   selector: 'app-login',
@@ -16,13 +16,13 @@ import { ToastrService } from 'ngx-toastr'; // Importation de Toastr
 export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string = '';
-  successMessage: string = ''; // Nouveau message de succès
+  successMessage: string = ''; 
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private http: HttpClient,
-    private toastr: ToastrService // Injection de ToastrService
+    private toastr: ToastrService 
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
