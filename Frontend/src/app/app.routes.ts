@@ -2,7 +2,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { LoginCompanyComponent } from './components/login-company/login-company.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SuperAdminDashboardComponent } from './components/super-admin-dashboard/super-admin-dashboard.component';
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { EmployeeDashboardComponent } from './components/employee-dashboard/employee-dashboard.component';
@@ -28,11 +27,6 @@ export const routes: Routes = [
         component: LoginCompanyComponent 
     },  
 
-    { 
-        path: 'dashboard',
-        component: DashboardComponent, 
-        canActivate: [AuthGuard] 
-    },
     { 
         path: 'superadmin-dashboard', 
         component: SuperAdminDashboardComponent
