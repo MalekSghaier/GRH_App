@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component  } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -11,7 +11,8 @@ import { ToastrService } from 'ngx-toastr';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login-company.component.html',
-  styleUrl: './login-company.component.css'
+  styleUrl: './login-company.component.css',
+  
 })
 export class LoginCompanyComponent {
   loginCampagnyForm: FormGroup;

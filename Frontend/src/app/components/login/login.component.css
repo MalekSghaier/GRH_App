@@ -86,12 +86,12 @@ img{
 .btn{
     width: 100%;
     height: 40px;
-    background: #04fff0;
+    background: #3C91E6;
     color: #000;
     border: none;
     outline: none;
     border-radius: 20px;
-    box-shadow: 0 0 20px #04fff0;
+    box-shadow: 0 0 20px #3C91E6;
     font-size: 15px;
     font-weight: 600;
     transition: 1s;
@@ -100,10 +100,10 @@ img{
 
 .btn:hover{
     background: transparent;
-    border: 2px solid #04fff0;
+    border: 2px solid #3C91E6;
     color: #fff;
     transform: scale(1.1);
-    box-shadow: 0 0 20px #04fff0;
+    box-shadow: 0 0 20px #3C91E6;
 }
 
 .register{
@@ -119,7 +119,7 @@ img{
 }
 
 .register p a:hover{
-    color: #04fff0;
+    color: #3C91E6;
 }
 
 .error-message {
@@ -133,6 +133,4 @@ img{
     color: green;
     margin-top: 5px; 
 }
-
-
   
