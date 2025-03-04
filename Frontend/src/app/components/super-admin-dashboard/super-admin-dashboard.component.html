@@ -16,7 +16,7 @@
 <body>
 	<!-- SIDEBAR -->
 	<section id="sidebar">
-		<a href="#" class="brand">
+		<a  class="brand">
 			<i class='bx bxs-smile  bx-lg'></i>
 			<span class="text">SuperAdmin</span>
 		</a>
@@ -24,45 +24,35 @@
 			<li class="active">
 				<a href="#">
 					<i class='bx bxs-dashboard bx-sm' ></i>
-					<span class="text">Dashboard</span>
+					<span class="text">Tableau de bord</span>
 				</a>
 			</li>
 			<li>
-				<a href="#">
-					<i class='bx bxs-shopping-bag-alt bx-sm' ></i>
-					<span class="text">My Store</span>
-				</a>
-			</li>
-			<li>
-				<a href="#">
-					<i class='bx bxs-doughnut-chart bx-sm' ></i>
-					<span class="text">Analytics</span>
-				</a>
-			</li>
-			<li>
-				<a href="#">
-					<i class='bx bxs-message-dots bx-sm' ></i>
-					<span class="text">Message</span>
-				</a>
-			</li>
-			<li>
-				<a href="#">
+				<a routerLink="/admins">
 					<i class='bx bxs-group bx-sm' ></i>
-					<span class="text">Team</span>
+					<span class="text">Admins</span>
 				</a>
 			</li>
+			<li>
+				<a routerLink="/compagnies">
+					<i class='bx bxs-shopping-bag-alt bx-sm' ></i>
+					<span class="text">Compagnies</span>
+				</a>
+			</li>
+
+
 		</ul>
 		<ul class="side-menu bottom">
 			<li>
 				<a href="#">
 					<i class='bx bxs-cog bx-sm bx-spin-hover' ></i>
-					<span class="text">Settings</span>
+					<span class="text">Paramètres</span>
 				</a>
 			</li>
 			<li>
 				<a href="#" class="logout">
 					<i class='bx bx-power-off bx-sm bx-burst-hover' ></i>
-					<span class="text">Logout</span>
+					<span class="text">Déconnexion</span>
 				</a>
 			</li>
 		</ul>
@@ -79,7 +69,7 @@
     <a href="#" class="nav-link">Categories</a>
     <form action="#">
         <div class="form-input">
-            <input type="search" placeholder="Search...">
+            <input type="search" placeholder="Recherche...">
             <button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
         </div>
     </form>
@@ -107,13 +97,13 @@
 
     <!-- Profile Menu -->
 	<a href="javascript:void(0)" class="profile" id="profileIcon">
-        <img src="https://placehold.co/600x400/png" alt="Profile">
+        <img src="https://cdn-icons-png.freepik.com/512/4159/4159471.png" alt="Profile">
     </a>
     <div class="profile-menu" id="profileMenu">
         <ul>
-            <li><a href="#">My Profile</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Log Out</a></li>
+            <li><a href="#">Mon Profil</a></li>
+            <li><a href="#">Paramètres</a></li>
+            <li><a href="#">Déconnexion</a></li>
         </ul>
     </div>
 </nav>
@@ -124,10 +114,10 @@
 		<main>
 			<div class="head-title">
 				<div class="left">
-					<h1>Dashboard</h1>
+					<h1>Tableau de bord</h1>
 					<ul class="breadcrumb">
 						<li>
-							<a href="#">Dashboard</a>
+							<a href="#">Tableau de bord</a>
 						</li>
 						<li><i class='bx bx-chevron-right' ></i></li>
 						<li>
