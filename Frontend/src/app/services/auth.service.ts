@@ -18,4 +18,8 @@ export class AuthService {
   loginCompany(email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login/company`, { email, password });
   }
+
+
+  
 }
+
