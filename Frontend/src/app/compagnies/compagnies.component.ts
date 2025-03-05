@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import { NavSidebarComponent } from '../sharedSuperAdmin/nav-sidebar/nav-sidebar.component';
 
 @Component({
   selector: 'app-compagnies',
-  imports: [],
+  standalone: true,
+  imports: [NavSidebarComponent],
   templateUrl: './compagnies.component.html',
   styleUrl: './compagnies.component.css'
 })

@@ -1,12 +1,29 @@
-import { Component, AfterViewInit ,ViewEncapsulation } from '@angular/core';
+// nav-sidebar.component.ts
+import { Component, AfterViewInit,ViewEncapsulation } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, RouterModule ,NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-super-admin-dashboard',
-  templateUrl: './super-admin-dashboard.component.html',
-  styleUrl:'./super-admin-dashboard.component.css',
+  selector: 'app-nav-sidebar',
+  standalone: true,
+  imports: [CommonModule, RouterModule], // Importez les modules nécessaires
+  templateUrl: './nav-sidebar.component.html',
+  styleUrls: ['./nav-sidebar.component.css'],
   encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
+  
 })
-export class SuperAdminDashboardComponent implements AfterViewInit {
+export class NavSidebarComponent implements AfterViewInit {
+
+  currentRoute: string = '';
+
+  constructor(private router: Router) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      this.currentRoute = event.url;
+    });
+  }
 
   ngAfterViewInit(): void {
     this.initializeSidebar();
