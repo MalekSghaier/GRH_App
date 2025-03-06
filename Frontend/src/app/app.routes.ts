@@ -6,7 +6,6 @@ import { SuperAdminDashboardComponent } from './components/super-admin-dashboard
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { EmployeeDashboardComponent } from './components/employee-dashboard/employee-dashboard.component';
 import { InternDashboardComponent } from './components/intern-dashboard/intern-dashboard.component';
-import { AdminsComponent } from './admins/admins.component';
 import { CompagniesComponent } from './compagnies/compagnies.component';
 import { ProfilComponent } from './profil/profil.component';
 
@@ -44,10 +43,6 @@ export const routes: Routes = [
     { 
         path: 'intern-dashboard', 
         component: InternDashboardComponent 
-    },
-    { 
-        path: 'admins', 
-        component: AdminsComponent 
     },
     { 
         path: 'compagnies', 

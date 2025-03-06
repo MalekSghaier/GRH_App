@@ -21,19 +21,13 @@
 			<span class="text">SuperAdmin</span>
 		</a>
 		<ul class="side-menu top">
-			<li [class.active]="currentRoute === '/superadmin-dashboard'">
+			<li >
 				<a routerLink="/superadmin-dashboard">
 					<i class='bx bxs-dashboard bx-sm' ></i>
 					<span class="text">Tableau de bord</span>
 				</a>
 			</li>
-			<li [class.active]="currentRoute === '/admins' ">
-				<a routerLink="/admins">
-					<i class='bx bxs-group bx-sm' ></i>
-					<span class="text">Admins</span>
-				</a>
-			</li>
-			<li [class.active]="currentRoute === '/compagnie' ">
+			<li class="active">
 				<a routerLink="/compagnies">
 					<i class='bx bxs-shopping-bag-alt bx-sm' ></i>
 					<span class="text">Compagnies</span>
