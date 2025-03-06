@@ -1,0 +1,111 @@
+<div class="form-container">
+    <h2>Ajouter une Compagnie</h2>
+    <form (ngSubmit)="onSubmit()" #companyForm="ngForm">
+      <!-- Nom de la compagnie -->
+      <div class="form-group">
+        <label for="name">Nom de la compagnie</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          [(ngModel)]="company.name"
+          required
+          placeholder="Entrez le nom de la compagnie"
+        />
+      </div>
+  
+      <!-- Adresse -->
+      <div class="form-group">
+        <label for="address">Adresse</label>
+        <input
+          type="text"
+          id="address"
+          name="address"
+          [(ngModel)]="company.address"
+          required
+          placeholder="Entrez l'adresse de la compagnie"
+        />
+      </div>
+  
+      <!-- Téléphone -->
+      <div class="form-group">
+        <label for="phone">Téléphone</label>
+        <input
+          type="text"
+          id="phone"
+          name="phone"
+          [(ngModel)]="company.phone"
+          required
+          placeholder="Entrez le numéro de téléphone"
+        />
+      </div>
+  
+      <!-- Matricule fiscale -->
+      <div class="form-group">
+        <label for="taxId">Matricule fiscale</label>
+        <input
+          type="text"
+          id="taxId"
+          name="taxId"
+          [(ngModel)]="company.taxId"
+          required
+          placeholder="Entrez la matricule fiscale"
+        />
+      </div>
+  
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          [(ngModel)]="company.email"
+          required
+          placeholder="Entrez l'email de la compagnie"
+        />
+      </div>
+  
+      <!-- Mot de passe -->
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="company.password"
+          required
+          placeholder="Entrez un mot de passe"
+        />
+      </div>
+  
+      <!-- Logo -->
+      <div class="form-group">
+        <label for="logo">Logo</label>
+        <input
+          type="file"
+          id="logo"
+          name="logo"
+          (change)="onFileChange($event, 'logo')"
+          accept="image/*"
+        />
+      </div>
+  
+      <!-- Signature numérique -->
+      <div class="form-group">
+        <label for="signature">Signature numérique</label>
+        <input
+          type="file"
+          id="signature"
+          name="signature"
+          (change)="onFileChange($event, 'signature')"
+          accept="image/*"
+        />
+      </div>
+  
+      <!-- Bouton de soumission -->
+      <button type="submit" [disabled]="!companyForm.form.valid">
+        Ajouter Compagnie
+      </button>
+    </form>
+  </div>

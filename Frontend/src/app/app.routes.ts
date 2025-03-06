@@ -8,6 +8,7 @@ import { EmployeeDashboardComponent } from './components/employee-dashboard/empl
 import { InternDashboardComponent } from './components/intern-dashboard/intern-dashboard.component';
 import { CompagniesComponent } from './compagnies/compagnies.component';
 import { ProfilComponent } from './profil/profil.component';
+import { AddCompanyComponent } from './add-company/add-company.component';
 
 import { AuthGuard } from './guards/auth.guards';
 
@@ -52,5 +53,9 @@ export const routes: Routes = [
         path: 'profil', 
         component: ProfilComponent 
     },
+    {
+        path :'add-company',
+        component : AddCompanyComponent
+    }
 
 ];
