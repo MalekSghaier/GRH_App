@@ -26,7 +26,7 @@ export class AddCompanyComponent {
 
   constructor(
     private router: Router,
-    private companyService: CompanyService, // Injecter correctement le service
+    private companyService: CompanyService,
   ) {}
 
   onFileChange(event: any, field: string) {

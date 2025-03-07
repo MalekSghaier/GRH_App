@@ -1,87 +1,96 @@
-<div class="form-container">
-    <h2>Ajouter une Compagnie</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Boxicons -->
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
+
+	<!-- My CSS -->
+	<link rel="stylesheet" href="style.css">
+
+	<title>AdminHub</title>
+</head>
+<body>
+  <div class="container">
     <form (ngSubmit)="onSubmit()" #companyForm="ngForm">
+      <h1>Ajouter Compagnie</h1>
       <!-- Nom de la compagnie -->
-      <div class="form-group">
-        <label for="name">Nom de la compagnie</label>
+      <div class="input-box">
+        <label for="name">Nom Compagnie:</label>
         <input
           type="text"
           id="name"
           name="name"
           [(ngModel)]="company.name"
           required
-          placeholder="Entrez le nom de la compagnie"
         />
       </div>
-  
       <!-- Adresse -->
-      <div class="form-group">
-        <label for="address">Adresse</label>
+      <div class="input-box">
+        <label for="address">Adresse:</label>
         <input
           type="text"
           id="address"
           name="address"
           [(ngModel)]="company.address"
           required
-          placeholder="Entrez l'adresse de la compagnie"
         />
       </div>
   
       <!-- Téléphone -->
-      <div class="form-group">
-        <label for="phone">Téléphone</label>
+      <div class="input-box">
+        <label for="phone">Téléphone:</label>
         <input
           type="text"
           id="phone"
           name="phone"
           [(ngModel)]="company.phone"
           required
-          placeholder="Entrez le numéro de téléphone"
         />
       </div>
   
       <!-- Matricule fiscale -->
-      <div class="form-group">
-        <label for="taxId">Matricule fiscale</label>
+      <div class="input-box">
+        <label for="taxId">Matricule Fiscale:</label>
         <input
           type="text"
           id="taxId"
           name="taxId"
           [(ngModel)]="company.taxId"
           required
-          placeholder="Entrez la matricule fiscale"
         />
       </div>
   
       <!-- Email -->
-      <div class="form-group">
-        <label for="email">Email</label>
+      <div class="input-box">
+        <label for="email">E-mail:</label>
         <input
           type="email"
           id="email"
           name="email"
           [(ngModel)]="company.email"
           required
-          placeholder="Entrez l'email de la compagnie"
         />
       </div>
   
       <!-- Mot de passe -->
-      <div class="form-group">
-        <label for="password">Mot de passe</label>
+      <div class="input-box">
+        <label for="password">Mot de passe:</label>
         <input
           type="password"
           id="password"
           name="password"
           [(ngModel)]="company.password"
           required
-          placeholder="Entrez un mot de passe"
         />
       </div>
   
       <!-- Logo -->
-      <div class="form-group">
-        <label for="logo">Logo</label>
+      <div class="input-box">
+        <label for="logo">Logo:</label>
         <input
           type="file"
           id="logo"
@@ -92,8 +101,8 @@
       </div>
   
       <!-- Signature numérique -->
-      <div class="form-group">
-        <label for="signature">Signature numérique</label>
+      <div class="input-box">
+        <label for="signature">Signature numérique:</label>
         <input
           type="file"
           id="signature"
@@ -104,8 +113,9 @@
       </div>
   
       <!-- Bouton de soumission -->
-      <button type="submit" [disabled]="!companyForm.form.valid">
+      <button class = "btn"type="submit" [disabled]="!companyForm.form.valid">
         Ajouter Compagnie
       </button>
     </form>
   </div>
+</body>
