@@ -46,6 +46,7 @@ export class AddCompanyComponent implements AfterViewInit{
   }
 
   onSubmit() {
+
     const formData = new FormData();
     formData.append('name', this.company.name);
     formData.append('address', this.company.address);

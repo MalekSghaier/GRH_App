@@ -106,116 +106,104 @@
 			<div class="table-data">
 				<div class="order">
 					
-							<div class="container">
-								<form (ngSubmit)="onSubmit()" #companyForm="ngForm">
-								  <h1>Ajouter Compagnie</h1>
-								  <!-- Nom de la compagnie -->
-								  <div class="input-box">
-									<label for="name">Nom Compagnie:</label>
-									<input
-									  type="text"
-									  id="name"
-									  name="name"
-									  [(ngModel)]="company.name"
-									  required
-									/>
-								  </div>
-								  <!-- Adresse -->
-								  <div class="input-box">
-									<label for="address">Adresse:</label>
-									<input
-									  type="text"
-									  id="address"
-									  name="address"
-									  [(ngModel)]="company.address"
-									  required
-									/>
-								  </div>
-							  
-								  <!-- Téléphone -->
-								  <div class="input-box">
-									<label for="phone">Téléphone:</label>
-									<input
-									  type="text"
-									  id="phone"
-									  name="phone"
-									  [(ngModel)]="company.phone"
-									  required
-									/>
-								  </div>
-							  
-								  <!-- Matricule fiscale -->
-								  <div class="input-box">
-									<label for="taxId">Matricule Fiscale:</label>
-									<input
-									  type="text"
-									  id="taxId"
-									  name="taxId"
-									  [(ngModel)]="company.taxId"
-									  required
-									/>
-								  </div>
-							  
-								  <!-- Email -->
-								  <div class="input-box">
-									<label for="email">E-mail:</label>
-									<input
-									  type="email"
-									  id="email"
-									  name="email"
-									  [(ngModel)]="company.email"
-									  required
-									/>
-								  </div>
-							  
-								  <!-- Mot de passe -->
-								  <div class="input-box">
-									<label for="password">Mot de passe:</label>
-									<input
-									  type="password"
-									  id="password"
-									  name="password"
-									  [(ngModel)]="company.password"
-									  required
-									/>
-								  </div>
-							  
-								  <!-- Logo -->
-								  <div class="input-box">
-									<label for="logo">Logo:</label>
-									<input
-									  type="file"
-									  id="logo"
-									  name="logo"
-									  (change)="onFileChange($event, 'logo')"
-									  accept="image/*"
-									/>
-								  </div>
-							  
-								  <!-- Signature numérique -->
-								  <div class="input-box">
-									<label for="signature">Signature :</label>
-									<input
-									  type="file"
-									  id="signature"
-									  name="signature"
-									  (change)="onFileChange($event, 'signature')"
-									  accept="image/*"
-									/>
-								  </div>
-							  
-								  <div class="btn-container">
-								  <!-- Bouton de soumission -->
-								  <button class = "btn"type="submit" [disabled]="!companyForm.form.valid">
-									Ajouter Compagnie
-								  </button>
+					<div class="container">
+						<form (ngSubmit)="onSubmit()" #companyForm="ngForm">
+							<h1>Ajouter Compagnie</h1>
+					
+							<!-- Nom de la compagnie -->
+							<div class="input-box">
+								<label for="name">Nom Compagnie:</label>
+								<div class="input-container">
+									<input type="text" id="name" name="name" [(ngModel)]="company.name" #name="ngModel" required />
+									<p *ngIf="name.invalid && name.touched" class="error-message">
+										Le nom de la compagnie est requis.
+									</p>
 								</div>
+							</div>
+					
+							<!-- Adresse -->
+							<div class="input-box">
+								<label for="address">Adresse:</label>
+								<div class="input-container">
+									<input type="text" id="address" name="address" [(ngModel)]="company.address" #address="ngModel" required />
+									<p *ngIf="address.invalid && address.touched" class="error-message">
+										L'adresse est requise.
+									</p>
+								</div>
+							</div>
+					
+							<!-- Téléphone -->
+							<div class="input-box">
+								<label for="phone">Téléphone:</label>
+								<div class="input-container">
+									<input type="text" id="phone" name="phone" [(ngModel)]="company.phone" #phone="ngModel" required pattern="[0-9]{8,10}" />
+									<p *ngIf="phone.invalid && phone.touched" class="error-message">
+										Veuillez entrer un numéro de téléphone valide.
+									</p>
+								</div>
+							</div>
+					
+							<!-- Matricule fiscale -->
+							<div class="input-box">
+								<label for="taxId">Matricule Fiscale:</label>
+								<div class="input-container">
+									<input type="text" id="taxId" name="taxId" [(ngModel)]="company.taxId" #taxId="ngModel" required />
+									<p *ngIf="taxId.invalid && taxId.touched" class="error-message">
+										Le matricule fiscale est requis.
+									</p>
+								</div>
+							</div>
+					
+							<!-- Email -->
+							<div class="input-box">
+								<label for="email">E-mail:</label>
+								<div class="input-container">
+									<input type="email" id="email" name="email" [(ngModel)]="company.email" #email="ngModel" required email />
+									<p *ngIf="email.invalid && email.touched" class="error-message">
+										Veuillez entrer une adresse e-mail valide.
+									</p>
+								</div>
+							</div>
+					
+							<!-- Mot de passe -->
+							<div class="input-box">
+								<label for="password">Mot de passe:</label>
+								<div class="input-container">
+									<input type="password" id="password" name="password" [(ngModel)]="company.password" #password="ngModel" required minlength="6" />
+									<p *ngIf="password.invalid && password.touched" class="error-message">
+										Le mot de passe doit contenir au moins 6 caractères.
+									</p>
+								</div>
+							</div>
+					
+							<!-- Logo -->
+							<div class="input-box">
+								<label for="logo">Logo:</label>
+								<div class="input-container">
+								<input type="file" id="logo" name="logo" (change)="onFileChange($event, 'logo')" accept="image/*" />
+							    </div>
+							</div>
+					
+							<!-- Signature numérique -->
+							<div class="input-box">
 
-								</form>
-							  </div>
+								<label for="signature">Signature :</label>
+								<div class="input-container">
+								<input type="file" id="signature" name="signature" (change)="onFileChange($event, 'signature')" accept="image/*" />
+							    </div>
 
+							</div>
+					
+							<!-- Bouton de soumission -->
+							<div class="btn-container">
+								<button class="btn" type="submit" [disabled]="!companyForm.form.valid">
+									Ajouter Compagnie
+								</button>
+							</div>
+						</form>
+					</div> <!-- Fermeture correcte de la div -->
+					
 				</div>
-
 			</div>
 		</main>
 		<!-- MAIN -->
