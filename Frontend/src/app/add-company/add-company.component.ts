@@ -29,7 +29,7 @@ export class AddCompanyComponent implements AfterViewInit, OnInit {
     this.companyForm = this.fb.group({
       name: ['', [Validators.required]],
       address: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern('[0-9]{8}')]],
+      phone: ['', [Validators.required, Validators.pattern('[0-9]{8,10}')]],
       taxId: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],

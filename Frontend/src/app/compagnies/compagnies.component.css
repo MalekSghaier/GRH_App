@@ -250,6 +250,42 @@ body {
 	width: 100%;
 	color: var(--dark);
 }
+
+/* Style pour centrer et espacer les boutons */
+.actions-column {
+	display: flex;
+	justify-content: center; /* Centre horizontalement */
+	align-items: center; /* Centre verticalement */
+	gap: 15px; /* Espacement entre les icônes */
+  }
+  
+  /* Style des boutons pour éviter les bordures */
+  .no-border-button {
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 5px;
+	transition: transform 0.2s ease-in-out;
+  }
+  
+  /* Effet au survol */
+  .no-border-button:hover {
+	transform: scale(1.2); /* Légère augmentation de la taille */
+  }
+  
+  /* Style des icônes */
+  .no-border-button i {
+	font-size: 20px;
+	color: #007bff;
+	transition: color 0.3s ease-in-out;
+  }
+  
+  /* Changement de couleur au survol */
+  .no-border-button i:hover {
+	color: #0056b3;
+  }
+
+  
 #content nav form .form-input button {
 	width: 36px;
 	height: 100%;
@@ -586,6 +622,43 @@ body.dark #content nav .profile-menu li a {
 	flex-grow: 1;
 	flex-basis: 500px;
 }
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 20px;
+  }
+  
+  th, td {
+	border: 1px solid #ddd;
+	padding: 8px;
+	text-align: left;
+  }
+  
+  th {
+	background-color: #007bff;
+	color: white;
+  }
+  
+
+
+  /* Style pour le logo (image ronde) */
+.company-logo {
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+	object-fit: contain;
+  }
+  
+  /* Style pour la signature (image carrée) */
+  .company-signature {
+	width: 100px; /* Ajuste la taille selon tes besoins */
+	height: auto;
+	border-radius: 0; /* S'assure que l'image reste carrée */
+	object-fit: contain;
+  }
+  
+  
 #content main .table-data .order table {
 	width: 100%;
 	border-collapse: collapse;
@@ -605,12 +678,7 @@ body.dark #content nav .profile-menu li a {
 	grid-gap: 12px;
 	padding-left: 6px;
 }
-#content main .table-data .order table td img {
-	width: 36px;
-	height: 36px;
-	border-radius: 50%;
-	object-fit: cover;
-}
+
 #content main .table-data .order table tbody tr:hover {
 	background: var(--grey);
 }

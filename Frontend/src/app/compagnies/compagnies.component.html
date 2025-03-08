@@ -106,30 +106,71 @@
 		<!-- MAIN -->
 		<main>
 			<div class="head-title">
-				<div class="left">
-					<h1>Tableau de bord</h1>
-					<ul class="breadcrumb">
-						<li>
-							<a href="#">Tableau de bord</a>
-						</li>
-						<li><i class='bx bx-chevron-right' ></i></li>
-						<li>
-							<a class="active" href="#">Compagnies</a>
-						</li>
-					</ul>
-				</div>
-				<a routerLink="/add-company" class="btn-download">
-					<i class='bx bx-message-square-add'></i>
-					<span class="text">Ajouter Compagnie</span>
-				</a>
+			  <div class="left">
+				<h1>Tableau de bord</h1>
+				<ul class="breadcrumb">
+				  <li>
+					<a href="#">Tableau de bord</a>
+				  </li>
+				  <li><i class='bx bx-chevron-right'></i></li>
+				  <li>
+					<a class="active" href="#">Compagnies</a>
+				  </li>
+				</ul>
+			  </div>
+			  <a routerLink="/add-company" class="btn-download">
+				<i class='bx bx-message-square-add'></i>
+				<span class="text">Ajouter Compagnie</span>
+			  </a>
 			</div>
+		  
 			<div class="table-data">
-				<div class="order">
-
-				</div>
-
+			  <div class="order">
+				<table>
+				  <thead>
+					<tr>
+					  <th>Logo</th>
+					  <th>Nom</th>
+					  <th>Adresse</th>
+					  <th>Téléphone</th>
+					  <th>Immatricule fiscale</th>
+					  <th>Email</th>
+					  <th>Signature</th>
+					  <th>Actions</th>
+					</tr>
+				  </thead>
+				  <tbody>
+					<tr *ngFor="let company of companies">
+					  <td>
+						<img *ngIf="company.logo" [src]="company.logo" alt="Logo de la compagnie" width="100" class="company-logo">
+					  </td>
+					  <td>{{ company.name }}</td>
+					  <td>{{ company.address }}</td>
+					  <td>{{ company.phone }}</td>
+					  <td>{{ company.taxId }}</td>
+					  <td>{{ company.email }}</td>
+					  <td>
+						<img *ngIf="company.signature" [src]="company.signature" alt="Signature" width="100" class="company-signature">
+						<td>
+							<!-- Bouton Modifier -->
+							<button class="no-border-button" (click)="editCompany(company)" style="background: none; border: none;">
+							  <i class='bx bxs-message-square-edit bx-sm' style="color: #007bff;"></i>
+							</button>
+						  
+							<!-- Bouton Supprimer -->
+							<button class="no-border-button"  (click)="deleteCompany(company._id)" style="background: none; border: none;">
+							  <i class='bx bxs-trash-alt bx-sm' style="color: #007bff;"></i>
+							</button>
+						  
+					    </td>
+					</tr>
+				  </tbody>
+				</table>
+			  </div>
 			</div>
 		</main>
+		  
+		  
 		<!-- MAIN -->
 	</section> 
 	<!-- CONTENT -->

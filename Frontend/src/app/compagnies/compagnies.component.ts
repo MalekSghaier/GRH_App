@@ -1,7 +1,8 @@
-import { Component, AfterViewInit,ViewEncapsulation } from '@angular/core';
+import { Component, AfterViewInit,ViewEncapsulation ,OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule ,NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { CompanyService } from '../services/company.service';
 
 @Component({
   selector: 'app-compagnies',
@@ -12,16 +13,55 @@ import { filter } from 'rxjs/operators';
   encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
 
 })
-export class CompagniesComponent implements AfterViewInit{
+export class CompagniesComponent implements AfterViewInit,OnInit {
   currentRoute: string = '';
+  companies: any[] = [];
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private companyService: CompanyService
+  ) 
+  
+  {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
       this.currentRoute = event.url;
     });
   }
+
+  ngOnInit(): void {
+    this.loadCompanies();
+  }
+
+  loadCompanies(): void {
+    this.companyService.getCompanies().subscribe({
+      next: (data) => {
+        this.companies = data;
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des compagnies:', err);
+      }
+    });
+  }
+
+  editCompany(company: any): void {
+    this.router.navigate(['/edit-company', company._id]); // Redirige vers la page d'édition
+  }
+  
+  deleteCompany(companyId: string): void {
+    if (confirm('Voulez-vous vraiment supprimer cette compagnie ?')) {
+      this.companyService.deleteCompany(companyId).subscribe({
+        next: () => {
+          this.companies = this.companies.filter(c => c._id !== companyId);
+        },
+        error: (err) => {
+          console.error('Erreur lors de la suppression:', err);
+        }
+      });
+    }
+  }
+  
 
   ngAfterViewInit(): void {
     this.initializeSidebar();
