@@ -90,6 +90,13 @@ body {
     justify-content: center; /* Centre horizontalement */
     margin-top: 20px; /* Espacement au-dessus */
 }
+
+.btn:disabled {
+    background-color: #cccccc; /* Couleur de fond grise */
+    color: #666666; /* Couleur du texte gris */
+    cursor: not-allowed; /* Curseur indiquant que le bouton est désactivé */
+    opacity: 0.7; /* Opacité réduite pour un effet grisé */
+}
 .error-message {
     font-size: 12px; 
     color: rgb(247, 95, 95);

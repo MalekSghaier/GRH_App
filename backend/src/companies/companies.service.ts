@@ -13,7 +13,7 @@ export class CompaniesService {
       return await createdCompany.save();
     } catch (error: unknown) {
       if (this.isMongoDuplicateError(error)) {
-        throw new ConflictException('Ce nom ou immatricule fiscale est déjà utilisé');
+        throw new ConflictException('Ce nom ,immatricule fiscale ou e-mail  est déjà utilisé');
       }
       throw error;
     }

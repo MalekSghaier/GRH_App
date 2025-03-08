@@ -1,78 +1,96 @@
-import { Component, AfterViewInit,ViewEncapsulation } from '@angular/core';
+import { Component, AfterViewInit, ViewEncapsulation, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule ,NavigationEnd } from '@angular/router';
+import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { CompanyService } from '../services/company.service'; // Importer le service
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { CompanyService } from '../services/company.service';
 
 @Component({
   selector: 'app-compagnies',
   standalone: true,
-  imports: [CommonModule, RouterModule,FormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './add-company.component.html',
   styleUrl: './add-company.component.css',
-  encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
+  encapsulation: ViewEncapsulation.None
 })
-export class AddCompanyComponent implements AfterViewInit{
-  currentRoute: string = '';
+export class AddCompanyComponent implements AfterViewInit, OnInit {
+  companyForm: FormGroup;
+  currentRoute: string = ''; // Déclaration de la propriété currentRoute
+  errorMessage: string = '';
+  successMessage: string = '';
 
-  company: any = {
-    name: '',
-    address: '',
-    phone: '',
-    taxId: '',
-    email: '',
-    password: '',
-    logo: null,
-    signature: null,
-  };
-  constructor(private router: Router,
-  private companyService: CompanyService) 
-  {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      this.currentRoute = event.url;
+  constructor(
+    private router: Router,
+    private companyService: CompanyService,
+    private fb: FormBuilder,
+    private toastr: ToastrService
+  ) {
+    this.companyForm = this.fb.group({
+      name: ['', [Validators.required]],
+      address: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern('[0-9]{8}')]],
+      taxId: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      logo: [null, Validators.required],
+      signature: [null, Validators.required]
     });
   }
 
+  ngOnInit(): void {
+    // S'abonner aux événements de navigation pour mettre à jour currentRoute
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.currentRoute = event.url; // Mettre à jour currentRoute avec l'URL actuelle
+      });
+  }
 
   onFileChange(event: any, field: string) {
     const file = event.target.files[0];
     if (file) {
-      this.company[field] = file;
+      this.companyForm.get(field)?.setValue(file);
     }
   }
 
   onSubmit() {
+    if (this.companyForm.invalid) {
+      this.errorMessage = 'Veuillez vérifier vos champs de saisie';
+      this.toastr.error('❌ Erreur lors de l’ajout de la compagnie', 'Veuillez vérifier vos champs de saisie');
+      return;
+    }
 
     const formData = new FormData();
-    formData.append('name', this.company.name);
-    formData.append('address', this.company.address);
-    formData.append('phone', this.company.phone);
-    formData.append('taxId', this.company.taxId);
-    formData.append('email', this.company.email);
-    formData.append('password', this.company.password);
-    if (this.company.logo) {
-      formData.append('logo', this.company.logo);
-    }
-    if (this.company.signature) {
-      formData.append('signature', this.company.signature);
-    }
+    formData.append('name', this.companyForm.get('name')?.value);
+    formData.append('address', this.companyForm.get('address')?.value);
+    formData.append('phone', this.companyForm.get('phone')?.value);
+    formData.append('taxId', this.companyForm.get('taxId')?.value);
+    formData.append('email', this.companyForm.get('email')?.value);
+    formData.append('password', this.companyForm.get('password')?.value);
+    formData.append('logo', this.companyForm.get('logo')?.value);
+    formData.append('signature', this.companyForm.get('signature')?.value);
 
     this.companyService.addCompany(formData).subscribe({
       next: (response) => {
-        console.log('✅ Compagnie ajoutée avec succès', response);
-        alert('Compagnie ajoutée avec succès !');
+        this.successMessage = " Compagnie ajoutée avec succès.";
+        this.errorMessage = '';
+        this.toastr.success(this.successMessage);
+        setTimeout(() => {
         this.router.navigate(['/compagnies']);
+        }, 1500);
       },
       error: (error) => {
-        console.error('❌ Erreur lors de l’ajout de la compagnie', error);
-        alert(`Erreur : ${error.error?.message || 'Une erreur s’est produite.'}`);
-      },
+        if (error.error && error.error.message) {
+          this.errorMessage = error.error.message;
+        } else {
+          this.errorMessage = 'Une erreur s’est produite lors de l’ajout de la compagnie.';
+        }
+        this.toastr.error(`❌ ${this.errorMessage}`);
+      }
     });
   }
+
   ngAfterViewInit(): void {
     this.initializeSidebar();
     this.initializeSearch();
@@ -80,14 +98,10 @@ export class AddCompanyComponent implements AfterViewInit{
     this.initializeMenus();
   }
 
-
-
   private initializeSidebar(): void {
     const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
-
     allSideMenu.forEach(item => {
       const li = item.parentElement;
-
       if (li) {
         item.addEventListener('click', function () {
           allSideMenu.forEach(i => {
@@ -102,7 +116,6 @@ export class AddCompanyComponent implements AfterViewInit{
 
     const menuBar = document.querySelector('#content nav .bx.bx-menu');
     const sidebar = document.getElementById('sidebar');
-
     if (menuBar && sidebar) {
       menuBar.addEventListener('click', function () {
         sidebar.classList.toggle('hide');
@@ -126,12 +139,10 @@ export class AddCompanyComponent implements AfterViewInit{
     }
   }
 
-  
   private initializeSearch(): void {
     const searchButton = document.querySelector('#content nav form .form-input button');
     const searchButtonIcon = document.querySelector('#content nav form .form-input button .bx');
     const searchForm = document.querySelector('#content nav form');
-
     if (searchButton && searchButtonIcon && searchForm) {
       searchButton.addEventListener('click', function (e) {
         if (window.innerWidth < 768) {
@@ -149,7 +160,6 @@ export class AddCompanyComponent implements AfterViewInit{
 
   private initializeDarkMode(): void {
     const switchMode = document.getElementById('switch-mode') as HTMLInputElement | null;
-
     if (switchMode) {
       switchMode.addEventListener('change', function () {
         if (this.checked) {
@@ -168,38 +178,37 @@ export class AddCompanyComponent implements AfterViewInit{
     const profileMenu = document.getElementById('profileMenu');
 
     if (notificationIcon && notificationMenu) {
-        notificationIcon.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            notificationMenu.classList.toggle('show');
-            if (profileMenu) {
-                profileMenu.classList.remove('show');
-            }
-        });
+      notificationIcon.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        notificationMenu.classList.toggle('show');
+        if (profileMenu) {
+          profileMenu.classList.remove('show');
+        }
+      });
     }
 
     if (profileIcon && profileMenu) {
-        profileIcon.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            profileMenu.classList.toggle('show');
-            if (notificationMenu) {
-                notificationMenu.classList.remove('show');
-            }
-        });
+      profileIcon.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        profileMenu.classList.toggle('show');
+        if (notificationMenu) {
+          notificationMenu.classList.remove('show');
+        }
+      });
     }
 
-    // Fermeture des menus lors du clic ailleurs
-    document.addEventListener('click', function(e) {
-        const target = e.target as HTMLElement;
-        if (notificationMenu && profileMenu) {
-            if (!target.closest('#notificationIcon') && !target.closest('#profileMenu')) {
-                notificationMenu.classList.remove('show');
-            }
-            if (!target.closest('#profileIcon') && !target.closest('#profileMenu')) {
-                profileMenu.classList.remove('show');
-            }
+    document.addEventListener('click', function (e) {
+      const target = e.target as HTMLElement;
+      if (notificationMenu && profileMenu) {
+        if (!target.closest('#notificationIcon') && !target.closest('#profileMenu')) {
+          notificationMenu.classList.remove('show');
         }
+        if (!target.closest('#profileIcon') && !target.closest('#profileMenu')) {
+          profileMenu.classList.remove('show');
+        }
+      }
     });
-}
+  }
 }

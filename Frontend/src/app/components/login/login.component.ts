@@ -3,15 +3,15 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { jwtDecode } from 'jwt-decode'; // Correction ici
-import { CommonModule } from '@angular/common'; // Pour *ngIf
+import { jwtDecode } from 'jwt-decode'; 
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  standalone: true, // Si vous utilisez le mode standalone
-  imports: [ReactiveFormsModule, CommonModule] // Ajouter ReactiveFormsModule et CommonModule
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule]
 })
 export class LoginComponent {
   loginForm: FormGroup;
