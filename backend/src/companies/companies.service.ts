@@ -2,18 +2,25 @@ import { Injectable, NotFoundException, ConflictException } from '@nestjs/common
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Company, CompanyDocument } from '../schemas/company.schema';
+import { MongoServerError } from 'mongodb'; // Importer MongoServerError
+
 
 @Injectable()
 export class CompaniesService {
   constructor(@InjectModel(Company.name) private companyModel: Model<CompanyDocument>) {}
 
+
   async create(company: Company): Promise<Company> {
     try {
       const createdCompany = new this.companyModel(company);
       return await createdCompany.save();
-    } catch (error: unknown) {
-      if (this.isMongoDuplicateError(error)) {
-        throw new ConflictException('Ce nom ,immatricule fiscale ou e-mail  est déjà utilisé');
+    } catch (error: any) { // Typage explicite pour éviter l'erreur TypeScript
+      if (error instanceof MongoServerError && error.code === 11000) {
+        const keyPattern = error.keyPattern as Record<string, any>; // Typage de keyPattern
+        if (keyPattern?.email) {
+          throw new ConflictException('Cet email est déjà utilisé.');
+        }
+        throw new ConflictException('Nom ou immatricule fiscale  déjà utilisé.');
       }
       throw error;
     }
