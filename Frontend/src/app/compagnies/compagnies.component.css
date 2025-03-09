@@ -609,11 +609,7 @@ body.dark #content nav .profile-menu li a {
 	grid-gap: 16px;
 	margin-bottom: 24px;
 }
-#content main .table-data .head h3 {
-	margin-right: auto;
-	font-size: 24px;
-	font-weight: 600;
-}
+
 #content main .table-data .head .bx {
 	cursor: pointer;
 }
@@ -623,21 +619,34 @@ body.dark #content nav .profile-menu li a {
 	flex-basis: 500px;
 }
 
-table {
+
+#content main .table-data .order table {
 	width: 100%;
 	border-collapse: collapse;
-	margin-top: 20px;
-  }
-  
-th, td {
-	border: 1px solid #ddd;
-	padding: 8px;
-	text-align: left;
 }
-  
-th {
-	background-color: #007bff;
-	color: white;
+
+#content main .table-data .order table th {
+	padding-bottom: 12px;
+	font-size: 13px;
+	text-align: left;
+	border-bottom: 1px solid var(--grey);
+}
+
+#content main .table-data .order table td {
+	padding: 16px 0;
+}
+
+#content main .table-data .order table tr td:first-child {
+	display: flex;
+	align-items: center;
+	grid-gap: 12px;
+	padding-left: 6px;
+}
+
+
+
+#content main .table-data .order table tbody tr:hover {
+	background: var(--grey);
 }
   
 
@@ -686,26 +695,7 @@ th {
 	object-fit: contain;
   }
   
-  
-#content main .table-data .order table {
-	width: 100%;
-	border-collapse: collapse;
-}
-#content main .table-data .order table th {
-	padding-bottom: 12px;
-	font-size: 13px;
-	text-align: left;
-	border-bottom: 1px solid var(--grey);
-}
-#content main .table-data .order table td {
-	padding: 16px 0;
-}
-#content main .table-data .order table tr td:first-child {
-	display: flex;
-	align-items: center;
-	grid-gap: 12px;
-	padding-left: 6px;
-}
+
 
 #content main .table-data .order table tbody tr:hover {
 	background: var(--grey);
@@ -716,15 +706,6 @@ th {
 	color: var(--light);
 	border-radius: 20px;
 	font-weight: 700;
-}
-#content main .table-data .order table tr td .status.completed {
-	background: var(--blue);
-}
-#content main .table-data .order table tr td .status.process {
-	background: var(--yellow);
-}
-#content main .table-data .order table tr td .status.pending {
-	background: var(--orange);
 }
 
 
