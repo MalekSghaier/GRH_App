@@ -35,8 +35,11 @@ export class CompaniesService {
     return company;
   }
 
-  async findAll(): Promise<Company[]> {
-    return this.companyModel.find().exec();
+  async findAll(page: number = 1, limit: number = 5): Promise<{ data: Company[]; total: number }> {
+    const skip = (page - 1) * limit;
+    const data = await this.companyModel.find().skip(skip).limit(limit).exec();
+    const total = await this.companyModel.countDocuments().exec();
+    return { data, total };
   }
 
   async findOne(id: string): Promise<Company> {

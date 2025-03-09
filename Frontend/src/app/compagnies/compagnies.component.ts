@@ -16,6 +16,9 @@ import { CompanyService } from '../services/company.service';
 export class CompagniesComponent implements AfterViewInit,OnInit {
   currentRoute: string = '';
   companies: any[] = [];
+  currentPage: number = 1; // Page actuelle
+  itemsPerPage: number = 3; // Nombre d'éléments par page
+  totalItems: number = 0; // Nombre total d'éléments
 
   constructor(
     private router: Router,
@@ -35,15 +38,30 @@ export class CompagniesComponent implements AfterViewInit,OnInit {
   }
 
   loadCompanies(): void {
-    this.companyService.getCompanies().subscribe({
-      next: (data) => {
-        this.companies = data;
+    this.companyService.getCompanies(this.currentPage, this.itemsPerPage).subscribe({
+      next: (response) => {
+        this.companies = response.data; // Mettre à jour la liste des compagnies
+        this.totalItems = response.total; // Mettre à jour le nombre total d'éléments
       },
       error: (err) => {
         console.error('Erreur lors du chargement des compagnies:', err);
-      }
+      },
     });
   }
+
+  // Changer de page
+  onPageChange(page: number): void {
+    this.currentPage = page; // Mettre à jour la page actuelle
+    this.loadCompanies(); // Recharger les compagnies pour la nouvelle page
+  }
+
+  // Générer un tableau de numéros de page pour la pagination
+  getPages(): number[] {
+    const totalPages = Math.ceil(this.totalItems / this.itemsPerPage); // Calculer le nombre total de pages
+    return Array.from({ length: totalPages }, (_, i) => i + 1); // Générer un tableau [1, 2, 3, ...]
+  }
+
+
 
   editCompany(company: any): void {
     this.router.navigate(['/edit-company', company._id]); // Redirige vers la page d'édition

@@ -1,4 +1,4 @@
-  import {Controller,Get,Post,Put,Delete,Body,Param,UseGuards,UseInterceptors,UploadedFiles,  BadRequestException,} from '@nestjs/common';
+  import {Controller,Get,Post,Put,Delete,Body,Param,UseGuards,UseInterceptors,UploadedFiles,  BadRequestException,Query ,} from '@nestjs/common';
   import { CompaniesService } from './companies.service';
   import { Company } from '../schemas/company.schema';
   import { AuthGuard } from '@nestjs/passport';
@@ -60,8 +60,11 @@
     }
     
     @Get()
-    async findAll() {
-      return this.companiesService.findAll();
+    async findAll(
+      @Query('page') page: number = 1,
+      @Query('limit') limit: number = 5,
+    ) {
+      return this.companiesService.findAll(page, limit);
     }
   
     @Get(':id')

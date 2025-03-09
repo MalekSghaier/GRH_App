@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
@@ -28,25 +28,38 @@ export class CompanyService {
   }
 
 
-  getCompanies(): Observable<any[]> {
+  // Méthode pour récupérer les compagnies avec pagination
+  getCompanies(page: number = 1, limit: number = 5): Observable<{ data: any[]; total: number }> {
     const token = localStorage.getItem('token');
     if (!token) {
-      console.error("Aucun token trouvé !");
+      console.error('Aucun token trouvé !');
       return new Observable();
     }
-  
+
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  
-    return this.http.get<any[]>(this.apiUrl, { headers }).pipe(
-      map(companies => {
-        return companies.map(company => ({
-          ...company,
-          logo: company.logo ? `http://localhost:3000/${company.logo}` : null,
-          signature: company.signature ? `http://localhost:3000/${company.signature}` : null
-        }));
-      })
-    );
+
+    // Ajouter les paramètres de pagination à la requête
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+
+    return this.http
+      .get<{ data: any[]; total: number }>(this.apiUrl, { headers, params })
+      .pipe(
+        map((response) => {
+          // Transformer les URLs des images (logo et signature)
+          return {
+            data: response.data.map((company) => ({
+              ...company,
+              logo: company.logo ? `http://localhost:3000/${company.logo}` : null,
+              signature: company.signature ? `http://localhost:3000/${company.signature}` : null,
+            })),
+            total: response.total,
+          };
+        })
+      );
   }
+
   
 
   deleteCompany(companyId: string) {

@@ -629,23 +629,51 @@ table {
 	margin-top: 20px;
   }
   
-  th, td {
+th, td {
 	border: 1px solid #ddd;
 	padding: 8px;
 	text-align: left;
-  }
+}
   
-  th {
+th {
 	background-color: #007bff;
 	color: white;
-  }
+}
   
 
-
+/* Styles pour la pagination */
+.pagination {
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
+  }
+  
+  .pagination button {
+	margin: 0 5px;
+	padding: 5px 10px;
+	border: 1px solid #ccc;
+	background-color: #fff;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	object-fit: contain;
+  }
+  
+  .pagination button:hover {
+	background-color: #f0f0f0;
+  }
+  
+  .pagination button.active {
+	background-color: #007bff;
+	color: #fff;
+	border-color: #007bff;
+  }
   /* Style pour le logo (image ronde) */
 .company-logo {
-	width: 64px;
-	height: 64px;
+	width: 50px;
+	height: 50px;
 	border-radius: 50%;
 	object-fit: contain;
   }
