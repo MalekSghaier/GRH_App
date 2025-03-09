@@ -68,14 +68,28 @@ export class CompagniesComponent implements AfterViewInit,OnInit {
   }
   
   deleteCompany(companyId: string): void {
+    // Afficher une boîte de dialogue de confirmation
     if (confirm('Voulez-vous vraiment supprimer cette compagnie ?')) {
+      // Appeler le service pour supprimer la compagnie
       this.companyService.deleteCompany(companyId).subscribe({
         next: () => {
+          // Supprimer la compagnie de la liste locale
           this.companies = this.companies.filter(c => c._id !== companyId);
+  
+          this.currentPage = 1; // Rediriger vers la première page
+
+          // Recharger les compagnies pour mettre à jour la pagination
+          this.loadCompanies();
+  
+          // Afficher un message de succès (optionnel)
+          console.log('Compagnie supprimée avec succès');
+
+
         },
         error: (err) => {
+          // Afficher une erreur en cas de problème
           console.error('Erreur lors de la suppression:', err);
-        }
+        },
       });
     }
   }

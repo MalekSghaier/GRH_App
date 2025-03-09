@@ -62,7 +62,7 @@
     @Get()
     async findAll(
       @Query('page') page: number = 1,
-      @Query('limit') limit: number = 5,
+      @Query('limit') limit: number = 3,
     ) {
       return this.companiesService.findAll(page, limit);
     }

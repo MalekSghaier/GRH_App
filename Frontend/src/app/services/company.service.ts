@@ -29,7 +29,7 @@ export class CompanyService {
 
 
   // Méthode pour récupérer les compagnies avec pagination
-  getCompanies(page: number = 1, limit: number = 5): Observable<{ data: any[]; total: number }> {
+  getCompanies(page: number = 1, limit: number = 3): Observable<{ data: any[]; total: number }> {
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('Aucun token trouvé !');
@@ -62,10 +62,16 @@ export class CompanyService {
 
   
 
-  deleteCompany(companyId: string) {
-    return this.http.delete(`http://localhost:3000/companies/${companyId}`);
+  deleteCompany(companyId: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Aucun token trouvé !');
+      return new Observable();
+    }
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.delete(`${this.apiUrl}/${companyId}`, { headers });
   }
   
 
-  
 }
