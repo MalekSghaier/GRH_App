@@ -28,8 +28,7 @@ export class CompanyService {
     // Envoyer la requête POST
     return this.http.post(this.apiUrl, formData, { headers });
   }
-
-
+  
   // Méthode pour récupérer les compagnies avec pagination
   getCompanies(page: number = 1, limit: number = 3): Observable<{ data: any[]; total: number }> {
     const token = localStorage.getItem('token');
@@ -62,8 +61,6 @@ export class CompanyService {
       );
   }
 
-  
-
   deleteCompany(companyId: string): Observable<any> {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -85,17 +82,13 @@ export class CompanyService {
     return this.http.get<Company>(`${this.apiUrl}/${id}`, { headers });
   }
 
-
   updateCompany(id: string, company: FormData): Observable<any> {
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('Aucun token trouvé !');
       return new Observable();
     }
-  
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.put(`${this.apiUrl}/${id}`, company, { headers });
   }
-  
-
 }
