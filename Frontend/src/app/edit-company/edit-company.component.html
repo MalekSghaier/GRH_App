@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
+    <title>AdminHub</title>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+        <a class="brand">
+            <i class='bx bxs-smile bx-lg'></i>
+            <span class="text">SuperAdmin</span>
+        </a>
+        <ul class="side-menu top">
+            <li>
+                <a routerLink="/superadmin-dashboard">
+                    <i class='bx bxs-dashboard bx-sm'></i>
+                    <span class="text">Tableau de bord</span>
+                </a>
+            </li>
+            <li class="active">
+                <a routerLink="/compagnies">
+                    <i class='bx bxs-shopping-bag-alt bx-sm'></i>
+                    <span class="text">Compagnies</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="side-menu bottom">
+            <li [class.active]="currentRoute === '/profil'">
+                <a routerLink="/profil">
+                    <i class='bx bxs-cog bx-sm bx-spin-hover'></i>
+                    <span class="text">Paramètres</span>
+                </a>
+            </li>
+            <li [class.active]="currentRoute === '#'">
+                <a routerLink="#" class="logout">
+                    <i class='bx bx-power-off bx-sm bx-burst-hover'></i>
+                    <span class="text">Déconnexion</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- SIDEBAR -->
+
+    <!-- CONTENT -->
+    <section id="content">
+        <!-- NAVBAR -->
+        <nav>
+            <i class='bx bx-menu bx-sm'></i>
+            <a href="#" class="nav-link">Compagnies</a>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Recherche...">
+                    <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" class="checkbox" id="switch-mode" hidden />
+            <label class="swith-lm" for="switch-mode">
+                <i class="bx bxs-moon"></i>
+                <i class="bx bx-sun"></i>
+                <div class="ball"></div>
+            </label>
+
+            <!-- Notification Bell -->
+            <a href="javascript:void(0)" class="notification" id="notificationIcon">
+                <i class='bx bxs-bell bx-tada-hover'></i>
+                <span class="num">5</span>
+            </a>
+            <div class="notification-menu" id="notificationMenu">
+                <ul>
+                    <li>New message from John</li>
+                    <li>Your order has been shipped</li>
+                    <li>New comment on your post</li>
+                    <li>Update available for your app</li>
+                    <li>Reminder: Meeting at 3PM</li>
+                </ul>
+            </div>
+
+            <!-- Profile Menu -->
+            <a href="javascript:void(0)" class="profile" id="profileIcon">
+                <img src="https://cdn-icons-png.freepik.com/512/4159/4159471.png" alt="Profile">
+            </a>
+            <div class="profile-menu" id="profileMenu">
+                <ul>
+                    <li><a routerLink="/profil">Mon Profil</a></li>
+                    <li><a href="#">Paramètres</a></li>
+                    <li><a href="#">Déconnexion</a></li>
+                </ul>
+            </div>
+        </nav>
+        <!-- NAVBAR -->
+
+        <!-- MAIN -->
+        <main>
+            <div class="table-data">
+                <div class="order">
+                    <div class="container">
+                        <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
+                            <h1>Modifier Compagnie</h1>
+
+                            <!-- Nom de la compagnie -->
+                            <div class="input-box">
+                                <label for="name">Nom Compagnie:</label>
+                                <div class="input-container">
+                                    <input type="text" id="name" formControlName="name">
+                                    <p *ngIf="companyForm.get('name')?.invalid && companyForm.get('name')?.touched" class="error-message">
+                                        Le nom de la compagnie est requis.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Adresse -->
+                            <div class="input-box">
+                                <label for="address">Adresse:</label>
+                                <div class="input-container">
+                                    <input type="text" id="address" formControlName="address">
+                                    <p *ngIf="companyForm.get('address')?.invalid && companyForm.get('address')?.touched" class="error-message">
+                                        L'adresse est requise.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Téléphone -->
+                            <div class="input-box">
+                                <label for="phone">Téléphone:</label>
+                                <div class="input-container">
+                                    <input type="text" id="phone" formControlName="phone">
+                                    <p *ngIf="companyForm.get('phone')?.invalid && companyForm.get('phone')?.touched" class="error-message">
+                                        Veuillez entrer un numéro de téléphone valide.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Matricule fiscale -->
+                            <div class="input-box">
+                                <label for="taxId">Matricule Fiscale:</label>
+                                <div class="input-container">
+                                    <input type="text" id="taxId" formControlName="taxId">
+                                    <p *ngIf="companyForm.get('taxId')?.invalid && companyForm.get('taxId')?.touched" class="error-message">
+                                        Le matricule fiscale est requis.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="input-box">
+                                <label for="email">E-mail:</label>
+                                <div class="input-container">
+                                    <input type="email" id="email" formControlName="email">
+                                    <p *ngIf="companyForm.get('email')?.invalid && companyForm.get('email')?.touched" class="error-message">
+                                        Veuillez entrer une adresse e-mail valide.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Mot de passe -->
+                            <div class="input-box">
+                                <label for="password">Mot de passe:</label>
+                                <div class="input-container">
+                                    <input type="password" id="password" formControlName="password">
+                                    <p *ngIf="companyForm.get('password')?.invalid && companyForm.get('password')?.touched" class="error-message">
+                                        Le mot de passe doit contenir au moins 6 caractères.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Logo -->
+                            <div class="input-box">
+                                <label for="logo">Logo:</label>
+                                <div class="input-container">
+                                    <input type="file" id="logo" (change)="onFileChange($event, 'logo')" accept="image/*">
+                                </div>
+                            </div>
+
+                            <!-- Signature numérique -->
+                            <div class="input-box">
+                                <label for="signature">Signature :</label>
+                                <div class="input-container">
+                                    <input type="file" id="signature" (change)="onFileChange($event, 'signature')" accept="image/*">
+                                </div>
+                            </div>
+
+                            <!-- Bouton de soumission -->
+							<div class="btn-container">
+								<button class="btn" type="submit" [disabled]="companyForm.invalid">
+									Modifier Compagnie
+								</button>
+							</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- MAIN -->
+    </section>
+    <!-- CONTENT -->
+    <script src="script.js"></script>
+</body>
+</html>

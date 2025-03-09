@@ -153,9 +153,9 @@
 						<img *ngIf="company.signature" [src]="company.signature" alt="Signature" width="100" class="company-signature">
 						<td>
 							<!-- Bouton Modifier -->
-							<button class="no-border-button" (click)="editCompany(company)" style="background: none; border: none;">
-							  <i class='bx bxs-message-square-edit bx-sm' style="color: #007bff;"></i>
-							</button>
+							<button class="no-border-button" [routerLink]="['/edit-company', company._id]" style="background: none; border: none;">
+								<i class='bx bxs-message-square-edit bx-sm' style="color: #007bff;"></i>
+							  </button>
 						  
 							<!-- Bouton Supprimer -->
 							<button class="no-border-button"  (click)="deleteCompany(company._id)" style="background: none; border: none;">

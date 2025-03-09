@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
+import { Company } from '../models/company.model'; // Importer l'interface Company
+
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +73,29 @@ export class CompanyService {
   
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.delete(`${this.apiUrl}/${companyId}`, { headers });
+  }
+
+  getCompanyById(id: string): Observable<Company> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Aucun token trouvé !');
+      return new Observable();
+    }
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<Company>(`${this.apiUrl}/${id}`, { headers });
+  }
+
+
+  updateCompany(id: string, company: Partial<Company> | FormData): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Aucun token trouvé !');
+      return new Observable();
+    }
+    
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
+    return this.http.put(`${this.apiUrl}/${id}`, company, { headers });
   }
   
 

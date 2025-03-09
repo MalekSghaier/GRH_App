@@ -68,8 +68,9 @@
     }
   
     @Get(':id')
-    async findOne(@Param('id') id: string) {
-      return this.companiesService.findOne(id);
+    async findOne(@Param('id') id: string): Promise<Company> {
+      const company = await this.companiesService.findOne(id);
+      return company; // Le champ _id est automatiquement inclus
     }
   
     @Put(':id')

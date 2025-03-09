@@ -9,6 +9,7 @@ import { InternDashboardComponent } from './components/intern-dashboard/intern-d
 import { CompagniesComponent } from './compagnies/compagnies.component';
 import { ProfilComponent } from './profil/profil.component';
 import { AddCompanyComponent } from './add-company/add-company.component';
+import { EditCompanyComponent } from './edit-company/edit-company.component';
 
 import { AuthGuard } from './guards/auth.guards';
 
@@ -56,6 +57,11 @@ export const routes: Routes = [
     {
         path :'add-company',
         component : AddCompanyComponent
+    },
+    { 
+        path: 'edit-company/:id', 
+        component: EditCompanyComponent 
     }
+
 
 ];

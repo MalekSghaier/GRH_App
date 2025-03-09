@@ -39,6 +39,9 @@ export class Company {
 
   @Prop({ required: true, unique: true })
   email: string;
+
+  // Ajouter le champ _id explicitement (optionnel, car Mongoose l'ajoute automatiquement)
+  _id?: string;
 }
 
 // Créer le schéma
