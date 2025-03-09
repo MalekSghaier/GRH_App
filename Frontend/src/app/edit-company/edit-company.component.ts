@@ -19,6 +19,7 @@ export class EditCompanyComponent implements AfterViewInit, OnInit {
   currentRoute: string = '';
   errorMessage: string = '';
   successMessage: string = '';
+  currentCompany: any; // Variable pour stocker les données actuelles de la compagnie
 
   constructor(
     private router: Router,
@@ -33,9 +34,9 @@ export class EditCompanyComponent implements AfterViewInit, OnInit {
       phone: ['', [Validators.required, Validators.pattern('[0-9]{8,10}')]],
       taxId: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      logo: [null],
-      signature: [null],
+      password: [''], // Le champ password n'est pas requis
+      logo: [null], // Le champ logo n'est pas requis
+      signature: [null], // Le champ signature n'est pas requis
     });
   }
 
@@ -52,6 +53,7 @@ export class EditCompanyComponent implements AfterViewInit, OnInit {
     if (id) {
       this.companyService.getCompanyById(id).subscribe({
         next: (company) => {
+          this.currentCompany = company; // Sauvegarde des données actuelles de la compagnie
           // Pré-remplir le formulaire avec les données de la compagnie
           this.companyForm.patchValue({
             name: company.name,
@@ -82,22 +84,36 @@ export class EditCompanyComponent implements AfterViewInit, OnInit {
       this.toastr.error('❌ Erreur lors de la modification de la compagnie', 'Veuillez vérifier vos champs de saisie');
       return;
     }
-
+  
+    // Créer un objet FormData
     const formData = new FormData();
+  
+    // Ajouter les champs du formulaire
     formData.append('name', this.companyForm.get('name')?.value);
     formData.append('address', this.companyForm.get('address')?.value);
     formData.append('phone', this.companyForm.get('phone')?.value);
     formData.append('taxId', this.companyForm.get('taxId')?.value);
     formData.append('email', this.companyForm.get('email')?.value);
-    formData.append('password', this.companyForm.get('password')?.value);
-    if (this.companyForm.get('logo')?.value) {
-      formData.append('logo', this.companyForm.get('logo')?.value);
+  
+    // Gérer le mot de passe (si non modifié, conserver l'ancienne valeur)
+    const password = this.companyForm.get('password')?.value;
+    if (password) {
+      formData.append('password', password);
     }
-    if (this.companyForm.get('signature')?.value) {
-      formData.append('signature', this.companyForm.get('signature')?.value);
+  
+    // Gérer le logo (si un fichier est sélectionné)
+    const logo = this.companyForm.get('logo')?.value;
+    if (logo instanceof File) {
+      formData.append('logo', logo, logo.name); // Ajouter le fichier avec son nom
     }
-
-    // Récupérer l'ID de la compagnie à partir de l'URL
+  
+    // Gérer la signature (si un fichier est sélectionné)
+    const signature = this.companyForm.get('signature')?.value;
+    if (signature instanceof File) {
+      formData.append('signature', signature, signature.name); // Ajouter le fichier avec son nom
+    }
+  
+    // Envoyer les données au backend
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.companyService.updateCompany(id, formData).subscribe({

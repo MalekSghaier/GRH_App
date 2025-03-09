@@ -86,15 +86,14 @@ export class CompanyService {
   }
 
 
-  updateCompany(id: string, company: Partial<Company> | FormData): Observable<any> {
+  updateCompany(id: string, company: FormData): Observable<any> {
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('Aucun token trouvé !');
       return new Observable();
     }
-    
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
   
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.put(`${this.apiUrl}/${id}`, company, { headers });
   }
   
