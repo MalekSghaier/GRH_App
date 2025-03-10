@@ -23,6 +23,8 @@ export class CompagniesComponent implements AfterViewInit,OnInit {
   totalItems: number = 0; // Nombre total d'éléments
   searchQuery: string = '';
   searchSubject = new Subject<string>();
+  isEmpty: boolean = false; // Nouvelle variable pour gérer l'état vide
+
 
   constructor(
     private router: Router,
@@ -53,9 +55,13 @@ export class CompagniesComponent implements AfterViewInit,OnInit {
       next: (response) => {
         this.companies = response.data; // Mettre à jour la liste des compagnies
         this.totalItems = response.total; // Mettre à jour le nombre total d'éléments
+        this.isEmpty = this.companies.length === 0; // Vérifier si le tableau est vide
+
       },
       error: (err) => {
         console.error('Erreur lors du chargement des compagnies:', err);
+        this.isEmpty = true; // En cas d'erreur, considérer le tableau comme vide
+
       },
     });
   }
@@ -70,9 +76,13 @@ export class CompagniesComponent implements AfterViewInit,OnInit {
       this.companyService.searchCompanies(query).subscribe({
         next: (companies) => {
           this.companies = companies;
+          this.isEmpty = this.companies.length === 0; // Vérifier si le tableau est vide
+
         },
         error: (err) => {
           console.error('Erreur lors de la recherche des compagnies:', err);
+          this.isEmpty = true; // En cas d'erreur, considérer le tableau comme vide
+
         },
       });
     } else {

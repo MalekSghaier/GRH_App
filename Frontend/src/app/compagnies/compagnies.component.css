@@ -649,6 +649,12 @@ body.dark #content nav .profile-menu li a {
 	background: var(--grey);
 }
   
+.empty-message {
+	text-align: center;
+	margin-top: 20px;
+	font-size: 18px;
+	color: #666;
+  }
 
 /* Styles pour la pagination */
 .pagination {
