@@ -1,14 +1,10 @@
   import {Controller,Get,Post,Put,Delete,Body,Param,UseGuards,UseInterceptors,UploadedFiles,  BadRequestException,Query ,
-    UploadedFile,
-    ParseFilePipe,
-    MaxFileSizeValidator,
-    FileTypeValidator,} from '@nestjs/common';
+} from '@nestjs/common';
   import { CompaniesService } from './companies.service';
   import { Company } from '../schemas/company.schema';
   import { AuthGuard } from '@nestjs/passport';
   import {SuperAdminAdminRolesGuard} from '../auth/SuperAdmin_Admin_roles.guard';
   import { FileFieldsInterceptor } from '@nestjs/platform-express';
-  import { FileInterceptor } from '@nestjs/platform-express';
   import { diskStorage } from 'multer';
   import { extname } from 'path';
   @Controller('companies')
