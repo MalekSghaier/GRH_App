@@ -1,19 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap');
-
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 }
-
 a {
 	text-decoration: none;
 }
-
 li {
 	list-style: none;
 }
-
 :root {
 	--poppins: 'Poppins', sans-serif;
 	--lato: 'Lato', sans-serif;
@@ -30,26 +26,18 @@ li {
 	--orange: #FD7238;
 	--light-orange: #FFE0D3;
 }
-
 html {
 	overflow-x: hidden;
 }
-
 body.dark {
 	--light: #0C0C1E;
 	--grey: #060714;
 	--dark: #FBFBFB;
 }
-
 body {
 	background: var(--grey);
 	overflow-x: hidden;
 }
-
-
-
-
-
 /* SIDEBAR */
 #sidebar {
 	position: fixed;
@@ -157,7 +145,6 @@ body {
 	display: flex;
 	justify-content: center;
 }
-
 #sidebar .side-menu.bottom li:nth-last-of-type(-n+2) { /* Son iki <li>'yi seç */
   position: absolute; /* Ebeveynine göre konumlandır */
   bottom: 0; /* En alt */
@@ -165,17 +152,11 @@ body {
   right: 0;
   text-align: center;
 }
-
 /* Birbirinin üzerine binmesini engellemek için */
 #sidebar .side-menu.bottom li:nth-last-of-type(2) {
   bottom: 40px; /* İkinci son öğeyi yukarı kaydır */
 }
 /* SIDEBAR */
-
-
-
-
-
 /* CONTENT */
 #content {
 	position: relative;
@@ -187,10 +168,6 @@ body {
 	width: calc(100% - 60px);
 	left: 60px;
 }
-
-
-
-
 /* NAVBAR */
 #content nav {
 	height: 56px;
@@ -250,7 +227,6 @@ body {
 	width: 100%;
 	color: var(--dark);
 }
-
 /* Style pour centrer et espacer les boutons */
 .actions-column {
 	display: flex;
@@ -283,9 +259,7 @@ body {
   /* Changement de couleur au survol */
   .no-border-button i:hover {
 	color: #0056b3;
-  }
-
-  
+  } 
 #content nav form .form-input button {
 	width: 36px;
 	height: 100%;
@@ -335,7 +309,6 @@ body {
     z-index: 9999;
     font-family: var(--lato);
 }
-
 #content nav .notification-menu ul {
     list-style: none;
     padding: 10px;
@@ -382,18 +355,15 @@ body.dark #content nav .notification-menu li a{
     z-index: 9999;
     font-family: var(--lato);
 }
-
 #content nav .profile-menu ul {
     list-style: none;
     padding: 10px;
     margin: 0;
 }
-
 #content nav .profile-menu li {
     padding: 10px;
     border-bottom: 1px solid var(--grey);
 }
-
 #content nav .profile-menu li:hover {
     background-color: var(--light-blue);
 	color: var(--dark);
@@ -440,8 +410,6 @@ body.dark #content nav .profile-menu li a {
 #content nav #switch-mode:checked + .switch-mode::before {
 	left: calc(100% - (25px - 4px) - 2px);
 }
-
-
 #content nav .swith-lm {
 	background-color:  var(--grey);
 	border-radius: 50px;
@@ -455,7 +423,6 @@ body.dark #content nav .profile-menu li a {
 	width: 45px;
 	transform: scale(1.5);
 }
-
 #content nav .swith-lm .ball {
 	background-color: var(--blue);
 	border-radius: 50%;
@@ -467,7 +434,6 @@ body.dark #content nav .profile-menu li a {
 	transform: translateX(0px);
 	transition: transform 0.2s linear;
 }
-
 #content nav .checkbox:checked + .swith-lm .ball {
 	transform: translateX(22px);
 }
@@ -479,15 +445,7 @@ body.dark #content nav .profile-menu li a {
 	color: var(--orange);
 	animation: shakeOn .7s;
 }
-
-
-
 /* NAVBAR */
-
-
-
-
-
 /* MAIN */
 #content main {
 	width: 100%;
@@ -537,10 +495,6 @@ body.dark #content nav .profile-menu li a {
 	grid-gap: 10px;
 	font-weight: 500;
 }
-
-
-
-
 #content main .box-info {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -584,11 +538,6 @@ body.dark #content nav .profile-menu li a {
 #content main .box-info li .text p {
 	color: var(--dark);	
 }
-
-
-
-
-
 #content main .table-data {
 	display: flex;
 	flex-wrap: wrap;
