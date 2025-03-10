@@ -54,6 +54,8 @@ export class CompanyService {
               ...company,
               logo: company.logo ? `http://localhost:3000/${company.logo}` : null,
               signature: company.signature ? `http://localhost:3000/${company.signature}` : null,
+
+
             })),
             total: response.total,
           };
@@ -90,5 +92,25 @@ export class CompanyService {
     }
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.put(`${this.apiUrl}/${id}`, company, { headers });
+  }
+
+  searchCompanies(query: string): Observable<Company[]> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Aucun token trouvé !');
+      return new Observable();
+    }
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<Company[]>(`${this.apiUrl}/search`, { headers, params: { query } }).pipe(
+      map((companies) => {
+        // Transformer les URLs des images (logo et signature)
+        return companies.map((company) => ({
+          ...company,
+          logo: company.logo ? `http://localhost:3000/${company.logo}` : undefined, // Utiliser `undefined` au lieu de `null`
+          signature: company.signature ? `http://localhost:3000/${company.signature}` : undefined, // Utiliser `undefined` au lieu de `null`
+        }));
+      })
+    );
   }
 }

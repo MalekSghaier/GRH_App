@@ -27,6 +27,18 @@ export class CompaniesService {
   }
 
 
+  async searchCompanies(query: string): Promise<Company[]> {
+    const regex = new RegExp(query, 'i'); // 'i' pour ignorer la casse
+    return this.companyModel.find({
+      $or: [
+        { name: { $regex: regex } },
+        { email: { $regex: regex } },
+        { taxId: { $regex: regex } },
+      ],
+    }).exec();
+  }
+
+  
   async findByEmail(email: string): Promise<CompanyDocument> {
     const company = await this.companyModel.findOne({ email }).exec();
     if (!company) {

@@ -67,12 +67,19 @@
     ) {
       return this.companiesService.findAll(page, limit);
     }
+
+    @Get('search')
+    async search(@Query('query') query: string): Promise<Company[]> {
+      return this.companiesService.searchCompanies(query);
+    }
   
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<Company> {
       const company = await this.companiesService.findOne(id);
       return company; // Le champ _id est automatiquement inclus
     }
+
+
   
     @Put(':id')
     @UseInterceptors(

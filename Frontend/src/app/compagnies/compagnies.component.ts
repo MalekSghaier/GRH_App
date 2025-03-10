@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule ,NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CompanyService } from '../services/company.service';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+
 
 @Component({
   selector: 'app-compagnies',
@@ -19,6 +21,8 @@ export class CompagniesComponent implements AfterViewInit,OnInit {
   currentPage: number = 1; // Page actuelle
   itemsPerPage: number = 3; // Nombre d'éléments par page
   totalItems: number = 0; // Nombre total d'éléments
+  searchQuery: string = '';
+  searchSubject = new Subject<string>();
 
   constructor(
     private router: Router,
@@ -35,6 +39,13 @@ export class CompagniesComponent implements AfterViewInit,OnInit {
 
   ngOnInit(): void {
     this.loadCompanies();
+
+    this.searchSubject.pipe(
+      debounceTime(300), // Attendre 300ms après la dernière frappe
+      distinctUntilChanged() // Ne pas appeler si la valeur n'a pas changé
+    ).subscribe(query => {
+      this.searchCompanies(query);
+    });
   }
 
   loadCompanies(): void {
@@ -47,6 +58,26 @@ export class CompagniesComponent implements AfterViewInit,OnInit {
         console.error('Erreur lors du chargement des compagnies:', err);
       },
     });
+  }
+
+  onSearchInput(event: Event): void {
+    const query = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(query);
+  }
+
+  searchCompanies(query: string): void {
+    if (query) {
+      this.companyService.searchCompanies(query).subscribe({
+        next: (companies) => {
+          this.companies = companies;
+        },
+        error: (err) => {
+          console.error('Erreur lors de la recherche des compagnies:', err);
+        },
+      });
+    } else {
+      this.loadCompanies(); // Recharger toutes les compagnies si la recherche est vide
+    }
   }
 
   // Changer de page
