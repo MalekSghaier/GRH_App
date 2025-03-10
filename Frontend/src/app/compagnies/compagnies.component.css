@@ -643,26 +643,21 @@ body.dark #content nav .profile-menu li a {
 	padding-left: 6px;
 }
 
-
-
 #content main .table-data .order table tbody tr:hover {
 	background: var(--grey);
 }
-  
 .empty-message {
 	text-align: center;
 	margin-top: 20px;
 	font-size: 18px;
 	color: #666;
   }
-
 /* Styles pour la pagination */
 .pagination {
 	display: flex;
 	justify-content: center;
 	margin-top: 20px;
   }
-  
   .pagination button {
 	margin: 0 5px;
 	padding: 5px 10px;
@@ -675,11 +670,9 @@ body.dark #content nav .profile-menu li a {
 	border-radius: 50%;
 	object-fit: contain;
   }
-  
   .pagination button:hover {
 	background-color: #f0f0f0;
   }
-  
   .pagination button.active {
 	background-color: #007bff;
 	color: #fff;
@@ -692,7 +685,6 @@ body.dark #content nav .profile-menu li a {
 	border-radius: 50%;
 	object-fit: contain;
   }
-  
   /* Style pour la signature (image carrée) */
   .company-signature {
 	width: 100px; /* Ajuste la taille selon tes besoins */
@@ -700,9 +692,6 @@ body.dark #content nav .profile-menu li a {
 	border-radius: 0; /* S'assure que l'image reste carrée */
 	object-fit: contain;
   }
-  
-
-
 #content main .table-data .order table tbody tr:hover {
 	background: var(--grey);
 }
@@ -713,8 +702,6 @@ body.dark #content nav .profile-menu li a {
 	border-radius: 20px;
 	font-weight: 700;
 }
-
-
 #content main .table-data .todo {
 	flex-grow: 1;
 	flex-basis: 300px;
@@ -758,18 +745,15 @@ body.dark #content nav .profile-menu li a {
       border-radius: 5px;
       width: 200px;
  }
-
  #content main .menu a , #content nav .menu a {
     color: white;
     text-decoration: none;
     display: block;
     padding: 8px 16px;
 }
-
 #content main .menu a:hover , #content nav .menu a:hover {
     background-color: #444;
-}
-        
+}      
 #content main .menu-link , #content nav .menu-link {
     margin: 5px;
     padding: 10px 20px;
@@ -782,11 +766,6 @@ body.dark #content nav .profile-menu li a {
 #content main .menu-link:hover, #content nav .menu-link:hover {
     text-decoration: underline;
 }
-
-
-
-
-
 /* Media Query for Smaller Screens */
 @media screen and (max-width: 768px) {
     /* Reduce width of notification and profile menu */
