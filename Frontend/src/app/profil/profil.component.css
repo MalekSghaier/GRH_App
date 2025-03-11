@@ -640,7 +640,7 @@ body.dark #content nav .profile-menu li a {
 .btn-container button:hover {
     background: transparent;
     border: 2px solid #3C91E6;
-    color: #2b2a2a;
+    color: #4c4b4b;
     transform: scale(1.1);
     box-shadow: 0 0 20px #3C91E6;
 }
