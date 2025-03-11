@@ -250,7 +250,20 @@ body {
 	width: 100%;
 	color: var(--dark);
 }
-
+#content nav form .form-input button {
+	width: 36px;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: var(--blue);
+	color: var(--light);
+	font-size: 18px;
+	border: none;
+	outline: none;
+	border-radius: 0 36px 36px 0;
+	cursor: pointer;
+}
 #content nav .notification {
 	font-size: 20px;
 	position: relative;
@@ -539,7 +552,6 @@ body.dark #content nav .profile-menu li a {
 
 .container {
     width: 100%;
-	height: 100%;
     color: #4c4b4b;
     padding: 10px 10px;
     border-radius: 15px;
@@ -601,59 +613,37 @@ body.dark #content nav .profile-menu li a {
     color: var(--dark); /* Couleur du texte */
 }
 
-.btn:hover {
-    background: transparent;
-    border: 2px solid #3C91E6;
-    color: #3f3f3f;
-    transform: scale(1.1);
-    box-shadow: 0 0 20px #3C91E6;
+
+.btn-container {
+    display: flex;
+    justify-content: center; /* Centrer les boutons horizontalement */
+    margin-top: 20px; /* Espacement au-dessus */
+    gap: 10px; /* Espace entre les boutons */
 }
 
 
-
-
-.btn {
-    width: 50%;
+.btn-container button {
+    width: 45%; /* Largeur des boutons */
     height: 40px;
     background: #3C91E6;
-    color: #3d3d3d;
+    color: var(--light);
     border: none;
     outline: none;
     border-radius: 20px;
-    box-shadow: 0 0 20px #3C91E6;
     font-size: 15px;
     font-weight: 600;
     transition: 0.5s;
-    margin-top: 8px;
     cursor: pointer;
 }
 
 
-.btn-container {
-    display: flex;
-    justify-content: center; /* Centre horizontalement */
-    margin-top: 20px; /* Espacement au-dessus */
-	gap : 12px;
+.btn-container button:hover {
+    background: transparent;
+    border: 2px solid #3C91E6;
+    color: #4c4b4b;
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #3C91E6;
 }
-
-
-
-#content nav form .form-input button {
-	width: 36px;
-	height: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background: var(--blue);
-	color: var(--light);
-	font-size: 18px;
-	border: none;
-	outline: none;
-	border-radius: 0 36px 36px 0;
-	cursor: pointer;
-}
-
-
 
 #content main .table-data {
     display: flex;
@@ -684,6 +674,7 @@ body.dark #content nav .profile-menu li a {
 	width: 100%; /* Prend toute la largeur de .table-data */
     max-width: 500px; /* Largeur maximale */
 	height: 330px;
+
 	justify-content: center;
 	align-items: center;
 	flex-grow: 1;

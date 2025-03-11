@@ -20,4 +20,15 @@ export class UserService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get(`${this.apiUrl}/my-info`, { headers });
   }
+
+  updateProfile(profileData: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Aucun token trouvé !');
+      return new Observable();
+    }
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put(`${this.apiUrl}/my-info`, profileData, { headers });
+  }
 }

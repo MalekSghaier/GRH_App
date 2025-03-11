@@ -10,6 +10,7 @@ import { CompagniesComponent } from './compagnies/compagnies.component';
 import { ProfilComponent } from './profil/profil.component';
 import { AddCompanyComponent } from './add-company/add-company.component';
 import { EditCompanyComponent } from './edit-company/edit-company.component';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 import { AuthGuard } from './guards/auth.guards';
 
@@ -61,7 +62,12 @@ export const routes: Routes = [
     { 
         path: 'edit-company/:id', 
         component: EditCompanyComponent 
-    }
+    },
+    { 
+        path: 'edit-profile', 
+        component: EditProfileComponent 
+    },
+
 
 
 ];
