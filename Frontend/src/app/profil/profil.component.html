@@ -89,24 +89,54 @@
 </nav>
 <!-- NAVBAR -->
 		<!-- MAIN -->
-    <main>
-        <div class="head-title">
-            <div class="left">
-                <h1>Paramètres</h1>
-                <ul class="breadcrumb">
-                    <li>
-                        <a href="#">Tableau de bord</a>
-                    </li>
-                    <li><i class='bx bx-chevron-right' ></i></li>
-                    <li>
-                        <a class="active" routerLink="/profil">Paramètres</a>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-
-    </main>
+		<main>
+			<div class="head-title">
+				<div class="left">
+					<h1>Paramètres</h1>
+					<ul class="breadcrumb">
+						<li>
+							<a href="#">Tableau de bord</a>
+						</li>
+						<li><i class='bx bx-chevron-right'></i></li>
+						<li>
+							<a class="active" routerLink="/profil">Paramètres</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		
+			<div class="table-data">
+				<div class="order">
+					<div class="container">
+						<div *ngIf="user">
+							<h2>Profil de {{ user.name }}</h2>
+							<div class="input-box">
+								<label>Nom :</label>
+								<div class="input-container">
+									<p>{{ user.name }}</p>
+								</div>
+							</div>
+							<div class="input-box">
+								<label>Email :</label>
+								<div class="input-container">
+									<p>{{ user.email }}</p>
+								</div>
+							</div>
+							<div class="input-box">
+								<label>Rôle :</label>
+								<div class="input-container">
+									<p>{{ user.role }}</p>
+								</div>
+							</div>
+							<div class="btn-container">
+								<button (click)="navigateToEditProfile()">Modifier données personnelles</button>
+								<button (click)="navigateToChangePassword()">Modifier mot de passe</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->

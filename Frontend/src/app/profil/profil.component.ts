@@ -1,7 +1,8 @@
-import { Component, AfterViewInit,ViewEncapsulation } from '@angular/core';
+import { Component, AfterViewInit,ViewEncapsulation,OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule ,NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { UserService } from '../services/user.service';
 @Component({
   selector: 'app-profil',
   standalone: true,
@@ -14,12 +15,36 @@ import { filter } from 'rxjs/operators';
 export class ProfilComponent implements AfterViewInit {
   currentRoute: string = '';
 
-  constructor(private router: Router) {
+  constructor(private router: Router,
+    private userService: UserService
+  ) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
       this.currentRoute = event.url;
     });
+  }
+
+  user: any;
+
+
+  ngOnInit(): void {
+    this.userService.getMyInfo().subscribe(
+      (data) => {
+        this.user = data;
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des informations utilisateur', error);
+      }
+    );
+  }
+
+  navigateToEditProfile(): void {
+    this.router.navigate(['/edit-profile']);
+  }
+
+  navigateToChangePassword(): void {
+    this.router.navigate(['/change-password']);
   }
 
   ngAfterViewInit(): void {
