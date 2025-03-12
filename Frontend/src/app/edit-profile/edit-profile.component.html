@@ -105,31 +105,34 @@
 				</div>
 			</div>
 		
-            <div class="table-data">
-                <div class="order">
-                    <div class="container">
-                        <h2>Modifier les données personnelles</h2>
-                        <form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
-                            <div class="input-box">
-                                <label>Nom :</label>
-                                <div class="input-container">
-                                    <input type="text" formControlName="name">
-                                </div>
-                            </div>
-                            <div class="input-box">
-                                <label>Email :</label>
-                                <div class="input-container">
-                                    <input type="email" formControlName="email">
-                                </div>
-                            </div>
-                            <div class="btn-container">
-                                <button type="submit" [disabled]="editProfileForm.invalid">Enregistrer</button>
-                                <button type="button" (click)="cancel()">Annuler</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+			<div class="table-data">
+				<div class="order">
+					<div class="container">
+						<h2>Modifier les données personnelles</h2>
+						<!-- Message de succès -->
+						<div *ngIf="successMessage" class="success-message">
+							{{ successMessage }}
+						</div>
+						<form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
+							<div class="input-box">
+								<label>Nom :</label>
+								<div class="input-container">
+									<input type="text" formControlName="name">
+								</div>
+							</div>
+							<div class="input-box">
+								<label>Email :</label>
+								<div class="input-container">
+									<input type="email" formControlName="email">
+								</div>
+							</div>
+							<div class="btn-container">
+								<button class="btn" type="submit" [disabled]="editProfileForm.invalid">Enregistrer</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
 		</main>
 		<!-- MAIN -->
 	</section>

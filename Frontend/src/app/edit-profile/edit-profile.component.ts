@@ -18,6 +18,7 @@ import { UserService } from '../services/user.service';
 export class EditProfileComponent implements AfterViewInit, OnInit{
   currentRoute: string = '';
   editProfileForm: FormGroup;
+  successMessage: string | null = null; // Variable pour le message de succès
 
 
   constructor(
@@ -61,7 +62,10 @@ export class EditProfileComponent implements AfterViewInit, OnInit{
     if (this.editProfileForm.valid) {
       this.userService.updateProfile(this.editProfileForm.value).subscribe(
         (data) => {
-          this.router.navigate(['/profile']);
+          this.successMessage = 'Profil mis à jour avec succès !'; 
+          setTimeout(() => {
+            this.router.navigate(['/profil']); 
+          }, 700); 
         },
         (error) => {
           console.error('Erreur lors de la mise à jour du profil', error);
