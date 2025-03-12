@@ -586,14 +586,14 @@ body.dark #content nav .profile-menu li a {
     outline: none;
     border-radius: 5px;
     color: #4c4b4b;
-    border: 2px solid #4c4b4b;
+    border: 2px solid #9b9a9a;
     font-size: 16px;
     padding: 10px;
 }
 
 .input-box label {
     width: 35%; /* Largeur du label */
-    color: #4c4b4b;
+    color: #626161;
     font-weight: 500;
 }
 
@@ -621,11 +621,42 @@ body.dark #content nav .profile-menu li a {
     transform: scale(1.1);
     box-shadow: 0 0 20px #3C91E6;
 }
+
+.btn-container button {
+	padding: 12px 24px; /* Padding horizontal plus large */
+	border: none;
+	border-radius: 10px;
+	font-size: 16px;
+	font-weight: 500;
+	font-family: var(--lato);
+	cursor: pointer;
+	transition: background-color 0.3s ease, transform 0.2s ease;
+	width: auto; /* Largeur automatique en fonction du contenu */
+	background: var(--blue); /* Couleur de fond bleue */
+	color: var(--light); /* Texte blanc */
+}
+
+.btn-container button:hover {
+	background: #2a7acf; /* Bleu plus foncé au survol */
+	transform: translateY(-2px);
+  }
+
+  
+.btn-container button[type="button"] {
+	background: var(--blue);
+	color: var(--light);
+
+  }
+  
+  .btn-container button[type="button"]:hover {
+	background: #2a7acf;
+	transform: translateY(-2px);
+  }
 .btn {
     width: 50%;
     height: 40px;
     background: #3C91E6;
-    color: #3d3d3d;
+    color: #676767;
     border: none;
     outline: none;
     border-radius: 20px;
@@ -692,7 +723,7 @@ body.dark #content nav .profile-menu li a {
 #content main .table-data .order {
 	width: 100%; /* Prend toute la largeur de .table-data */
     max-width: 500px; /* Largeur maximale */
-	height: 330px;
+	height: 350px;
 	justify-content: center;
 	align-items: center;
 	flex-grow: 1;

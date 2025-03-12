@@ -4,7 +4,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, mongo, Error as MongooseError } from 'mongoose';
 import { User, UserRole, UserDocument } from '../schemas/user.schema';
 import * as QRCode from 'qrcode';
-import { ObjectId } from 'mongodb'; // Assurez-vous d'importer ObjectId
+import { ObjectId } from 'mongodb'; 
+import * as bcrypt from 'bcrypt';
 
 
 
@@ -129,6 +130,31 @@ export class UsersService {
     if (!updatedUser) {
       throw new NotFoundException(`Utilisateur avec ID ${id} non trouvé`);
     }
+    return updatedUser;
+  }
+
+  async checkPassword(userId: string, oldPassword: string): Promise<boolean> {
+    const user = await this.userModel.findById(userId).exec();
+    if (!user) {
+      throw new NotFoundException(`Utilisateur avec ID ${userId} non trouvé`);
+    }
+  
+    // Vérifier si l'ancien mot de passe correspond
+    return bcrypt.compare(oldPassword, user.password);
+  }
+
+
+  async changePassword(userId: string, newPassword: string): Promise<UserDocument> {
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      userId,
+      { password: newPassword },
+      { new: true }
+    ).exec();
+    
+    if (!updatedUser) {
+      throw new NotFoundException(`Utilisateur avec ID ${userId} non trouvé`);
+    }
+    
     return updatedUser;
   }
 

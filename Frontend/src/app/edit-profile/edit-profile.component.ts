@@ -2,7 +2,6 @@ import { Component, AfterViewInit,ViewEncapsulation,OnInit } from '@angular/core
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule ,NavigationEnd } from '@angular/router';
 import { FormBuilder, FormGroup, Validators,ReactiveFormsModule  } from '@angular/forms';
-
 import { filter } from 'rxjs/operators';
 import { UserService } from '../services/user.service';
 

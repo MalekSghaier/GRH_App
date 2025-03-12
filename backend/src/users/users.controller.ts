@@ -6,6 +6,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard'; 
 import { Request } from '@nestjs/common';
 import { Request as ExpressRequest } from 'express';
+import * as bcrypt from 'bcrypt';
 
 
 
@@ -44,6 +45,41 @@ export class UsersController {
       throw new NotFoundException("Utilisateur non trouvé");
     }
     return this.usersService.updateProfile(userId, userData); 
+  }
+
+  @Post('check-password')
+  @UseGuards(AuthGuard('jwt'))
+  async checkPassword(@Request() req: ExpressRequest, @Body('oldPassword') oldPassword: string): Promise<boolean> {
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new NotFoundException("Utilisateur non trouvé");
+    }
+  
+    const user = await this.usersService.findById(userId);
+    if (!user) {
+      throw new NotFoundException("Utilisateur non trouvé");
+    }
+  
+    // Vérifier si l'ancien mot de passe correspond
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    return isMatch;
+  }
+
+
+  @Put('change-password')
+  @UseGuards(AuthGuard('jwt'))
+  async changePassword(@Request() req: ExpressRequest, @Body('newPassword') newPassword: string): Promise<UserDocument> {
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new NotFoundException("Utilisateur non trouvé");
+    }
+  
+    // Hacher le nouveau mot de passe
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+  
+    // Mettre à jour le mot de passe
+    const updatedUser = await this.usersService.changePassword(userId, hashedPassword);
+    return updatedUser;
   }
 
 
