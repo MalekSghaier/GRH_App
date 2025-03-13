@@ -4,6 +4,7 @@ import { Router, RouterModule ,NavigationEnd } from '@angular/router';
 import { FormBuilder, FormGroup, Validators,ReactiveFormsModule  } from '@angular/forms';
 import { filter } from 'rxjs/operators';
 import { UserService } from '../services/user.service';
+import { ToastrService } from 'ngx-toastr'; 
 @Component({
   selector: 'app-change-password',
   imports: [CommonModule, RouterModule,ReactiveFormsModule],
@@ -18,18 +19,18 @@ export class ChangePasswordComponent implements AfterViewInit, OnInit{
   changePasswordForm: FormGroup;
   showNewPasswordFields: boolean = false;
 
-
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService // Inject ToastrService
   ) {
     this.changePasswordForm = this.fb.group({
       oldPassword: ['', Validators.required],
       newPassword: [''],
       confirmNewPassword: ['']
     });
-  
+
     // Gestion de la navigation
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -38,60 +39,58 @@ export class ChangePasswordComponent implements AfterViewInit, OnInit{
     });
   }
 
-
   ngOnInit(): void {}
 
-    // Vérifier l'ancien mot de passe
-    checkOldPassword(): void {
-      const oldPassword = this.changePasswordForm.get('oldPassword')?.value;
+  // Vérifier l'ancien mot de passe
+  checkOldPassword(): void {
+    const oldPassword = this.changePasswordForm.get('oldPassword')?.value;
 
-      this.userService.checkPassword(oldPassword).subscribe(
-        (isValid) => {
-          if (isValid) {
-            this.showNewPasswordFields = true; // Afficher les champs du nouveau mot de passe
-            this.changePasswordForm.get('newPassword')?.setValidators([Validators.required, Validators.minLength(6)]);
-            this.changePasswordForm.get('confirmNewPassword')?.setValidators([Validators.required]);
-            this.changePasswordForm.get('newPassword')?.updateValueAndValidity();
-            this.changePasswordForm.get('confirmNewPassword')?.updateValueAndValidity();
-          } else {
-            alert('Ancien mot de passe incorrect');
-          }
-        },
-        (error) => {
-          console.error('Erreur lors de la vérification du mot de passe', error);
-          alert('Une erreur est survenue lors de la vérification du mot de passe');
-        }
-      );
-    }
-
-    onSubmit(): void {
-      if (this.changePasswordForm.valid) {
-        const newPassword = this.changePasswordForm.get('newPassword')?.value;
-        const confirmNewPassword = this.changePasswordForm.get('confirmNewPassword')?.value;
-  
-        if (newPassword === confirmNewPassword) {
-          this.userService.changePassword(newPassword).subscribe(
-            (data) => {
-              alert('Mot de passe mis à jour avec succès !');
-              this.router.navigate(['/profil']);
-            },
-            (error) => {
-              console.error('Erreur lors de la mise à jour du mot de passe', error);
-              alert('Une erreur est survenue lors de la mise à jour du mot de passe');
-            }
-          );
+    this.userService.checkPassword(oldPassword).subscribe(
+      (isValid) => {
+        if (isValid) {
+          this.showNewPasswordFields = true; // Afficher les champs du nouveau mot de passe
+          this.changePasswordForm.get('newPassword')?.setValidators([Validators.required, Validators.minLength(6)]);
+          this.changePasswordForm.get('confirmNewPassword')?.setValidators([Validators.required]);
+          this.changePasswordForm.get('newPassword')?.updateValueAndValidity();
+          this.changePasswordForm.get('confirmNewPassword')?.updateValueAndValidity();
         } else {
-          alert('Les nouveaux mots de passe ne correspondent pas');
+          this.toastr.error('Ancien mot de passe incorrect', 'Erreur'); // Toast pour erreur
         }
-      } else {
-        alert('Veuillez remplir tous les champs correctement');
+      },
+      (error) => {
+        console.error('Erreur lors de la vérification du mot de passe', error);
+        this.toastr.error('Une erreur est survenue lors de la vérification du mot de passe', 'Erreur'); // Toast pour erreur
       }
-    }
-  
+    );
+  }
 
-    // Annuler et revenir à la page de profil
+  onSubmit(): void {
+    if (this.changePasswordForm.valid) {
+      const newPassword = this.changePasswordForm.get('newPassword')?.value;
+      const confirmNewPassword = this.changePasswordForm.get('confirmNewPassword')?.value;
+
+      if (newPassword === confirmNewPassword) {
+        this.userService.changePassword(newPassword).subscribe(
+          (data) => {
+            this.toastr.success('Mot de passe mis à jour avec succès !', 'Succès'); // Toast pour succès
+            this.router.navigate(['/profil']);
+          },
+          (error) => {
+            console.error('Erreur lors de la mise à jour du mot de passe', error);
+            this.toastr.error('Une erreur est survenue lors de la mise à jour du mot de passe', 'Erreur'); // Toast pour erreur
+          }
+        );
+      } else {
+        this.toastr.warning('Les nouveaux mots de passe ne correspondent pas', 'Attention'); // Toast pour avertissement
+      }
+    } else {
+      this.toastr.warning('Veuillez remplir tous les champs correctement', 'Attention'); // Toast pour avertissement
+    }
+  }
+
+  // Annuler et revenir à la page de profil
   cancel(): void {
-      this.router.navigate(['/profile']);
+    this.router.navigate(['/profil']);
   }
 
   ngAfterViewInit(): void {
