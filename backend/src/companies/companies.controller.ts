@@ -5,12 +5,16 @@
   import { AuthGuard } from '@nestjs/passport';
   import {SuperAdminAdminRolesGuard} from '../auth/SuperAdmin_Admin_roles.guard';
   import { FileFieldsInterceptor } from '@nestjs/platform-express';
+  import { UsersService } from 'src/users/users.service';
   import { diskStorage } from 'multer';
   import { extname } from 'path';
   @Controller('companies')
   @UseGuards(AuthGuard('jwt'),SuperAdminAdminRolesGuard) 
   export class CompaniesController {
-    constructor(private readonly companiesService: CompaniesService) {}
+    constructor(private readonly companiesService: CompaniesService,
+      private readonly usersService: UsersService, // Injecter le service UsersService
+
+    ) {}
   
     @Post()
     @UseInterceptors(
@@ -71,6 +75,11 @@
     @Get('search')
     async search(@Query('query') query: string): Promise<Company[]> {
       return this.companiesService.searchCompanies(query);
+    }
+
+    @Get('statistics')
+    async getStatistics() {
+      return this.companiesService.getStatistics();
     }
   
     @Get(':id')

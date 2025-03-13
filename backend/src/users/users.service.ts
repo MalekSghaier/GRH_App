@@ -39,6 +39,9 @@ export class UsersService {
     }
   }
 
+  async countUsersByRole(role: string): Promise<number> {
+    return this.userModel.countDocuments({ role }).exec();
+  }
   
   async findByUsername(username: string) {
     return this.userModel.findOne({ username }).exec();

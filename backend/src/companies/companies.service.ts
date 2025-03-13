@@ -2,14 +2,32 @@ import { Injectable, NotFoundException, ConflictException } from '@nestjs/common
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Company, CompanyDocument } from '../schemas/company.schema';
+import { UsersService } from 'src/users/users.service';
 import { MongoServerError } from 'mongodb'; // Importer MongoServerError
 
 
 @Injectable()
 export class CompaniesService {
-  constructor(@InjectModel(Company.name) private companyModel: Model<CompanyDocument>) {}
+  constructor(@InjectModel(Company.name) private companyModel: Model<CompanyDocument>,
+  private readonly usersService: UsersService, ) {}
 
 
+  async getStatistics() {
+    // Compter le nombre de compagnies
+    const totalCompanies = await this.companyModel.countDocuments().exec();
+
+    // Compter le nombre d'employés (role = EMPLOYEE)
+    const totalEmployees = await this.usersService.countUsersByRole('employé');
+
+    // Compter le nombre de stagiaires (role = INTERN)
+    const totalInterns = await this.usersService.countUsersByRole('stagiaire');
+
+    return {
+      totalCompanies,
+      totalEmployees,
+      totalInterns,
+    };
+  }
   async create(company: Company): Promise<Company> {
     try {
       const createdCompany = new this.companyModel(company);

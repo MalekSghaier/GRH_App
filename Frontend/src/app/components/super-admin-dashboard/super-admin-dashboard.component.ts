@@ -1,4 +1,6 @@
-import { Component, AfterViewInit ,ViewEncapsulation } from '@angular/core';
+import { Component, AfterViewInit ,ViewEncapsulation , OnInit } from '@angular/core';
+import { StatisticsService } from '../../services/statistics.service';
+
 
 @Component({
   selector: 'app-super-admin-dashboard',
@@ -6,7 +8,30 @@ import { Component, AfterViewInit ,ViewEncapsulation } from '@angular/core';
   styleUrl:'./super-admin-dashboard.component.css',
   encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
 })
-export class SuperAdminDashboardComponent implements AfterViewInit {
+export class SuperAdminDashboardComponent implements AfterViewInit , OnInit {
+
+  totalCompanies: number = 0;
+  totalEmployees: number = 0;
+  totalInterns: number = 0;
+  constructor(private statisticsService: StatisticsService) {}
+
+
+  ngOnInit(): void {
+    this.loadStatistics();
+  }
+
+  private loadStatistics(): void {
+    this.statisticsService.getStatistics().subscribe(
+      (data) => {
+        this.totalCompanies = data.totalCompanies;
+        this.totalEmployees = data.totalEmployees;
+        this.totalInterns = data.totalInterns;
+      },
+      (error) => {
+        console.error('Erreur lors du chargement des statistiques', error);
+      },
+    );
+  }
 
   ngAfterViewInit(): void {
     this.initializeSidebar();
