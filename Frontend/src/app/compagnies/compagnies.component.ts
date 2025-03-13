@@ -4,6 +4,7 @@ import { Router, RouterModule ,NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CompanyService } from '../services/company.service';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 
 @Component({
@@ -28,7 +29,8 @@ export class CompagniesComponent implements AfterViewInit,OnInit {
 
   constructor(
     private router: Router,
-    private companyService: CompanyService
+    private companyService: CompanyService,
+    private authService: AuthService
   ) 
   
   {
@@ -48,6 +50,10 @@ export class CompagniesComponent implements AfterViewInit,OnInit {
     ).subscribe(query => {
       this.searchCompanies(query);
     });
+  }
+
+  logout(): void {
+    this.authService.logout(); // Appelez la méthode logout
   }
 
   loadCompanies(): void {

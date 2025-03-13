@@ -4,6 +4,7 @@ import { Router, RouterModule ,NavigationEnd } from '@angular/router';
 import { FormBuilder, FormGroup, Validators,ReactiveFormsModule  } from '@angular/forms';
 import { filter } from 'rxjs/operators';
 import { UserService } from '../services/user.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -24,6 +25,7 @@ export class EditProfileComponent implements AfterViewInit, OnInit{
     private router: Router,
     private fb: FormBuilder,
     private userService: UserService,
+    private authService: AuthService
   ) {
     // Initialisation du formulaire réactif
     this.editProfileForm = this.fb.group({
@@ -57,6 +59,9 @@ export class EditProfileComponent implements AfterViewInit, OnInit{
     );
   }
 
+  logout(): void {
+    this.authService.logout(); // Appelez la méthode logout
+  }
   onSubmit(): void {
     if (this.editProfileForm.valid) {
       this.userService.updateProfile(this.editProfileForm.value).subscribe(

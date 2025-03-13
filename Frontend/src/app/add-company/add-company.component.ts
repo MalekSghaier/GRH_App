@@ -5,6 +5,8 @@ import { filter } from 'rxjs/operators';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from '../services/company.service';
+import { AuthService } from '../services/auth.service'; // Importez AuthService
+
 
 @Component({
   selector: 'app-compagnies',
@@ -24,7 +26,8 @@ export class AddCompanyComponent implements AfterViewInit, OnInit {
     private router: Router,
     private companyService: CompanyService,
     private fb: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private authService: AuthService
   ) {
     this.companyForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -45,6 +48,9 @@ export class AddCompanyComponent implements AfterViewInit, OnInit {
       .subscribe((event: NavigationEnd) => {
         this.currentRoute = event.url; // Mettre à jour currentRoute avec l'URL actuelle
       });
+  }
+  logout(): void {
+    this.authService.logout(); // Appelez la méthode logout
   }
 
   onFileChange(event: any, field: string) {

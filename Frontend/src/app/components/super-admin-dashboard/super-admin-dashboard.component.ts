@@ -1,5 +1,6 @@
 import { Component, AfterViewInit ,ViewEncapsulation , OnInit } from '@angular/core';
 import { StatisticsService } from '../../services/statistics.service';
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({
@@ -13,11 +14,14 @@ export class SuperAdminDashboardComponent implements AfterViewInit , OnInit {
   totalCompanies: number = 0;
   totalEmployees: number = 0;
   totalInterns: number = 0;
-  constructor(private statisticsService: StatisticsService) {}
+  constructor(private statisticsService: StatisticsService,private authService: AuthService) {}
 
 
   ngOnInit(): void {
     this.loadStatistics();
+  }
+  logout(): void {
+    this.authService.logout(); // Appelez la méthode logout
   }
 
   private loadStatistics(): void {

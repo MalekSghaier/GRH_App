@@ -5,6 +5,7 @@ import { filter } from 'rxjs/operators';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CompanyService } from '../services/company.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-edit-company',
@@ -26,7 +27,8 @@ export class EditCompanyComponent implements AfterViewInit, OnInit {
     private companyService: CompanyService,
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService
   ) {
     this.companyForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -71,6 +73,10 @@ export class EditCompanyComponent implements AfterViewInit, OnInit {
     }
   }
 
+  logout(): void {
+    this.authService.logout(); // Appelez la méthode logout
+  }
+  
   onFileChange(event: any, field: string) {
     const file = event.target.files[0];
     if (file) {

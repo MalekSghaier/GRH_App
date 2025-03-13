@@ -43,7 +43,7 @@
 				</a>
 			</li>
 			<li [class.active]="currentRoute === '#'">
-				<a routerLink="#" class="logout">
+				<a (click)="logout()" class="logout">
 					<i class='bx bx-power-off bx-sm bx-burst-hover' ></i>
 					<span class="text">Déconnexion</span>
 				</a>

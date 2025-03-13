@@ -5,6 +5,8 @@ import { FormBuilder, FormGroup, Validators,ReactiveFormsModule  } from '@angula
 import { filter } from 'rxjs/operators';
 import { UserService } from '../services/user.service';
 import { ToastrService } from 'ngx-toastr'; 
+import { AuthService } from '../services/auth.service'; // Importez AuthService
+
 @Component({
   selector: 'app-change-password',
   imports: [CommonModule, RouterModule,ReactiveFormsModule],
@@ -23,7 +25,8 @@ export class ChangePasswordComponent implements AfterViewInit, OnInit{
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
-    private toastr: ToastrService // Inject ToastrService
+    private toastr: ToastrService, // Inject ToastrService
+    private authService: AuthService
   ) {
     this.changePasswordForm = this.fb.group({
       oldPassword: ['', Validators.required],
@@ -40,6 +43,10 @@ export class ChangePasswordComponent implements AfterViewInit, OnInit{
   }
 
   ngOnInit(): void {}
+
+  logout(): void {
+    this.authService.logout(); // Appelez la méthode logout
+  }
 
   // Vérifier l'ancien mot de passe
   checkOldPassword(): void {

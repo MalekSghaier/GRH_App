@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule ,NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { UserService } from '../services/user.service';
+import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-profil',
   standalone: true,
@@ -16,7 +17,8 @@ export class ProfilComponent implements AfterViewInit {
   currentRoute: string = '';
 
   constructor(private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthService
   ) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -37,6 +39,9 @@ export class ProfilComponent implements AfterViewInit {
         console.error('Erreur lors de la récupération des informations utilisateur', error);
       }
     );
+  }
+  logout(): void {
+    this.authService.logout(); // Appelez la méthode logout
   }
 
   navigateToEditProfile(): void {
