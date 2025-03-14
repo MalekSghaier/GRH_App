@@ -1,23 +1,31 @@
-import { Component, AfterViewInit ,ViewEncapsulation } from '@angular/core';
-import { SharedNavbarComponent } from '../../shared-navbar/shared-navbar.component';
-import { SharedSidebarComponent } from '../../shared-sidebar/shared-sidebar.component';
+import { Component, AfterViewInit ,ViewEncapsulation ,  } from '@angular/core';
+import { AuthService } from '../services/auth.service';
+
 
 @Component({
-  selector: 'app-admin-dashboard',
-  standalone: true,
-  imports: [SharedNavbarComponent,SharedSidebarComponent],
-  templateUrl: './admin-dashboard.component.html',
-  styleUrl: './admin-dashboard.component.css',
+  selector: 'app-shared-navbar',
+  imports: [],
+  templateUrl: './shared-navbar.component.html',
+  styleUrl: './shared-navbar.component.css',
   encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
-
+  
 })
-export class AdminDashboardComponent implements AfterViewInit {
+export class SharedNavbarComponent implements AfterViewInit {
+
+  constructor(private authService: AuthService) {}
+  
+  logout(): void {
+    this.authService.logout(); // Appelez la méthode logout
+  }
+
   ngAfterViewInit(): void {
     this.initializeSidebar();
     this.initializeSearch();
     this.initializeDarkMode();
     this.initializeMenus();
   }
+
+
 
   private initializeSidebar(): void {
     const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
@@ -63,6 +71,7 @@ export class AdminDashboardComponent implements AfterViewInit {
     }
   }
 
+  
   private initializeSearch(): void {
     const searchButton = document.querySelector('#content nav form .form-input button');
     const searchButtonIcon = document.querySelector('#content nav form .form-input button .bx');

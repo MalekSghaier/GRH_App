@@ -1,0 +1,31 @@
+<nav>
+    <i class='bx bx-menu bx-sm' ></i>
+    <a class="nav-link"></a>
+    <form action="#">
+        <div class="form-input">
+        </div>
+    </form>
+    <input type="checkbox" class="checkbox" id="switch-mode" hidden />
+    <label class="swith-lm" for="switch-mode">
+        <i class="bx bxs-moon"></i>
+        <i class="bx bx-sun"></i>
+        <div class="ball"></div>
+    </label>
+
+    <!-- Notification Bell -->
+	<a href="javascript:void(0)" class="notification" id="notificationIcon">
+		<i class='bx bxs-bell bx-tada-hover'></i>
+	</a>
+
+
+    <!-- Profile Menu -->
+	<a href="javascript:void(0)" class="profile" id="profileIcon">
+        <img src="https://cdn-icons-png.freepik.com/512/4159/4159471.png" alt="Profile">
+    </a>
+    <div class="profile-menu" id="profileMenu">
+        <ul>
+            <li><a routerLink="#">Paramètres</a></li>
+			<li><a (click)="logout()">Déconnexion</a></li>
+        </ul>
+    </div>
+</nav>
