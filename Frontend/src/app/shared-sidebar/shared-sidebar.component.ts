@@ -1,36 +1,33 @@
-import { Component, AfterViewInit ,ViewEncapsulation , OnInit } from '@angular/core';
+import { Component, AfterViewInit, ViewEncapsulation, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router'; // Importez RouterModule
 
 @Component({
   selector: 'app-shared-sidebar',
-  imports: [],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule], // Ajoutez RouterModule ici
   templateUrl: './shared-sidebar.component.html',
-  styleUrl: './shared-sidebar.component.css',
-  encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
-
+  styleUrls: ['./shared-sidebar.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
-export class SharedSidebarComponent implements AfterViewInit,OnInit{
+export class SharedSidebarComponent implements AfterViewInit, OnInit {
 
   currentRoute: string = ''; // Déclaration de la propriété currentRoute
 
+  constructor(private authService: AuthService, private router: Router) {}
 
-  constructor(private authService: AuthService,
-    private router: Router,
+  ngOnInit(): void {
+    // S'abonner aux événements de navigation pour mettre à jour currentRoute
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.currentRoute = event.url; // Mettre à jour currentRoute avec l'URL actuelle
+      });
+  }
 
-  ) {}
-
-    ngOnInit(): void {
-      // S'abonner aux événements de navigation pour mettre à jour currentRoute
-      this.router.events
-        .pipe(filter(event => event instanceof NavigationEnd))
-        .subscribe((event: NavigationEnd) => {
-          this.currentRoute = event.url; // Mettre à jour currentRoute avec l'URL actuelle
-        });
-    }
-  
   logout(): void {
     this.authService.logout(); // Appelez la méthode logout
   }
@@ -42,40 +39,37 @@ export class SharedSidebarComponent implements AfterViewInit,OnInit{
     this.initializeMenus();
   }
 
-
-
   private initializeSidebar(): void {
     const menuBar = document.querySelector('#content nav .bx.bx-menu');
     const sidebar = document.getElementById('sidebar');
     const content = document.getElementById('content');
 
     if (menuBar && sidebar && content) {
-        menuBar.addEventListener('click', function () {
-            sidebar.classList.toggle('hide');
-            content.classList.toggle('sidebar-hidden'); // Ajoutez ou supprimez la classe
-        });
+      menuBar.addEventListener('click', function () {
+        sidebar.classList.toggle('hide');
+        content.classList.toggle('sidebar-hidden');
+      });
     }
 
     window.addEventListener('load', this.adjustSidebar);
     window.addEventListener('resize', this.adjustSidebar);
-}
+  }
 
-private adjustSidebar(): void {
+  private adjustSidebar(): void {
     const sidebar = document.getElementById('sidebar');
     const content = document.getElementById('content');
 
     if (sidebar && content) {
-        if (window.innerWidth <= 576) {
-            sidebar.classList.add('hide');
-            content.classList.add('sidebar-hidden'); // Ajoutez la classe
-        } else {
-            sidebar.classList.remove('hide');
-            content.classList.remove('sidebar-hidden'); // Supprimez la classe
-        }
+      if (window.innerWidth <= 576) {
+        sidebar.classList.add('hide');
+        content.classList.add('sidebar-hidden');
+      } else {
+        sidebar.classList.remove('hide');
+        content.classList.remove('sidebar-hidden');
+      }
     }
-}
+  }
 
-  
   private initializeSearch(): void {
     const searchButton = document.querySelector('#content nav form .form-input button');
     const searchButtonIcon = document.querySelector('#content nav form .form-input button .bx');

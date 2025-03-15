@@ -1,47 +1,46 @@
 <section id="sidebar">
     <a class="brand">
-        <i class='bx bxs-smile  bx-lg'></i>
-        <span class="text">Espace Admin</span>
+      <i class='bx bxs-smile bx-lg'></i>
+      <span class="text">Espace Admin</span>
     </a>
     <ul class="side-menu top">
-        <li class="active">
-            <a routerLink="admin-dashboard">
-                <i class='bx bxs-dashboard bx-sm' ></i>
-                <span class="text">Tableau de bord</span>
-            </a>
-        </li>
-        <li [class.active]="currentRoute === '/profil'">
-            <a routerLink="#">
-                <i class='bx bxs-group bx-sm' ></i>
-                <span class="text">Utilisateurs</span>
-            </a>
-        </li>
-        <li [class.active]="currentRoute === '/profil'">
-            <a routerLink="#">
-                <i class='bx bxs-calendar bx-sm'></i>
-                <span class="text">Congés</span>
-            </a>
-        </li>
-
-        <li [class.active]="currentRoute === '/profil'">
-            <a routerLink="#">
-                <i class='bx bxs-file-doc bx-sm' ></i>
-                <span class="text">Documents</span>
-            </a>
-        </li>
+      <li routerLinkActive="active">
+        <a routerLink="/admin-dashboard">
+          <i class='bx bxs-dashboard bx-sm'></i>
+          <span class="text">Tableau de bord</span>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="/add-user">
+          <i class='bx bxs-group bx-sm'></i>
+          <span class="text">Utilisateurs</span>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="/conges">
+          <i class='bx bxs-calendar bx-sm'></i>
+          <span class="text">Congés</span>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="/documents">
+          <i class='bx bxs-file-doc bx-sm'></i>
+          <span class="text">Documents</span>
+        </a>
+      </li>
     </ul>
     <ul class="side-menu bottom">
-        <li [class.active]="currentRoute === '/profil'">
-            <a routerlink="#">
-                <i class='bx bxs-cog bx-sm bx-spin-hover' ></i>
-                <span class="text">Paramètres</span>
-            </a>
-        </li>
-        <li [class.active]="currentRoute === '#'">
-            <a  (click)="logout()" class="logout">
-                <i class='bx bx-power-off bx-sm bx-burst-hover' ></i>
-                <span class="text">Déconnexion</span>
-            </a>
-        </li>
+      <li routerLinkActive="active">
+        <a routerLink="/profil">
+          <i class='bx bxs-cog bx-sm bx-spin-hover'></i>
+          <span class="text">Paramètres</span>
+        </a>
+      </li>
+      <li>
+        <a (click)="logout()" class="logout">
+          <i class='bx bx-power-off bx-sm bx-burst-hover'></i>
+          <span class="text">Déconnexion</span>
+        </a>
+      </li>
     </ul>
-</section>
+  </section>

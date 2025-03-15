@@ -18,7 +18,7 @@ import { AuthService } from '../services/auth.service'; // Importez AuthService
 })
 export class AddCompanyComponent implements AfterViewInit, OnInit {
   companyForm: FormGroup;
-  currentRoute: string = ''; // Déclaration de la propriété currentRoute
+  currentRoute: string = ''; 
   errorMessage: string = '';
   successMessage: string = '';
 
