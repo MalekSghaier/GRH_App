@@ -1,5 +1,8 @@
-import { Component, AfterViewInit ,ViewEncapsulation ,  } from '@angular/core';
+import { Component, AfterViewInit ,ViewEncapsulation , OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-shared-sidebar',
@@ -9,9 +12,24 @@ import { AuthService } from '../services/auth.service';
   encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
 
 })
-export class SharedSidebarComponent implements AfterViewInit{
+export class SharedSidebarComponent implements AfterViewInit,OnInit{
 
-  constructor(private authService: AuthService) {}
+  currentRoute: string = ''; // Déclaration de la propriété currentRoute
+
+
+  constructor(private authService: AuthService,
+    private router: Router,
+
+  ) {}
+
+    ngOnInit(): void {
+      // S'abonner aux événements de navigation pour mettre à jour currentRoute
+      this.router.events
+        .pipe(filter(event => event instanceof NavigationEnd))
+        .subscribe((event: NavigationEnd) => {
+          this.currentRoute = event.url; // Mettre à jour currentRoute avec l'URL actuelle
+        });
+    }
   
   logout(): void {
     this.authService.logout(); // Appelez la méthode logout

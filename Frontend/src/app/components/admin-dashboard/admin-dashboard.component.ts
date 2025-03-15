@@ -14,9 +14,7 @@ import { SharedSidebarComponent } from '../../shared-sidebar/shared-sidebar.comp
 export class AdminDashboardComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.initializeSidebar();
-    this.initializeSearch();
-    this.initializeDarkMode();
-    this.initializeMenus();
+ 
   }
 
   private initializeSidebar(): void {
