@@ -47,22 +47,33 @@ body {
 }
 
 
+.navbar {
+    transition: all 0.3s ease;
+    width: calc(100% - 250px); /* Largeur avec la sidebar affichée */
+}
 
+.navbar.expanded {
+    width: 100%; /* Lorsque la sidebar est masquée */
+}
+
+#sidebar.hide + #navbar {
+	width: 100%;
+  }
 
 
 /* SIDEBAR */
 #sidebar {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 220px;
-	height: 100%;
-	background: var(--light);
-	z-index: 2000;
-	font-family: var(--lato);
-	transition: .3s ease;
-	overflow-x: hidden;
-	scrollbar-width: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100%;
+    background: var(--light);
+    z-index: 2000;
+    font-family: var(--lato);
+    transition: .3s ease;
+    overflow-x: hidden;
+    scrollbar-width: none;
 }
 #sidebar::--webkit-scrollbar {
 	display: none;
@@ -178,33 +189,26 @@ body {
 
 /* CONTENT */
 #content {
+	margin-left: 0px; /* Ajustez cette valeur en fonction de la largeur de votre sidebar */
 	position: relative;
-	width: calc(100% - 220px);
-	left: 220px;
-	transition: .3s ease;
+	width: 100%;
+    transition:  0.3s ease;
 }
-#sidebar.hide ~ #content {
-	width: calc(100% - 60px);
-	left: 60px;
+#content.sidebar-hidden {
+    margin-left: -160px;
+	width: 97%;
 }
 
-
-
-
-/* NAVBAR */
-#content nav {
-	height: 56px;
-	background: var(--light);
-	padding: 0 24px;
-	display: flex;
-	align-items: center;
-	grid-gap: 24px;
-	font-family: var(--lato);
-	position: sticky;
-	top: 0;
-	left: 0;
-	z-index: 1000;
+/* Styles pour le navbar */
+nav {
+    width: 100%; /* Ajustez cette valeur en fonction de la largeur de votre sidebar */
+    transition:  0.3s ease;
 }
+
+.sidebar-hidden nav {
+    width: 100%;
+}
+
 #content nav::before {
 	content: '';
 	position: absolute;

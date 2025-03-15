@@ -27,48 +27,35 @@ export class SharedSidebarComponent implements AfterViewInit{
 
 
   private initializeSidebar(): void {
-    const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
-
-    allSideMenu.forEach(item => {
-      const li = item.parentElement;
-
-      if (li) {
-        item.addEventListener('click', function () {
-          allSideMenu.forEach(i => {
-            if (i.parentElement) {
-              i.parentElement.classList.remove('active');
-            }
-          });
-          li.classList.add('active');
-        });
-      }
-    });
-
     const menuBar = document.querySelector('#content nav .bx.bx-menu');
     const sidebar = document.getElementById('sidebar');
+    const content = document.getElementById('content');
 
-    if (menuBar && sidebar) {
-      menuBar.addEventListener('click', function () {
-        sidebar.classList.toggle('hide');
-      });
+    if (menuBar && sidebar && content) {
+        menuBar.addEventListener('click', function () {
+            sidebar.classList.toggle('hide');
+            content.classList.toggle('sidebar-hidden'); // Ajoutez ou supprimez la classe
+        });
     }
 
     window.addEventListener('load', this.adjustSidebar);
     window.addEventListener('resize', this.adjustSidebar);
-  }
+}
 
-  private adjustSidebar(): void {
+private adjustSidebar(): void {
     const sidebar = document.getElementById('sidebar');
-    if (sidebar) {
-      if (window.innerWidth <= 576) {
-        sidebar.classList.add('hide');
-        sidebar.classList.remove('show');
-      } else {
-        sidebar.classList.remove('hide');
-        sidebar.classList.add('show');
-      }
+    const content = document.getElementById('content');
+
+    if (sidebar && content) {
+        if (window.innerWidth <= 576) {
+            sidebar.classList.add('hide');
+            content.classList.add('sidebar-hidden'); // Ajoutez la classe
+        } else {
+            sidebar.classList.remove('hide');
+            content.classList.remove('sidebar-hidden'); // Supprimez la classe
+        }
     }
-  }
+}
 
   
   private initializeSearch(): void {
