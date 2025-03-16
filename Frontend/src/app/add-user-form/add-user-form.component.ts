@@ -4,7 +4,7 @@ import { UserService } from '../services/user.service';
 import { Router ,NavigationEnd,RouterModule} from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SharedSidebarComponent } from "../shared-sidebar/shared-sidebar.component";
-import { SharedNavbarComponent } from "../shared-navbar/shared-navbar.component"; // Importez CommonModule
+import { SharedNavbarComponent } from "../shared-navbar/shared-navbar.component";
 import { filter } from 'rxjs/operators';
 
 
@@ -13,9 +13,7 @@ import { filter } from 'rxjs/operators';
   templateUrl: './add-user-form.component.html',
   styleUrls: ['./add-user-form.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, SharedSidebarComponent, SharedNavbarComponent,RouterModule] // Ajoutez CommonModule ici
- // Ajoutez CommonModule ici
- // Ajoutez CommonModule ici
+  imports: [ReactiveFormsModule, CommonModule, SharedSidebarComponent, SharedNavbarComponent,RouterModule]
 })
 export class AddUserFormComponent implements AfterViewInit {
   userForm: FormGroup;
@@ -31,7 +29,7 @@ export class AddUserFormComponent implements AfterViewInit {
       email: ['', [Validators.required, Validators.email]],
       role: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      company: ['', Validators.required] // Société d'accueil
+      company: ['', Validators.required] 
     });
   }
 

@@ -13,6 +13,7 @@ import { EditCompanyComponent } from './edit-company/edit-company.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { AddUserFormComponent } from './add-user-form/add-user-form.component';
+import { UsersComponent } from './users/users.component';
 
 import { AuthGuard } from './guards/auth.guards';
 
@@ -73,13 +74,13 @@ export const routes: Routes = [
         path: 'change-password', 
         component: ChangePasswordComponent 
     },
+
     { 
-        path: 'add-user', 
-        component: AddUserFormComponent 
+        path: 'users', 
+        component: UsersComponent 
     },
-
-
-
-
-
+    { 
+        path: 'users/add-user', 
+        component: AddUserFormComponent 
+    }, 
 ];
