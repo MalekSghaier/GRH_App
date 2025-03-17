@@ -79,7 +79,7 @@
                         <div class="input-box">
                           <label for="company">Société d'accueil:</label>
                           <div class="input-container">
-                            <input type="text" id="company" formControlName="company">
+                            <input type="text" id="company" formControlName="company" [readonly]="true"> <!-- Désactiver la modification -->
                             <p *ngIf="userForm.get('company')?.invalid && userForm.get('company')?.touched" class="error-message">
                               La société d'accueil est requise.
                             </p>

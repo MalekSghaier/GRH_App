@@ -37,11 +37,13 @@ export class AuthService {
     };
   }
 
-  loginCompany(company: CompanyDocument): { access_token: string; role: string } {
-    const payload = { email: company.email, sub: company._id, role: 'admin' }; // Rôle 'admin' pour les entreprises
+  loginCompany(company: CompanyDocument): { access_token: string; role: string ;companyName: string } {
+    const payload = { email: company.email, sub: company._id, role: 'admin',companyName: company.name }; // Rôle 'admin' pour les entreprises
     return {
       access_token: this.jwtService.sign(payload),
       role: 'admin',
+      companyName: company.name, // Retourner le nom de la compagnie
+
     };
   }
 }

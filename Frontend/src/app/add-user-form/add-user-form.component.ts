@@ -17,6 +17,7 @@ import { filter } from 'rxjs/operators';
 export class AddUserFormComponent implements AfterViewInit {
   userForm: FormGroup;
   isEmployeeOrIntern: boolean = false; // Variable pour gérer la visibilité du champ "company"
+  companyName: string = ''; // Variable pour stocker le nom de la compagnie
 
   constructor(
     private fb: FormBuilder,
@@ -28,7 +29,16 @@ export class AddUserFormComponent implements AfterViewInit {
       email: ['', [Validators.required, Validators.email]],
       role: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      company: [''], // Société d'accueil (optionnelle)
+      company: ['',Validators.required], 
+    });
+  }
+
+  ngOnInit(): void {
+    // Récupérer le nom de la compagnie depuis le localStorage
+    this.companyName = localStorage.getItem('companyName') || '';
+    // Initialiser le champ "company" avec le nom de la compagnie
+    this.userForm.patchValue({
+      company: this.companyName,
     });
   }
 

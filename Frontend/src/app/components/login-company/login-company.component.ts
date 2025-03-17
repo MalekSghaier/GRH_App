@@ -42,6 +42,7 @@ export class LoginCompanyComponent {
       .subscribe({
         next: (response: any) => {
           localStorage.setItem('token', response.token);
+          localStorage.setItem('companyName', response.companyName); // Stocker le nom de la compagnie
           this.successMessage = "Ravi de vous retrouver ! Gérez vos demandes et accédez à vos documents en toute sérénité.";
           this.errorMessage = ''; 
           this.toastr.success(this.successMessage, "Bienvenue");
