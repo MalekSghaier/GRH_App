@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { SharedSidebarComponent } from "../shared-sidebar/shared-sidebar.component";
 import { SharedNavbarComponent } from "../shared-navbar/shared-navbar.component";
 import { filter } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-add-user-form',
@@ -23,6 +25,8 @@ export class AddUserFormComponent implements AfterViewInit {
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
+    private toastr: ToastrService
+
   ) {
     this.userForm = this.fb.group({
       name: ['', Validators.required],
@@ -114,12 +118,22 @@ export class AddUserFormComponent implements AfterViewInit {
       this.userService.createUser(userData).subscribe({
         next: (response) => {
           console.log('Utilisateur créé avec succès', response);
-          this.router.navigate(['/users']);
+          this.toastr.success('Utilisateur créé avec succès', 'Succès'); // Message de succès
+          setTimeout(() => {
+            this.router.navigate(['/users']);
+          }, 1500); // Redirection après 1,5 seconde
         },
         error: (error) => {
           console.error('Erreur lors de la création de l\'utilisateur', error);
+          if (error.status === 409) {
+            this.toastr.error('Cet email est déjà utilisé.', 'Erreur'); // Message d'erreur spécifique
+          } else {
+            this.toastr.error('Une erreur s’est produite lors de la création de l’utilisateur.', 'Erreur'); // Message d'erreur générique
+          }
         }
       });
+    } else {
+      this.toastr.error('Veuillez remplir tous les champs requis.', 'Erreur'); // Message d'erreur si le formulaire est invalide
     }
   }
 }

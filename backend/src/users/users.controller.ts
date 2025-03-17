@@ -1,5 +1,5 @@
 //users.controller.ts
-import { Controller, Get, Post, Body, ConflictException, UseGuards ,NotFoundException ,Put, Delete,Param} from '@nestjs/common';
+import { Controller, Get, Post, Body, ConflictException, UseGuards ,NotFoundException ,Put, Delete,Param, InternalServerErrorException} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDocument } from '../schemas/user.schema'; 
 import { AuthGuard } from '@nestjs/passport';
@@ -108,12 +108,12 @@ export class UsersController {
     try {
       return await this.usersService.create(user);
     } catch (error) {
-    if (error instanceof ConflictException) {
-      throw new ConflictException(error.message);
+      if (error instanceof ConflictException) {
+        throw new ConflictException('Cet email est déjà utilisé.');
+      }
+      throw new InternalServerErrorException('Une erreur interne est survenue.');
     }
-    throw error;
-    }
-}
+  }
 
   @Get('admin-users')
   @UseGuards(AuthGuard('jwt'), AdminGuard)
