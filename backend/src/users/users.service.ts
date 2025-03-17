@@ -39,6 +39,18 @@ export class UsersService {
     }
   }
 
+
+  async generateAndUpdateQrCode(userId: string): Promise<UserDocument> {
+    const user = await this.findById(userId);
+    if (!user) {
+      throw new NotFoundException(`Utilisateur avec ID ${userId} non trouvé`);
+    }
+  
+    const qrCode = await this.generateQrCode(userId);
+    user.qrcode = qrCode;
+    return await user.save();
+  }
+
   async countUsersByRole(role: string): Promise<number> {
     return this.userModel.countDocuments({ role }).exec();
   }
@@ -56,6 +68,8 @@ export class UsersService {
       if (!user.role) {
         user.role = UserRole.EMPLOYEE; // Par défaut, un utilisateur est un employé
       }
+  
+      // Enregistrer l'utilisateur dans la base de données sans générer de QR Code
       const createdUser = new this.userModel(user);
       return await createdUser.save();
     } catch (error: unknown) {
@@ -79,8 +93,6 @@ export class UsersService {
     return user;
   }
 
-  
-  
   async findById(id: string): Promise<UserDocument> {
     const user = await this.userModel.findById(id).exec();
     if (!user) throw new NotFoundException(`Utilisateur avec ID ${id} non trouvé`);

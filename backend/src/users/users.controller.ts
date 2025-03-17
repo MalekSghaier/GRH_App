@@ -65,6 +65,12 @@ export class UsersController {
     return isMatch;
   }
 
+  @Put(':id/generate-qrcode')
+  @UseGuards(AuthGuard('jwt'))
+  async generateQrCodeForUser(@Param('id') id: string): Promise<UserDocument> {
+  return this.usersService.generateAndUpdateQrCode(id);
+  }
+
 
   @Put('change-password')
   @UseGuards(AuthGuard('jwt'))
@@ -86,6 +92,7 @@ export class UsersController {
   @Get(':id/qrcode')
   @UseGuards(AuthGuard('jwt')) 
   async getUserQrCode(@Param('id') id: string): Promise<{ qrCode: string }> {
+    // Ignorer l'entité connectée et utiliser directement l'ID passé dans l'URL
     const qrCode = await this.usersService.generateQrCode(id);
     return { qrCode }; // Retourner le QR Code en JSON
   }

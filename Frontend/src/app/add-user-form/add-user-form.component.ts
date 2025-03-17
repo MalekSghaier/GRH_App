@@ -1,44 +1,56 @@
-import { Component,AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from '../services/user.service';
-import { Router ,NavigationEnd,RouterModule} from '@angular/router';
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SharedSidebarComponent } from "../shared-sidebar/shared-sidebar.component";
 import { SharedNavbarComponent } from "../shared-navbar/shared-navbar.component";
 import { filter } from 'rxjs/operators';
-
 
 @Component({
   selector: 'app-add-user-form',
   templateUrl: './add-user-form.component.html',
   styleUrls: ['./add-user-form.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, SharedSidebarComponent, SharedNavbarComponent,RouterModule]
+  imports: [ReactiveFormsModule, CommonModule, SharedSidebarComponent, SharedNavbarComponent, RouterModule]
 })
 export class AddUserFormComponent implements AfterViewInit {
   userForm: FormGroup;
+  isEmployeeOrIntern: boolean = false; // Variable pour gérer la visibilité du champ "company"
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
-
   ) {
     this.userForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       role: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      company: ['', Validators.required] 
+      company: [''], // Société d'accueil (optionnelle)
     });
   }
 
-
   ngAfterViewInit(): void {
     this.initializeSidebar();
- 
   }
 
+  // Méthode pour gérer le changement de rôle
+  onRoleChange(event: Event): void {
+    const role = (event.target as HTMLSelectElement).value;
+    this.isEmployeeOrIntern = role === 'employé' || role === 'stagiaire';
+
+    // Ajouter ou supprimer les validateurs pour le champ "company"
+    if (this.isEmployeeOrIntern) {
+      this.userForm.get('company')?.setValidators([Validators.required]);
+    } else {
+      this.userForm.get('company')?.clearValidators();
+    }
+    this.userForm.get('company')?.updateValueAndValidity();
+  }
+
+  // Méthode pour initialiser la sidebar (inchangée)
   private initializeSidebar(): void {
     const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
 
@@ -70,6 +82,7 @@ export class AddUserFormComponent implements AfterViewInit {
     window.addEventListener('resize', this.adjustSidebar);
   }
 
+  // Méthode pour ajuster la sidebar (inchangée)
   private adjustSidebar(): void {
     const sidebar = document.getElementById('sidebar');
     if (sidebar) {
@@ -86,10 +99,12 @@ export class AddUserFormComponent implements AfterViewInit {
   onSubmit(): void {
     if (this.userForm.valid) {
       const userData = this.userForm.value;
+      console.log('Données envoyées au backend :', userData);
+  
       this.userService.createUser(userData).subscribe({
         next: (response) => {
           console.log('Utilisateur créé avec succès', response);
-          this.router.navigate(['/users']); // Rediriger vers la liste des utilisateurs
+          this.router.navigate(['/users']);
         },
         error: (error) => {
           console.error('Erreur lors de la création de l\'utilisateur', error);

@@ -1,4 +1,4 @@
-//user.schema.ts
+// user.schema.ts
 import { Schema, Document, model, CallbackError } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 
@@ -15,6 +15,8 @@ export interface IUser extends Document {
   email: string;
   password: string;
   role: UserRole;
+  company?: string; // Société d'accueil (optionnelle)
+  qrcode?: string; // QR Code (optionnel)
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -23,8 +25,8 @@ export const UserSchema = new Schema<IUser>({
   email: {
     type: String,
     required: true,
-    unique: true, // Assure que l'email est unique
-    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*\.\w{2,3}$/, 'Veuillez fournir un email valide'], // Validation du format de l'email
+    unique: true,
+    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*\.\w{2,3}$/, 'Veuillez fournir un email valide'],
   },
   password: { type: String, required: true },
   role: {
@@ -32,10 +34,12 @@ export const UserSchema = new Schema<IUser>({
     enum: Object.values(UserRole),
     default: UserRole.VISITOR,
   },
+  company: { type: String }, // Société d'accueil (optionnelle)
+  qrcode: { type: String }, // QR Code (optionnel)
 }, { collection: 'users' });
 
 UserSchema.pre<IUser>('save', async function (next: (err?: CallbackError) => void) {
-  if (!this.isModified('password')) return next(); // Ne pas hacher si le mot de passe n’a pas changé
+  if (!this.isModified('password')) return next();
   try {
     const saltRounds = 10;
     this.password = await bcrypt.hash(this.password, saltRounds);

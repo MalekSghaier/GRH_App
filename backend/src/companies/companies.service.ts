@@ -72,6 +72,13 @@ export class CompaniesService {
     return { data, total };
   }
 
+  async findById(id: string): Promise<CompanyDocument> {
+    const company = await this.companyModel.findById(id).exec();
+    if (!company) {
+      throw new NotFoundException(`Compagnie avec ID ${id} non trouvée`);
+    }
+    return company;
+  }
   async findOne(id: string): Promise<Company> {
     const company = await this.companyModel.findById(id).exec();
     if (!company) {
