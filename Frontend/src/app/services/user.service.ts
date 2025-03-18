@@ -76,4 +76,15 @@ export class UserService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.post(`${this.apiUrl}`, userData, { headers });
   }
+
+  // Générer un QR Code pour un utilisateur
+  generateQrCode(userId: string): Observable<void> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Aucun token trouvé !');
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put<void>(`${this.apiUrl}/${userId}/generate-qrcode`, {}, { headers });
+  }
 }

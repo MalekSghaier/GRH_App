@@ -3,6 +3,8 @@ import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component'
 import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.component';
 import { UserService } from '../services/user.service'; // Importer le service
 import { CommonModule } from '@angular/common'; // Importer CommonModule pour *ngFor
+import { ToastrService } from 'ngx-toastr'; // Importer ToastrService pour les notifications
+
 
 
 @Component({
@@ -18,7 +20,11 @@ export class UsersComponent implements AfterViewInit,OnInit  {
   users: any[] = []; // Liste des utilisateurs
   isEmpty: boolean = false; // Variable pour gérer l'état vide
 
-  constructor(private userService: UserService) {} // Injecter le service
+  constructor(
+    private userService: UserService,
+    private toastr: ToastrService // Injecter ToastrService pour les notifications
+
+  ) {} // Injecter le service
 
   ngOnInit(): void {
     this.loadAdminUsers(); // Charger les utilisateurs au démarrage
@@ -39,6 +45,20 @@ export class UsersComponent implements AfterViewInit,OnInit  {
         }
       });
     }
+
+  // Générer le QR Code pour un utilisateur
+  generateQRCode(userId: string): void {
+    this.userService.generateQrCode(userId).subscribe({
+      next: () => {
+        // Afficher une notification de succès
+        this.toastr.success('QR Code généré avec succès', 'Succès');
+      },
+      error: (err) => {
+        console.error('Erreur lors de la génération du QR Code:', err);
+        this.toastr.error('Erreur lors de la génération du QR Code', 'Erreur');
+      }
+    });
+  }
 
 
   ngAfterViewInit(): void {

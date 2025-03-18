@@ -55,7 +55,11 @@
                 <td>{{ user.company || 'N/A' }}</td>
 				<td>							
 					<div class="register">
-					     <p><a href="edit-profile">Télécharger QR Code</a></p>
+					     <p>
+							<a href="javascript:void(0)" (click)="generateQRCode(user._id)">
+							Télécharger QR Code
+							</a>
+						</p>
 				    </div>
 				</td>
 
