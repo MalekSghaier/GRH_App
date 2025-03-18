@@ -3,7 +3,6 @@ import { Controller, Get, Post, Body, ConflictException, UseGuards ,NotFoundExce
 import { UsersService } from './users.service';
 import { UserDocument } from '../schemas/user.schema'; 
 import { AuthGuard } from '@nestjs/passport';
-import { AdminGuard } from '../auth/admin.guard'; 
 import { Request } from '@nestjs/common';
 import { Request as ExpressRequest } from 'express';
 import * as bcrypt from 'bcrypt';
@@ -116,14 +115,14 @@ export class UsersController {
   }
 
   @Get('admin-users')
-  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @UseGuards(AuthGuard('jwt'))
   async findUsersForAdmin() {
     return this.usersService.findUsersForAdmin();
   }
 
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @UseGuards(AuthGuard('jwt'))
   async findById(@Param('id') id: string): Promise<UserDocument> {
     const user = await this.usersService.findById(id);
     if (!user) throw new NotFoundException(`Utilisateur avec ID ${id} non trouvé`);
@@ -131,14 +130,14 @@ export class UsersController {
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'), AdminGuard) 
+  @UseGuards(AuthGuard('jwt')) 
   async update(@Param('id') id: string, @Body() userData: Partial<UserDocument>): Promise<UserDocument> {
     return this.usersService.update(id, userData);
   }
 
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'), AdminGuard) 
+  @UseGuards(AuthGuard('jwt')) 
   async delete(@Param('id') id: string): Promise<{ message: string }> {
     await this.usersService.delete(id);
     return { message: 'Utilisateur supprimé avec succès' };

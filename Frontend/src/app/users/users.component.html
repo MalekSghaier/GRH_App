@@ -1,88 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-	<!-- Boxicons -->
-	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-	<link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
-
-	<!-- My CSS -->
-	<title>AdminHub</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <title>AdminHub</title>
 </head>
 <body>
-	<app-shared-sidebar></app-shared-sidebar>
-	<section id="content">
+  <app-shared-sidebar></app-shared-sidebar>
+  <section id="content">
+    <app-shared-navbar></app-shared-navbar>
 
-		<app-shared-navbar></app-shared-navbar>
+    <!-- MAIN -->
+    <main>
+      <div class="head-title">
+        <div class="left">
+          <h1>Dashboard</h1>
+          <ul class="breadcrumb">
+            <li>
+              <a href="#">Tableau de bord</a>
+            </li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li>
+              <a class="active" href="users">Utilisateurs</a>
+            </li>
+          </ul>
+        </div>
+        <a href="users/add-user" class="btn-download">
+          <i class='bx bx-message-square-add'></i>
+          <span class="text">Ajouter Utilisateur</span>
+        </a>
+      </div>
 
+      <div class="table-data">
+        <div class="order">
+          <!-- Afficher le tableau si la liste n'est pas vide -->
+          <table *ngIf="!isEmpty; else emptyMessage">
+            <thead>
+              <tr>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Rôle</th>
+                <th>Compagnie</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of users">
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+                <td>{{ user.company || 'N/A' }}</td>
+              </tr>
+            </tbody>
+          </table>
 
-		<!-- MAIN -->
-		<main>
-			<div class="head-title">
-				<div class="left">
-					<h1>Dashboard</h1>
-					<ul class="breadcrumb">
-						<li>
-							<a href="#">Tableau de bord</a>
-						</li>
-						<li><i class='bx bx-chevron-right' ></i></li>
-						<li>
-							<a class="active" href="users">Utilisateurs</a>
-						</li>
-					</ul>
-				</div>
-				<a href="users/add-user"class="btn-download">
-					<i class='bx bx-message-square-add' ></i>
-					<span class="text">Ajouter Utilisateur</span>
-				</a>
-			</div>
-
-			<ul class="box-info">
-				<li>
-					<i class='bx bxs-calendar-check' ></i>
-					<span class="text">
-						<h3>1020</h3>
-						<p>New Order</p>
-					</span>
-				</li>
-				<li>
-					<i class='bx bxs-group' ></i>
-					<span class="text">
-						<h3>2834</h3>
-						<p>Visitors</p>
-					</span>
-				</li>
-				<li>
-					<i class='bx bxs-dollar-circle' ></i>
-					<span class="text">
-						<h3>N$2543.00</h3>
-						<p>Total Sales</p>
-					</span>
-				</li>
-			</ul>
-
-
-			<div class="table-data">
-				<div class="order">
-					<div class="head">
-						<h3>Recent Orders</h3>
-						<i class='bx bx-search' ></i>
-						<i class='bx bx-filter' ></i>
-					</div>
-					<table>
-
-					</table>
-				</div>
-
-			</div>
-		</main>
-		<!-- MAIN -->
-	</section>
-	<!-- CONTENT -->
-	
-
-	<script src="script.js"></script>
+          <!-- Afficher un message si la liste est vide -->
+          <ng-template #emptyMessage>
+            <div class="empty-message">
+              <p>Aucun utilisateur trouvé.</p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </main>
+    <!-- MAIN -->
+  </section>
+  <!-- CONTENT -->
 </body>
 </html>

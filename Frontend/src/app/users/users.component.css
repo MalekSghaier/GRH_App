@@ -308,7 +308,12 @@ body {
     text-decoration: underline;
 }
 
-
+.empty-message {
+	text-align: center;
+	margin-top: 20px;
+	font-size: 18px;
+	color: #666;
+  }
 
 
 

@@ -44,8 +44,7 @@ export class LoginComponent {
           const token = response.access_token;
           localStorage.setItem('token', token);
           
-          // Décoder le token pour récupérer le rôle de l'utilisateur
-          const decodedToken: any = jwtDecode(token); // Correction ici
+          const decodedToken: any = jwtDecode(token); 
           const role = decodedToken.role;
 
           // Affichage du message de succès

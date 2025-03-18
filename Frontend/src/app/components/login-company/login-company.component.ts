@@ -41,14 +41,13 @@ export class LoginCompanyComponent {
     this.http.post('http://localhost:3000/auth/login/company', this.loginCampagnyForm.value)
       .subscribe({
         next: (response: any) => {
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('companyName', response.companyName); // Stocker le nom de la compagnie
+          const token = response.access_token;
+          localStorage.setItem('token', token);
+          localStorage.setItem('companyName', response.companyName); 
           this.successMessage = "Ravi de vous retrouver ! Gérez vos demandes et accédez à vos documents en toute sérénité.";
           this.errorMessage = ''; 
           this.toastr.success(this.successMessage, "Bienvenue");
-  
-          // Attendre 1,5 seconde avant de rediriger vers le dashboard
-          setTimeout(() => {
+            setTimeout(() => {
             this.router.navigate(['/admin-dashboard']);
           }, 1500);
         },

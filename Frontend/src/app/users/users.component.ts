@@ -1,16 +1,45 @@
-import { Component, AfterViewInit ,ViewEncapsulation } from '@angular/core';
+import { Component, AfterViewInit ,ViewEncapsulation,OnInit  } from '@angular/core';
 import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component';
 import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.component';
+import { UserService } from '../services/user.service'; // Importer le service
+import { CommonModule } from '@angular/common'; // Importer CommonModule pour *ngFor
+
+
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [SharedNavbarComponent,SharedSidebarComponent],
+  imports: [SharedNavbarComponent,SharedSidebarComponent,CommonModule],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
   encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
 
 })
-export class UsersComponent implements AfterViewInit {
+export class UsersComponent implements AfterViewInit,OnInit  {
+  users: any[] = []; // Liste des utilisateurs
+  isEmpty: boolean = false; // Variable pour gérer l'état vide
+
+  constructor(private userService: UserService) {} // Injecter le service
+
+  ngOnInit(): void {
+    this.loadAdminUsers(); // Charger les utilisateurs au démarrage
+  }
+
+    // Charger la liste des utilisateurs
+    loadAdminUsers(): void {
+      this.userService.getAdminUsers().subscribe({
+        next: (users) => {
+          this.users = users; // Mettre à jour la liste des utilisateurs
+          this.isEmpty = this.users.length === 0; // Mettre à jour l'état vide
+
+        },
+        error: (err) => {
+          console.error('Erreur lors du chargement des utilisateurs:', err);
+          this.isEmpty = true; // En cas d'erreur, considérer le tableau comme vide
+
+        }
+      });
+    }
+
 
   ngAfterViewInit(): void {
     this.initializeSidebar();

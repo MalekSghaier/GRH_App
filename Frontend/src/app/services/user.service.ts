@@ -21,6 +21,18 @@ export class UserService {
     return this.http.get(`${this.apiUrl}/my-info`, { headers });
   }
 
+    // Récupérer la liste des utilisateurs pour l'admin
+    getAdminUsers(): Observable<any[]> {
+      const token = localStorage.getItem('token'); // Récupérer le token JWT
+      if (!token) {
+        throw new Error('Aucun token trouvé !');
+      }
+  
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`); // Ajouter le token dans les en-têtes
+      return this.http.get<any[]>(`${this.apiUrl}/admin-users`, { headers });
+    }
+  
+
   updateProfile(profileData: any): Observable<any> {
     const token = localStorage.getItem('token');
     if (!token) {
