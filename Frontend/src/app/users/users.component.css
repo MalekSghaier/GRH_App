@@ -313,7 +313,43 @@ body {
 	margin-top: 20px;
 	font-size: 18px;
 	color: #666;
+}
+.no-border-button {
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 5px;
+	transition: transform 0.2s ease-in-out;
+}
+  /* Effet au survol */
+  .no-border-button:hover {
+	transform: scale(1.2); /* Légère augmentation de la taille */
   }
+  
+  /* Style des icônes */
+  .no-border-button i {
+	font-size: 20px;
+	color: #007bff;
+	transition: color 0.3s ease-in-out;
+  }
+  
+  /* Changement de couleur au survol */
+  .no-border-button i:hover {
+	color: #0056b3;
+  } 
+  .register{
+    font-size: 16px;
+}
+
+.register p a{
+    font-weight: 400;
+    color: #6e6e6e;
+    font-size: 16px;
+}
+
+.register p a:hover{
+    color: #3C91E6;
+}
 
 
 

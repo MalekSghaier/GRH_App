@@ -42,6 +42,9 @@
                 <th>Email</th>
                 <th>Rôle</th>
                 <th>Compagnie</th>
+				<th>QR Code</th>
+				<th>Actions</th>
+
               </tr>
             </thead>
             <tbody>
@@ -50,6 +53,24 @@
                 <td>{{ user.email }}</td>
                 <td>{{ user.role }}</td>
                 <td>{{ user.company || 'N/A' }}</td>
+				<td>							
+					<div class="register">
+					     <p><a href="edit-profile">Télécharger QR Code</a></p>
+				    </div>
+				</td>
+
+				<td>
+					<!-- Bouton Modifier -->
+					<button class="no-border-button"  style="background: none; border: none;">
+						<i class='bx bxs-message-square-edit bx-sm' style="color: #007bff;"></i>
+					  </button>
+				  
+					<!-- Bouton Supprimer -->
+					<button class="no-border-button"   style="background: none; border: none;">
+					  <i class='bx bxs-trash-alt bx-sm' style="color: #007bff;"></i>
+					</button>
+				  
+				</td>
               </tr>
             </tbody>
           </table>
