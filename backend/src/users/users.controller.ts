@@ -86,10 +86,6 @@ export class UsersController {
     const updatedUser = await this.usersService.changePassword(userId, hashedPassword);
     return updatedUser;
   }
-
-
-
-
   
   @Get()
   @UseGuards(AuthGuard('jwt')) 
