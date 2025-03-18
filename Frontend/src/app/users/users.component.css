@@ -116,7 +116,43 @@ body {
 }
 
 
-
+/* Style pour la barre de recherche */
+.form-input {
+	display: flex;
+	align-items: center;
+	height: 36px;
+	background: var(--light) ;
+	border-radius: 36px;
+	overflow: hidden;
+  }
+  
+  .form-input input {
+	flex-grow: 1;
+	padding: 0 16px;
+	height: 100%;
+	border: none;
+	background: transparent;
+	outline: none;
+	color: var(--dark);
+  }
+  
+  .form-input button {
+	width: 36px;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: var(--blue);
+	color: var(--light);
+	font-size: 18px;
+	border: none;
+	outline: none;
+	cursor: pointer;
+  }
+  
+  .form-input button:hover {
+	background: var(--light-blue);
+  }
 
 #content main .box-info {
 	display: grid;
@@ -271,43 +307,6 @@ body {
 }
 /* MAIN */
 /* CONTENT */
-#content main .menu, #content nav .menu {
-
-    display: none;
-      list-style-type: none;
-      padding-left: 20px;
-      margin-top: 5px;
-      position: absolute;
-      background-color: #f9f9f9;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      width: 200px;
- }
-
- #content main .menu a , #content nav .menu a {
-    color: white;
-    text-decoration: none;
-    display: block;
-    padding: 8px 16px;
-}
-
-#content main .menu a:hover , #content nav .menu a:hover {
-    background-color: #444;
-}
-        
-#content main .menu-link , #content nav .menu-link {
-    margin: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    text-decoration: none;
-    color: #007bff;
-}
-
-#content main .menu-link:hover, #content nav .menu-link:hover {
-    text-decoration: underline;
-}
-
 .empty-message {
 	text-align: center;
 	margin-top: 20px;
@@ -325,14 +324,12 @@ body {
   .no-border-button:hover {
 	transform: scale(1.2); /* Légère augmentation de la taille */
   }
-  
   /* Style des icônes */
   .no-border-button i {
 	font-size: 20px;
 	color: #007bff;
 	transition: color 0.3s ease-in-out;
   }
-  
   /* Changement de couleur au survol */
   .no-border-button i:hover {
 	color: #0056b3;
@@ -377,7 +374,14 @@ body {
 	border-color: #007bff;
   }
 
+.bxs-moon {
+	color: var(--yellow);
+}
 
+.bx-sun {
+	color: var(--orange);
+	animation: shakeOn .7s;
+}
 
 /* Media Query for Smaller Screens */
 @media screen and (max-width: 768px) {

@@ -313,13 +313,11 @@ body {
     padding: 10px;
     margin: 0;
 }
-
 #content nav .notification-menu li {
     padding: 10px;
     border-bottom: 1px solid var(--grey);
 	color: var(--dark);
 }
-
 #content nav .notification-menu li:hover {
     background-color: var(--light-blue);
 	color: var(--dark);
