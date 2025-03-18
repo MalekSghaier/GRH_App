@@ -4,13 +4,14 @@ import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.compone
 import { UserService } from '../services/user.service'; // Importer le service
 import { CommonModule } from '@angular/common'; // Importer CommonModule pour *ngFor
 import { ToastrService } from 'ngx-toastr'; // Importer ToastrService pour les notifications
+import { RouterLink } from '@angular/router'; // <-- Ajouter cette ligne
 
 
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [SharedNavbarComponent,SharedSidebarComponent,CommonModule],
+  imports: [SharedNavbarComponent,SharedSidebarComponent,CommonModule,RouterLink],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
   encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
@@ -58,6 +59,21 @@ export class UsersComponent implements AfterViewInit,OnInit  {
         this.toastr.error('Erreur lors de la génération du QR Code', 'Erreur');
       }
     });
+  }
+
+  deleteUser(userId: string): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
+      this.userService.deleteUser(userId).subscribe({
+        next: () => {
+          this.toastr.success('Utilisateur supprimé avec succès', 'Succès');
+          this.loadAdminUsers(); // Recharger la liste des utilisateurs après la suppression
+        },
+        error: (err) => {
+          console.error('Erreur lors de la suppression de l\'utilisateur:', err);
+          this.toastr.error('Erreur lors de la suppression de l\'utilisateur', 'Erreur');
+        }
+      });
+    }
   }
 
 

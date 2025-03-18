@@ -14,6 +14,7 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { AddUserFormComponent } from './add-user-form/add-user-form.component';
 import { UsersComponent } from './users/users.component';
+import { UpdateUserComponent } from './update-user/update-user.component';
 
 import { AuthGuard } from './guards/auth.guards';
 
@@ -83,4 +84,9 @@ export const routes: Routes = [
         path: 'users/add-user', 
         component: AddUserFormComponent 
     }, 
+    { 
+        path: 'users/update/:id', 
+        component: UpdateUserComponent 
+    },
+
 ];

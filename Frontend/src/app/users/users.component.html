@@ -65,12 +65,12 @@
 
 				<td>
 					<!-- Bouton Modifier -->
-					<button class="no-border-button"  style="background: none; border: none;">
+					<button class="no-border-button"  [routerLink]="['/users/update', user._id]"  style="background: none; border: none;">
 						<i class='bx bxs-message-square-edit bx-sm' style="color: #007bff;"></i>
 					  </button>
 				  
 					<!-- Bouton Supprimer -->
-					<button class="no-border-button"   style="background: none; border: none;">
+					<button class="no-border-button" (click)="deleteUser(user._id)"  style="background: none; border: none;">
 					  <i class='bx bxs-trash-alt bx-sm' style="color: #007bff;"></i>
 					</button>
 				  
