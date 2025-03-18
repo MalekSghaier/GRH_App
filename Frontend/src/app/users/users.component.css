@@ -150,9 +150,6 @@ body {
 	cursor: pointer;
   }
   
-  .form-input button:hover {
-	background: var(--light-blue);
-  }
 
 #content main .box-info {
 	display: grid;
