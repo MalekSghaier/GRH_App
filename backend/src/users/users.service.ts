@@ -131,6 +131,20 @@ export class UsersService {
     }).exec();
   }
 
+  // users.service.ts
+async findUsersForAdminPaginated(page: number = 1, limit: number = 5): Promise<{ data: UserDocument[]; total: number }> {
+  const skip = (page - 1) * limit;
+  const data = await this.userModel
+    .find({ role: { $in: [UserRole.EMPLOYEE, UserRole.INTERN, UserRole.VISITOR] } })
+    .skip(skip)
+    .limit(limit)
+    .exec();
+  const total = await this.userModel
+    .countDocuments({ role: { $in: [UserRole.EMPLOYEE, UserRole.INTERN, UserRole.VISITOR] } })
+    .exec();
+  return { data, total };
+}
+
   async updateProfile(id: string, userData: Partial<Pick<UserDocument, 'name' | 'email'>>): Promise<UserDocument> {
     const allowedFields: (keyof UserDocument)[] = ['name', 'email'];
     const updateData: Partial<Pick<UserDocument, 'name' | 'email'>> = {};

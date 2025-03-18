@@ -20,6 +20,9 @@ import { RouterLink } from '@angular/router'; // <-- Ajouter cette ligne
 export class UsersComponent implements AfterViewInit,OnInit  {
   users: any[] = []; // Liste des utilisateurs
   isEmpty: boolean = false; // Variable pour gérer l'état vide
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalItems: number = 0;
 
   constructor(
     private userService: UserService,
@@ -33,18 +36,27 @@ export class UsersComponent implements AfterViewInit,OnInit  {
 
     // Charger la liste des utilisateurs
     loadAdminUsers(): void {
-      this.userService.getAdminUsers().subscribe({
-        next: (users) => {
-          this.users = users; // Mettre à jour la liste des utilisateurs
-          this.isEmpty = this.users.length === 0; // Mettre à jour l'état vide
-
+      this.userService.getPaginatedAdminUsers(this.currentPage, this.itemsPerPage).subscribe({
+        next: (response) => {
+          this.users = response.data;
+          this.totalItems = response.total;
+          this.isEmpty = this.users.length === 0;
         },
         error: (err) => {
           console.error('Erreur lors du chargement des utilisateurs:', err);
-          this.isEmpty = true; // En cas d'erreur, considérer le tableau comme vide
-
-        }
+          this.isEmpty = true;
+        },
       });
+    }
+
+    onPageChange(page: number): void {
+      this.currentPage = page;
+      this.loadAdminUsers();
+    }
+  
+    getPages(): number[] {
+      const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
   // Générer le QR Code pour un utilisateur

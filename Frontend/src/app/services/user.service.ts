@@ -117,4 +117,14 @@ export class UserService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.delete<void>(`${this.apiUrl}/${userId}`, { headers });
   }
+
+  getPaginatedAdminUsers(page: number, limit: number): Observable<{ data: any[]; total: number }> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Aucun token trouvé !');
+    }
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<{ data: any[]; total: number }>(`${this.apiUrl}/admin-users/paginated?page=${page}&limit=${limit}`, { headers });
+  }
 }

@@ -1,5 +1,5 @@
 //users.controller.ts
-import { Controller, Get, Post, Body, ConflictException, UseGuards ,NotFoundException ,Put, Delete,Param, InternalServerErrorException} from '@nestjs/common';
+import { Controller, Get, Post, Body, ConflictException, UseGuards ,NotFoundException ,Put, Delete,Param, InternalServerErrorException, Query} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDocument } from '../schemas/user.schema'; 
 import { AuthGuard } from '@nestjs/passport';
@@ -109,6 +109,15 @@ export class UsersController {
   async findUsersForAdmin() {
     return this.usersService.findUsersForAdmin();
   }
+
+  @Get('admin-users/paginated')
+  @UseGuards(AuthGuard('jwt'))
+   async findUsersForAdminPaginated(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 5,
+     ): Promise<{ data: UserDocument[]; total: number }> {
+      return this.usersService.findUsersForAdminPaginated(page, limit);
+}
 
 
   @Get(':id')

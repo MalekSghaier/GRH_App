@@ -85,6 +85,16 @@
               <p>Aucun utilisateur trouvé.</p>
             </div>
           </ng-template>
+
+          <div class="pagination">
+            <button
+              *ngFor="let page of getPages()"
+              (click)="onPageChange(page)"
+              [class.active]="page === currentPage"
+            >
+              {{ page }}
+            </button>
+          </div>
         </div>
       </div>
     </main>
