@@ -131,7 +131,6 @@ export class UsersService {
     }).exec();
   }
 
-  // users.service.ts
 async findUsersForAdminPaginated(page: number = 1, limit: number = 5): Promise<{ data: UserDocument[]; total: number }> {
   const skip = (page - 1) * limit;
   const data = await this.userModel
@@ -185,6 +184,25 @@ async findUsersForAdminPaginated(page: number = 1, limit: number = 5): Promise<{
     }
     
     return updatedUser;
+  }
+
+
+  async searchUsers(query: string): Promise<UserDocument[]> {
+    const regex = new RegExp(query, 'i'); // 'i' pour ignorer la casse
+    return this.userModel.find({
+      $and: [
+        {
+          role: { $in: [UserRole.EMPLOYEE, UserRole.INTERN, UserRole.VISITOR] } // Filtre sur les rôles
+        },
+        {
+          $or: [
+            { name: { $regex: regex } },
+            { email: { $regex: regex } },
+            { role: { $regex: regex } }
+          ]
+        }
+      ]
+    }).exec();
   }
 
 

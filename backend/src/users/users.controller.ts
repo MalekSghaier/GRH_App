@@ -13,6 +13,8 @@ import * as bcrypt from 'bcrypt';
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
+
+
   @Get('my-info')
   @UseGuards(AuthGuard('jwt')) 
   async getMyInfo(@Request() req: ExpressRequest): Promise<UserDocument> {
@@ -34,6 +36,12 @@ export class UsersController {
   
     return user;
   }  
+
+  @Get('search')
+  @UseGuards(AuthGuard('jwt'))
+  async searchUsers(@Query('query') query: string): Promise<UserDocument[]> {
+    return this.usersService.searchUsers(query);
+  }
 
 
   @Put('my-info')
@@ -86,6 +94,9 @@ export class UsersController {
     const updatedUser = await this.usersService.changePassword(userId, hashedPassword);
     return updatedUser;
   }
+
+
+
   
   @Get()
   @UseGuards(AuthGuard('jwt')) 

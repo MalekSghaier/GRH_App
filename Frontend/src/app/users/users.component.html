@@ -28,12 +28,14 @@
         </div>
 
         <!-- Barre de recherche -->
-        <form action="#">
-          <div class="form-input">
-            <input type="search" placeholder="Recherche..." >
-            <button class="search-btn"><i class='bx bx-search'></i></button>
-          </div>
-        </form>
+<!-- users.component.html -->
+
+       <form action="#">
+         <div class="form-input">
+           <input type="search" placeholder="Recherche..." (input)="search($event)">
+           <button class="search-btn"><i class='bx bx-search'></i></button>
+         </div>
+       </form>
         <a href="users/add-user" class="btn-download">
           <i class='bx bx-message-square-add'></i>
           <span class="text">Ajouter Utilisateur</span>

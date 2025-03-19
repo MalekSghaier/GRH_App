@@ -1,10 +1,12 @@
 import { Component, AfterViewInit ,ViewEncapsulation,OnInit  } from '@angular/core';
 import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component';
 import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.component';
-import { UserService } from '../services/user.service'; // Importer le service
+import { UserService } from '../services/user.service';
 import { CommonModule } from '@angular/common'; // Importer CommonModule pour *ngFor
-import { ToastrService } from 'ngx-toastr'; // Importer ToastrService pour les notifications
-import { RouterLink } from '@angular/router'; // <-- Ajouter cette ligne
+import { ToastrService } from 'ngx-toastr'; 
+import { RouterLink } from '@angular/router'; 
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 
 
@@ -18,11 +20,13 @@ import { RouterLink } from '@angular/router'; // <-- Ajouter cette ligne
 
 })
 export class UsersComponent implements AfterViewInit,OnInit  {
-  users: any[] = []; // Liste des utilisateurs
-  isEmpty: boolean = false; // Variable pour gérer l'état vide
+  users: any[] = []; 
+  isEmpty: boolean = false; 
   currentPage: number = 1;
   itemsPerPage: number = 5;
   totalItems: number = 0;
+  private searchTerms = new Subject<string>();
+
 
   constructor(
     private userService: UserService,
@@ -32,6 +36,27 @@ export class UsersComponent implements AfterViewInit,OnInit  {
 
   ngOnInit(): void {
     this.loadAdminUsers(); // Charger les utilisateurs au démarrage
+    
+    // Gérer la recherche en temps réel
+    this.searchTerms.pipe(
+      debounceTime(100),        // Attendre 300ms après chaque frappe
+      distinctUntilChanged(),   // Ignorer si le terme de recherche n'a pas changé
+      switchMap((query: string) => this.userService.searchUsers(query)) // Changer de recherche
+    ).subscribe({
+      next: (users) => {
+        this.users = users;
+        this.isEmpty = users.length === 0;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la recherche des utilisateurs:', err);
+        this.isEmpty = true;
+      }
+    });
+  }
+  search(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const query = inputElement.value;
+    this.searchTerms.next(query);
   }
 
     // Charger la liste des utilisateurs
