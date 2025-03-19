@@ -188,11 +188,11 @@ async findUsersForAdminPaginated(page: number = 1, limit: number = 5): Promise<{
 
 
   async searchUsers(query: string): Promise<UserDocument[]> {
-    const regex = new RegExp(query, 'i'); // 'i' pour ignorer la casse
+    const regex = new RegExp(query, 'i'); 
     return this.userModel.find({
       $and: [
         {
-          role: { $in: [UserRole.EMPLOYEE, UserRole.INTERN, UserRole.VISITOR] } // Filtre sur les rôles
+          role: { $in: [UserRole.EMPLOYEE, UserRole.INTERN, UserRole.VISITOR] }
         },
         {
           $or: [
