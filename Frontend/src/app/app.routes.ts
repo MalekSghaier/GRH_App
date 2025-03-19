@@ -6,15 +6,15 @@ import { SuperAdminDashboardComponent } from './components/super-admin-dashboard
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { EmployeeDashboardComponent } from './components/employee-dashboard/employee-dashboard.component';
 import { InternDashboardComponent } from './components/intern-dashboard/intern-dashboard.component';
-import { CompagniesComponent } from './compagnies/compagnies.component';
-import { ProfilComponent } from './profil/profil.component';
-import { AddCompanyComponent } from './add-company/add-company.component';
-import { EditCompanyComponent } from './edit-company/edit-company.component';
-import { EditProfileComponent } from './edit-profile/edit-profile.component';
-import { ChangePasswordComponent } from './change-password/change-password.component';
-import { AddUserFormComponent } from './add-user-form/add-user-form.component';
-import { UsersComponent } from './users/users.component';
-import { UpdateUserComponent } from './update-user/update-user.component';
+import { CompagniesComponent } from './components/compagnies/compagnies.component';
+import { ProfilComponent } from './components/profil/profil.component';
+import { AddCompanyComponent } from './components/add-company/add-company.component';
+import { EditCompanyComponent } from './components/edit-company/edit-company.component';
+import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
+import { AddUserFormComponent } from './components/add-user-form/add-user-form.component';
+import { UsersComponent } from './components/users/users.component';
+import { UpdateUserComponent } from './components/update-user/update-user.component';
 
 import { AuthGuard } from './guards/auth.guards';
 

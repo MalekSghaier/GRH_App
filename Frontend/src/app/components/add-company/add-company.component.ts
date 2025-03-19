@@ -4,8 +4,8 @@ import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { CompanyService } from '../services/company.service';
-import { AuthService } from '../services/auth.service'; // Importez AuthService
+import { CompanyService } from '../../services/company.service';
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({

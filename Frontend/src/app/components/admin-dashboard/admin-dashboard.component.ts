@@ -1,6 +1,6 @@
 import { Component, AfterViewInit ,ViewEncapsulation } from '@angular/core';
-import { SharedNavbarComponent } from '../../shared-navbar/shared-navbar.component';
-import { SharedSidebarComponent } from '../../shared-sidebar/shared-sidebar.component';
+import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component';
+import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.component';
 
 @Component({
   selector: 'app-admin-dashboard',

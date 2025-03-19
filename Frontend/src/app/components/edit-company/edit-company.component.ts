@@ -4,8 +4,8 @@ import { Router, RouterModule, NavigationEnd, ActivatedRoute } from '@angular/ro
 import { filter } from 'rxjs/operators';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { CompanyService } from '../services/company.service';
-import { AuthService } from '../services/auth.service';
+import { CompanyService } from '../../services/company.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-edit-company',

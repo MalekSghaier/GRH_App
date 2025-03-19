@@ -1,7 +1,7 @@
 import { Component, AfterViewInit ,ViewEncapsulation,OnInit  } from '@angular/core';
 import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component';
 import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.component';
-import { UserService } from '../services/user.service';
+import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common'; // Importer CommonModule pour *ngFor
 import { ToastrService } from 'ngx-toastr'; 
 import { RouterLink } from '@angular/router'; 

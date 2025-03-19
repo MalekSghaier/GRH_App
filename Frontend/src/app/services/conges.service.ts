@@ -1,0 +1,27 @@
+// src/app/services/conges.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CongesService {
+  private apiUrl = 'http://localhost:3000/conges'; // Remplacez par l'URL de votre API
+
+  constructor(private http: HttpClient) {}
+
+  // Récupérer tous les congés
+  getAllConges(): Observable<any[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any[]>(this.apiUrl, { headers });
+  }
+
+  // Mettre à jour le statut d'un congé (accepter ou rejeter)
+  updateCongeStatus(id: string, status: 'approved' | 'rejected'): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put(`${this.apiUrl}/${id}`, { status }, { headers });
+  }
+}

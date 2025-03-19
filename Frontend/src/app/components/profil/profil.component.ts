@@ -1,39 +1,25 @@
 import { Component, AfterViewInit,ViewEncapsulation,OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule ,NavigationEnd } from '@angular/router';
-import { FormBuilder, FormGroup, Validators,ReactiveFormsModule  } from '@angular/forms';
 import { filter } from 'rxjs/operators';
-import { UserService } from '../services/user.service';
-import { AuthService } from '../services/auth.service';
-
+import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 @Component({
-  selector: 'app-edit-profile',
+  selector: 'app-profil',
   standalone: true,
-  imports: [CommonModule, RouterModule,ReactiveFormsModule],
-  templateUrl: './edit-profile.component.html',
-  styleUrl: './edit-profile.component.css',
+  imports: [CommonModule, RouterModule], 
+  templateUrl: './profil.component.html',
+  styleUrl: './profil.component.css',
   encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
-
+  
 })
-export class EditProfileComponent implements AfterViewInit, OnInit{
+export class ProfilComponent implements AfterViewInit {
   currentRoute: string = '';
-  editProfileForm: FormGroup;
-  successMessage: string | null = null; // Variable pour le message de succès
 
-
-  constructor(
-    private router: Router,
-    private fb: FormBuilder,
+  constructor(private router: Router,
     private userService: UserService,
     private authService: AuthService
   ) {
-    // Initialisation du formulaire réactif
-    this.editProfileForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]]
-    });
-  
-    // Gestion de la navigation
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
@@ -41,45 +27,29 @@ export class EditProfileComponent implements AfterViewInit, OnInit{
     });
   }
 
-
-  navigateToEditProfile(): void {
-    this.router.navigate(['/edit-profile']);
-  }
+  user: any;
 
 
   ngOnInit(): void {
-    // Récupérer les informations de l'utilisateur connecté
     this.userService.getMyInfo().subscribe(
-      (user) => {
-        this.editProfileForm.patchValue(user);
+      (data) => {
+        this.user = data;
       },
       (error) => {
         console.error('Erreur lors de la récupération des informations utilisateur', error);
       }
     );
   }
-
   logout(): void {
     this.authService.logout(); // Appelez la méthode logout
   }
-  onSubmit(): void {
-    if (this.editProfileForm.valid) {
-      this.userService.updateProfile(this.editProfileForm.value).subscribe(
-        (data) => {
-          this.successMessage = 'Profil mis à jour avec succès !'; 
-          setTimeout(() => {
-            this.router.navigate(['/profil']); 
-          }, 700); 
-        },
-        (error) => {
-          console.error('Erreur lors de la mise à jour du profil', error);
-        }
-      );
-    }
+
+  navigateToEditProfile(): void {
+    this.router.navigate(['/edit-profile']);
   }
 
-  cancel(): void {
-    this.router.navigate(['/profile']);
+  navigateToChangePassword(): void {
+    this.router.navigate(['/change-password']);
   }
 
   ngAfterViewInit(): void {
@@ -88,6 +58,8 @@ export class EditProfileComponent implements AfterViewInit, OnInit{
     this.initializeDarkMode();
     this.initializeMenus();
   }
+
+
 
   private initializeSidebar(): void {
     const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');

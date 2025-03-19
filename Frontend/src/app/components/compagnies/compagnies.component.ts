@@ -1,40 +1,39 @@
-import { Component, AfterViewInit,ViewEncapsulation,OnInit } from '@angular/core';
+import { Component, AfterViewInit,ViewEncapsulation ,OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule ,NavigationEnd } from '@angular/router';
-import { FormBuilder, FormGroup, Validators,ReactiveFormsModule  } from '@angular/forms';
 import { filter } from 'rxjs/operators';
-import { UserService } from '../services/user.service';
-import { ToastrService } from 'ngx-toastr'; 
-import { AuthService } from '../services/auth.service'; // Importez AuthService
+import { CompanyService } from '../../services/company.service';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+
 
 @Component({
-  selector: 'app-change-password',
-  imports: [CommonModule, RouterModule,ReactiveFormsModule],
-  templateUrl: './change-password.component.html',
-  styleUrl: './change-password.component.css',
+  selector: 'app-compagnies',
+  standalone: true,
+  imports: [CommonModule, RouterModule],
+  templateUrl: './compagnies.component.html',
+  styleUrl: './compagnies.component.css',
   encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
 
 })
-export class ChangePasswordComponent implements AfterViewInit, OnInit{
-
+export class CompagniesComponent implements AfterViewInit,OnInit {
   currentRoute: string = '';
-  changePasswordForm: FormGroup;
-  showNewPasswordFields: boolean = false;
+  companies: any[] = [];
+  currentPage: number = 1; // Page actuelle
+  itemsPerPage: number = 3; // Nombre d'éléments par page
+  totalItems: number = 0; // Nombre total d'éléments
+  searchQuery: string = '';
+  searchSubject = new Subject<string>();
+  isEmpty: boolean = false; // Nouvelle variable pour gérer l'état vide
+
 
   constructor(
-    private fb: FormBuilder,
-    private userService: UserService,
     private router: Router,
-    private toastr: ToastrService, // Inject ToastrService
+    private companyService: CompanyService,
     private authService: AuthService
-  ) {
-    this.changePasswordForm = this.fb.group({
-      oldPassword: ['', Validators.required],
-      newPassword: [''],
-      confirmNewPassword: ['']
-    });
-
-    // Gestion de la navigation
+  ) 
+  
+  {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
@@ -42,63 +41,106 @@ export class ChangePasswordComponent implements AfterViewInit, OnInit{
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadCompanies();
+
+    this.searchSubject.pipe(
+      debounceTime(300), // Attendre 300ms après la dernière frappe
+      distinctUntilChanged() // Ne pas appeler si la valeur n'a pas changé
+    ).subscribe(query => {
+      this.searchCompanies(query);
+    });
+  }
 
   logout(): void {
     this.authService.logout(); // Appelez la méthode logout
   }
 
-  // Vérifier l'ancien mot de passe
-  checkOldPassword(): void {
-    const oldPassword = this.changePasswordForm.get('oldPassword')?.value;
+  loadCompanies(): void {
+    this.companyService.getCompanies(this.currentPage, this.itemsPerPage).subscribe({
+      next: (response) => {
+        this.companies = response.data; // Mettre à jour la liste des compagnies
+        this.totalItems = response.total; // Mettre à jour le nombre total d'éléments
+        this.isEmpty = this.companies.length === 0; // Vérifier si le tableau est vide
 
-    this.userService.checkPassword(oldPassword).subscribe(
-      (isValid) => {
-        if (isValid) {
-          this.showNewPasswordFields = true; // Afficher les champs du nouveau mot de passe
-          this.changePasswordForm.get('newPassword')?.setValidators([Validators.required, Validators.minLength(6)]);
-          this.changePasswordForm.get('confirmNewPassword')?.setValidators([Validators.required]);
-          this.changePasswordForm.get('newPassword')?.updateValueAndValidity();
-          this.changePasswordForm.get('confirmNewPassword')?.updateValueAndValidity();
-        } else {
-          this.toastr.error('Ancien mot de passe incorrect', 'Erreur'); // Toast pour erreur
-        }
       },
-      (error) => {
-        console.error('Erreur lors de la vérification du mot de passe', error);
-        this.toastr.error('Une erreur est survenue lors de la vérification du mot de passe', 'Erreur'); // Toast pour erreur
-      }
-    );
+      error: (err) => {
+        console.error('Erreur lors du chargement des compagnies:', err);
+        this.isEmpty = true; // En cas d'erreur, considérer le tableau comme vide
+
+      },
+    });
   }
 
-  onSubmit(): void {
-    if (this.changePasswordForm.valid) {
-      const newPassword = this.changePasswordForm.get('newPassword')?.value;
-      const confirmNewPassword = this.changePasswordForm.get('confirmNewPassword')?.value;
+  onSearchInput(event: Event): void {
+    const query = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(query);
+  }
 
-      if (newPassword === confirmNewPassword) {
-        this.userService.changePassword(newPassword).subscribe(
-          (data) => {
-            this.toastr.success('Mot de passe mis à jour avec succès !', 'Succès'); // Toast pour succès
-            this.router.navigate(['/profil']);
-          },
-          (error) => {
-            console.error('Erreur lors de la mise à jour du mot de passe', error);
-            this.toastr.error('Une erreur est survenue lors de la mise à jour du mot de passe', 'Erreur'); // Toast pour erreur
-          }
-        );
-      } else {
-        this.toastr.warning('Les nouveaux mots de passe ne correspondent pas', 'Attention'); // Toast pour avertissement
-      }
+  searchCompanies(query: string): void {
+    if (query) {
+      this.companyService.searchCompanies(query).subscribe({
+        next: (companies) => {
+          this.companies = companies;
+          this.isEmpty = this.companies.length === 0; // Vérifier si le tableau est vide
+
+        },
+        error: (err) => {
+          console.error('Erreur lors de la recherche des compagnies:', err);
+          this.isEmpty = true; // En cas d'erreur, considérer le tableau comme vide
+
+        },
+      });
     } else {
-      this.toastr.warning('Veuillez remplir tous les champs correctement', 'Attention'); // Toast pour avertissement
+      this.loadCompanies(); // Recharger toutes les compagnies si la recherche est vide
     }
   }
 
-  // Annuler et revenir à la page de profil
-  cancel(): void {
-    this.router.navigate(['/profil']);
+  // Changer de page
+  onPageChange(page: number): void {
+    this.currentPage = page; // Mettre à jour la page actuelle
+    this.loadCompanies(); // Recharger les compagnies pour la nouvelle page
   }
+
+  // Générer un tableau de numéros de page pour la pagination
+  getPages(): number[] {
+    const totalPages = Math.ceil(this.totalItems / this.itemsPerPage); // Calculer le nombre total de pages
+    return Array.from({ length: totalPages }, (_, i) => i + 1); // Générer un tableau [1, 2, 3, ...]
+  }
+
+
+
+  editCompany(company: any): void {
+    this.router.navigate(['/edit-company', company._id]); // Redirige vers la page d'édition
+  }
+  
+  deleteCompany(companyId: string): void {
+    // Afficher une boîte de dialogue de confirmation
+    if (confirm('Voulez-vous vraiment supprimer cette compagnie ?')) {
+      // Appeler le service pour supprimer la compagnie
+      this.companyService.deleteCompany(companyId).subscribe({
+        next: () => {
+          // Supprimer la compagnie de la liste locale
+          this.companies = this.companies.filter(c => c._id !== companyId);
+  
+          this.currentPage = 1; // Rediriger vers la première page
+
+          // Recharger les compagnies pour mettre à jour la pagination
+          this.loadCompanies();
+  
+          // Afficher un message de succès (optionnel)
+          console.log('Compagnie supprimée avec succès');
+
+
+        },
+        error: (err) => {
+          // Afficher une erreur en cas de problème
+          console.error('Erreur lors de la suppression:', err);
+        },
+      });
+    }
+  }
+  
 
   ngAfterViewInit(): void {
     this.initializeSidebar();
@@ -106,6 +148,8 @@ export class ChangePasswordComponent implements AfterViewInit, OnInit{
     this.initializeDarkMode();
     this.initializeMenus();
   }
+
+
 
   private initializeSidebar(): void {
     const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
@@ -228,5 +272,3 @@ export class ChangePasswordComponent implements AfterViewInit, OnInit{
     });
 }
 }
-
-

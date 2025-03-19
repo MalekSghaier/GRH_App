@@ -1,39 +1,39 @@
-import { Component, AfterViewInit,ViewEncapsulation ,OnInit } from '@angular/core';
+import { Component, AfterViewInit,ViewEncapsulation,OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule ,NavigationEnd } from '@angular/router';
+import { FormBuilder, FormGroup, Validators,ReactiveFormsModule  } from '@angular/forms';
 import { filter } from 'rxjs/operators';
-import { CompanyService } from '../services/company.service';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
-import { AuthService } from '../services/auth.service';
-
+import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-compagnies',
+  selector: 'app-edit-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './compagnies.component.html',
-  styleUrl: './compagnies.component.css',
+  imports: [CommonModule, RouterModule,ReactiveFormsModule],
+  templateUrl: './edit-profile.component.html',
+  styleUrl: './edit-profile.component.css',
   encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
 
 })
-export class CompagniesComponent implements AfterViewInit,OnInit {
+export class EditProfileComponent implements AfterViewInit, OnInit{
   currentRoute: string = '';
-  companies: any[] = [];
-  currentPage: number = 1; // Page actuelle
-  itemsPerPage: number = 3; // Nombre d'éléments par page
-  totalItems: number = 0; // Nombre total d'éléments
-  searchQuery: string = '';
-  searchSubject = new Subject<string>();
-  isEmpty: boolean = false; // Nouvelle variable pour gérer l'état vide
+  editProfileForm: FormGroup;
+  successMessage: string | null = null; // Variable pour le message de succès
 
 
   constructor(
     private router: Router,
-    private companyService: CompanyService,
+    private fb: FormBuilder,
+    private userService: UserService,
     private authService: AuthService
-  ) 
+  ) {
+    // Initialisation du formulaire réactif
+    this.editProfileForm = this.fb.group({
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]]
+    });
   
-  {
+    // Gestion de la navigation
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
@@ -41,106 +41,46 @@ export class CompagniesComponent implements AfterViewInit,OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.loadCompanies();
 
-    this.searchSubject.pipe(
-      debounceTime(300), // Attendre 300ms après la dernière frappe
-      distinctUntilChanged() // Ne pas appeler si la valeur n'a pas changé
-    ).subscribe(query => {
-      this.searchCompanies(query);
-    });
+  navigateToEditProfile(): void {
+    this.router.navigate(['/edit-profile']);
+  }
+
+
+  ngOnInit(): void {
+    // Récupérer les informations de l'utilisateur connecté
+    this.userService.getMyInfo().subscribe(
+      (user) => {
+        this.editProfileForm.patchValue(user);
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des informations utilisateur', error);
+      }
+    );
   }
 
   logout(): void {
     this.authService.logout(); // Appelez la méthode logout
   }
-
-  loadCompanies(): void {
-    this.companyService.getCompanies(this.currentPage, this.itemsPerPage).subscribe({
-      next: (response) => {
-        this.companies = response.data; // Mettre à jour la liste des compagnies
-        this.totalItems = response.total; // Mettre à jour le nombre total d'éléments
-        this.isEmpty = this.companies.length === 0; // Vérifier si le tableau est vide
-
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des compagnies:', err);
-        this.isEmpty = true; // En cas d'erreur, considérer le tableau comme vide
-
-      },
-    });
-  }
-
-  onSearchInput(event: Event): void {
-    const query = (event.target as HTMLInputElement).value;
-    this.searchSubject.next(query);
-  }
-
-  searchCompanies(query: string): void {
-    if (query) {
-      this.companyService.searchCompanies(query).subscribe({
-        next: (companies) => {
-          this.companies = companies;
-          this.isEmpty = this.companies.length === 0; // Vérifier si le tableau est vide
-
+  onSubmit(): void {
+    if (this.editProfileForm.valid) {
+      this.userService.updateProfile(this.editProfileForm.value).subscribe(
+        (data) => {
+          this.successMessage = 'Profil mis à jour avec succès !'; 
+          setTimeout(() => {
+            this.router.navigate(['/profil']); 
+          }, 700); 
         },
-        error: (err) => {
-          console.error('Erreur lors de la recherche des compagnies:', err);
-          this.isEmpty = true; // En cas d'erreur, considérer le tableau comme vide
-
-        },
-      });
-    } else {
-      this.loadCompanies(); // Recharger toutes les compagnies si la recherche est vide
+        (error) => {
+          console.error('Erreur lors de la mise à jour du profil', error);
+        }
+      );
     }
   }
 
-  // Changer de page
-  onPageChange(page: number): void {
-    this.currentPage = page; // Mettre à jour la page actuelle
-    this.loadCompanies(); // Recharger les compagnies pour la nouvelle page
+  cancel(): void {
+    this.router.navigate(['/profile']);
   }
-
-  // Générer un tableau de numéros de page pour la pagination
-  getPages(): number[] {
-    const totalPages = Math.ceil(this.totalItems / this.itemsPerPage); // Calculer le nombre total de pages
-    return Array.from({ length: totalPages }, (_, i) => i + 1); // Générer un tableau [1, 2, 3, ...]
-  }
-
-
-
-  editCompany(company: any): void {
-    this.router.navigate(['/edit-company', company._id]); // Redirige vers la page d'édition
-  }
-  
-  deleteCompany(companyId: string): void {
-    // Afficher une boîte de dialogue de confirmation
-    if (confirm('Voulez-vous vraiment supprimer cette compagnie ?')) {
-      // Appeler le service pour supprimer la compagnie
-      this.companyService.deleteCompany(companyId).subscribe({
-        next: () => {
-          // Supprimer la compagnie de la liste locale
-          this.companies = this.companies.filter(c => c._id !== companyId);
-  
-          this.currentPage = 1; // Rediriger vers la première page
-
-          // Recharger les compagnies pour mettre à jour la pagination
-          this.loadCompanies();
-  
-          // Afficher un message de succès (optionnel)
-          console.log('Compagnie supprimée avec succès');
-
-
-        },
-        error: (err) => {
-          // Afficher une erreur en cas de problème
-          console.error('Erreur lors de la suppression:', err);
-        },
-      });
-    }
-  }
-  
 
   ngAfterViewInit(): void {
     this.initializeSidebar();
@@ -148,8 +88,6 @@ export class CompagniesComponent implements AfterViewInit,OnInit {
     this.initializeDarkMode();
     this.initializeMenus();
   }
-
-
 
   private initializeSidebar(): void {
     const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');

@@ -1,25 +1,40 @@
 import { Component, AfterViewInit,ViewEncapsulation,OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule ,NavigationEnd } from '@angular/router';
+import { FormBuilder, FormGroup, Validators,ReactiveFormsModule  } from '@angular/forms';
 import { filter } from 'rxjs/operators';
-import { UserService } from '../services/user.service';
-import { AuthService } from '../services/auth.service';
-@Component({
-  selector: 'app-profil',
-  standalone: true,
-  imports: [CommonModule, RouterModule], 
-  templateUrl: './profil.component.html',
-  styleUrl: './profil.component.css',
-  encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
-  
-})
-export class ProfilComponent implements AfterViewInit {
-  currentRoute: string = '';
+import { UserService } from '../../services/user.service';
+import { ToastrService } from 'ngx-toastr'; 
+import { AuthService } from '../../services/auth.service';
 
-  constructor(private router: Router,
+@Component({
+  selector: 'app-change-password',
+  imports: [CommonModule, RouterModule,ReactiveFormsModule],
+  templateUrl: './change-password.component.html',
+  styleUrl: './change-password.component.css',
+  encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
+
+})
+export class ChangePasswordComponent implements AfterViewInit, OnInit{
+
+  currentRoute: string = '';
+  changePasswordForm: FormGroup;
+  showNewPasswordFields: boolean = false;
+
+  constructor(
+    private fb: FormBuilder,
     private userService: UserService,
+    private router: Router,
+    private toastr: ToastrService, // Inject ToastrService
     private authService: AuthService
   ) {
+    this.changePasswordForm = this.fb.group({
+      oldPassword: ['', Validators.required],
+      newPassword: [''],
+      confirmNewPassword: ['']
+    });
+
+    // Gestion de la navigation
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
@@ -27,29 +42,62 @@ export class ProfilComponent implements AfterViewInit {
     });
   }
 
-  user: any;
+  ngOnInit(): void {}
 
-
-  ngOnInit(): void {
-    this.userService.getMyInfo().subscribe(
-      (data) => {
-        this.user = data;
-      },
-      (error) => {
-        console.error('Erreur lors de la récupération des informations utilisateur', error);
-      }
-    );
-  }
   logout(): void {
     this.authService.logout(); // Appelez la méthode logout
   }
 
-  navigateToEditProfile(): void {
-    this.router.navigate(['/edit-profile']);
+  // Vérifier l'ancien mot de passe
+  checkOldPassword(): void {
+    const oldPassword = this.changePasswordForm.get('oldPassword')?.value;
+
+    this.userService.checkPassword(oldPassword).subscribe(
+      (isValid) => {
+        if (isValid) {
+          this.showNewPasswordFields = true; // Afficher les champs du nouveau mot de passe
+          this.changePasswordForm.get('newPassword')?.setValidators([Validators.required, Validators.minLength(6)]);
+          this.changePasswordForm.get('confirmNewPassword')?.setValidators([Validators.required]);
+          this.changePasswordForm.get('newPassword')?.updateValueAndValidity();
+          this.changePasswordForm.get('confirmNewPassword')?.updateValueAndValidity();
+        } else {
+          this.toastr.error('Ancien mot de passe incorrect', 'Erreur'); // Toast pour erreur
+        }
+      },
+      (error) => {
+        console.error('Erreur lors de la vérification du mot de passe', error);
+        this.toastr.error('Une erreur est survenue lors de la vérification du mot de passe', 'Erreur'); // Toast pour erreur
+      }
+    );
   }
 
-  navigateToChangePassword(): void {
-    this.router.navigate(['/change-password']);
+  onSubmit(): void {
+    if (this.changePasswordForm.valid) {
+      const newPassword = this.changePasswordForm.get('newPassword')?.value;
+      const confirmNewPassword = this.changePasswordForm.get('confirmNewPassword')?.value;
+
+      if (newPassword === confirmNewPassword) {
+        this.userService.changePassword(newPassword).subscribe(
+          (data) => {
+            this.toastr.success('Mot de passe mis à jour avec succès !', 'Succès'); // Toast pour succès
+            this.router.navigate(['/profil']);
+          },
+          (error) => {
+            console.error('Erreur lors de la mise à jour du mot de passe', error);
+            this.toastr.error('Une erreur est survenue lors de la mise à jour du mot de passe', 'Erreur'); // Toast pour erreur
+          }
+        );
+      } else {
+        this.toastr.warning('Les nouveaux mots de passe ne correspondent pas', 'Attention'); // Toast pour avertissement
+      }
+    } else {
+      this.toastr.warning('Veuillez remplir tous les champs correctement', 'Attention'); // Toast pour avertissement
+    }
+  }
+
+  // Annuler et revenir à la page de profil
+  cancel(): void {
+    this.router.navigate(['/profil']);
   }
 
   ngAfterViewInit(): void {
@@ -58,8 +106,6 @@ export class ProfilComponent implements AfterViewInit {
     this.initializeDarkMode();
     this.initializeMenus();
   }
-
-
 
   private initializeSidebar(): void {
     const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
@@ -182,3 +228,5 @@ export class ProfilComponent implements AfterViewInit {
     });
 }
 }
+
+
