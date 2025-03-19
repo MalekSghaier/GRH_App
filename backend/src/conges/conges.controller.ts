@@ -33,6 +33,12 @@ export class CongesController {
     return this.congesService.findAll();
   }
 
+  @Get('pending')
+  @UseGuards(AuthGuard('jwt'))
+  findAllPending() {
+    return this.congesService.findAllPending();
+  }
+
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
   async update(@Param('id') id: string, @Body() data: Partial<IConge>) {

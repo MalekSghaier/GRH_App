@@ -16,9 +16,13 @@ export class CongesService {
     return this.congeModel.find({ userId }).exec();
   }
 
-async findAll(): Promise<IConge[]> {
-  return this.congeModel.find().populate('userId', 'name email').exec(); // Inclure le nom et l'email de l'utilisateur
-}
+  async findAll(): Promise<IConge[]> {
+    return this.congeModel.find().populate('userId', 'name email').exec(); // Inclure le nom et l'email de l'utilisateur
+  }
+
+  async findAllPending(): Promise<IConge[]> {
+    return this.congeModel.find({ status: 'pending' }).populate('userId', 'name email').exec();
+  }
 
   async update(id: string, data: Partial<IConge>): Promise<IConge> {
     const conge = await this.congeModel.findByIdAndUpdate(id, data, { new: true });

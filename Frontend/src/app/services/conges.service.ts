@@ -18,10 +18,17 @@ export class CongesService {
     return this.http.get<any[]>(this.apiUrl, { headers });
   }
 
+  getAllPendingConges(): Observable<any[]> {
+     const token = localStorage.getItem('token');
+     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any[]>(`${this.apiUrl}/pending`, { headers });
+  }
+
   // Mettre à jour le statut d'un congé (accepter ou rejeter)
   updateCongeStatus(id: string, status: 'approved' | 'rejected'): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.put(`${this.apiUrl}/${id}`, { status }, { headers });
   }
+
 }

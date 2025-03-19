@@ -37,7 +37,7 @@ export class CongesComponent implements AfterViewInit ,OnInit{
     }
 
     loadConges(): void {
-      this.congesService.getAllConges().subscribe({
+      this.congesService.getAllPendingConges().subscribe({
         next: (data) => {
           this.conges = data;
           this.isEmpty = this.conges.length === 0; 
@@ -54,9 +54,10 @@ export class CongesComponent implements AfterViewInit ,OnInit{
 
     updateStatus(id: string, status: 'approved' | 'rejected'): void {
       this.congesService.updateCongeStatus(id, status).subscribe({
-        next: () => {
+        next: (updatedConge) => {
           this.toastr.success('Statut du congé mis à jour', 'Succès');
-          this.loadConges(); // Recharger la liste des congés après la mise à jour
+          // Supprimer le congé mis à jour du tableau
+          this.conges = this.conges.filter(conge => conge._id !== id);
         },
         error: (err) => {
           console.error('Erreur lors de la mise à jour du statut:', err);
@@ -64,18 +65,14 @@ export class CongesComponent implements AfterViewInit ,OnInit{
         }
       });
     }
-
-
   // Méthode pour traduire le statut
   translateStatus(status: string): string {
     return this.statusMap[status] || status; // Retourne la traduction ou le statut original si non trouvé
   }
-
   ngAfterViewInit(): void {
     this.initializeSidebar();
  
   }
-
   private initializeSidebar(): void {
     const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
 
