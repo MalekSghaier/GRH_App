@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <title>AdminHub</title>
+</head>
+<body>
+  <app-shared-sidebar></app-shared-sidebar>
+  <section id="content">
+    <app-shared-navbar></app-shared-navbar>
+
+    <!-- MAIN -->
+    <main>
+      <div class="head-title">
+        <div class="left">
+          <h1>Tableau de bord</h1>
+          <ul class="breadcrumb">
+            <li>
+              <a href="#">Tableau de bord</a>
+            </li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li>
+              <a class="active" href="conges">Congés</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Barre de recherche -->
+        <form action="#">
+          <div class="form-input">
+            <input type="search" placeholder="Recherche..." >
+            <button class="search-btn"><i class='bx bx-search'></i></button>
+          </div>
+        </form>
+      </div>
+
+      <div class="table-data">
+        <div class="order">
+          <!-- Afficher le tableau si la liste n'est pas vide -->
+          <table *ngIf="!isEmpty; else emptyMessage">
+            <thead>
+              <tr>
+                <th>Employé</th>
+                <th>Début du Congé</th>
+                <th>Fin du Congé</th>
+                <th>Motif</th>
+                <th>État</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let conge of conges">
+                <td>{{ conge.userId?.name || 'Utilisateur inconnu' }}</td> <!-- Afficher le nom de l'utilisateur -->
+                <td>{{ conge.startDate | date }}</td>
+                <td>{{ conge.endDate | date }}</td>
+                <td>{{ conge.reason }}</td>
+                <td>{{ translateStatus(conge.status) }}</td> <!-- Utilisation de la traduction -->
+                <td>
+                  <!-- Bouton Accepter -->
+                  <button *ngIf="conge.status === 'pending'" class="no-border-button" (click)="updateStatus(conge._id, 'approved')" style="background: none; border: none;">
+                    <i class='bx bx-check bx-sm' style="color: #28a745;"></i>
+                  </button>
+                  <!-- Bouton Rejeter -->
+                  <button *ngIf="conge.status === 'pending'" class="no-border-button" (click)="updateStatus(conge._id, 'rejected')" style="background: none; border: none;">
+                    <i class='bx bx-x bx-sm' style="color: #dc3545;"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Afficher un message si la liste est vide -->
+          <ng-template #emptyMessage>
+            <div class="empty-message">
+              <p>Aucun congé trouvé.</p>
+            </div>
+          </ng-template>
+
+
+        </div>
+      </div>
+    </main>
+    <!-- MAIN -->
+  </section>
+  <!-- CONTENT -->
+</body>
+</html>

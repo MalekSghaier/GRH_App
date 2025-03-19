@@ -1,8 +1,8 @@
+//controller.ts
 import { Controller, Get, Post, Body, Put, Delete, Param, UseGuards, Req, UnauthorizedException } from '@nestjs/common';
 import { CongesService } from './conges.service';
 import { AuthGuard } from '@nestjs/passport';
 import { EmployeeInternGuard } from '../auth/employee-intern.guard';
-import { AdminGuard } from '../auth/admin.guard';
 import { Request } from 'express';
 import { UserPayload } from '../schemas/user-payload'; 
 import { IConge } from 'src/schemas/conge.schema';
@@ -28,20 +28,20 @@ export class CongesController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @UseGuards(AuthGuard('jwt'))
   findAll() {
     return this.congesService.findAll();
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @UseGuards(AuthGuard('jwt'))
   async update(@Param('id') id: string, @Body() data: Partial<IConge>) {
     await this.congesService.update(id, data);
     return { message: 'Congé mis à jour avec succès' };
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @UseGuards(AuthGuard('jwt'))
   async delete(@Param('id') id: string) {
     await this.congesService.delete(id);
     return { message: 'Congé supprimé avec succès' };

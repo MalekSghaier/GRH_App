@@ -1,3 +1,4 @@
+//service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -15,9 +16,9 @@ export class CongesService {
     return this.congeModel.find({ userId }).exec();
   }
 
-  async findAll(): Promise<IConge[]> {
-    return this.congeModel.find().exec();
-  }
+async findAll(): Promise<IConge[]> {
+  return this.congeModel.find().populate('userId', 'name email').exec(); // Inclure le nom et l'email de l'utilisateur
+}
 
   async update(id: string, data: Partial<IConge>): Promise<IConge> {
     const conge = await this.congeModel.findByIdAndUpdate(id, data, { new: true });

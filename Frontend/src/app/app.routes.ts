@@ -15,6 +15,7 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
 import { AddUserFormComponent } from './components/add-user-form/add-user-form.component';
 import { UsersComponent } from './components/users/users.component';
 import { UpdateUserComponent } from './components/update-user/update-user.component';
+import { CongesComponent } from './components/conges/conges.component';
 
 import { AuthGuard } from './guards/auth.guards';
 
@@ -87,6 +88,10 @@ export const routes: Routes = [
     { 
         path: 'users/update/:id', 
         component: UpdateUserComponent 
+    },
+    { 
+        path: 'conges', 
+        component: CongesComponent 
     },
 
 ];

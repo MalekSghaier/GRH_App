@@ -1,4 +1,3 @@
-//admin.guard.ts
 import { CanActivate, ExecutionContext, Injectable, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
@@ -8,6 +7,7 @@ interface User {
   id: string;
   email: string;
   role: UserRole;  
+  companyName?: string;  // Optionnel pour les compagnies
 }
 
 @Injectable()
@@ -18,8 +18,9 @@ export class AdminGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
     const user = request.user as User | undefined;
 
-    if (!user || user.role !== UserRole.ADMIN) {  
-      throw new ForbiddenException("Accès refusé. Seuls les admins sont autorisés.");
+    // Vérifier si l'utilisateur est un admin ou une compagnie
+    if (!user || (user.role !== UserRole.ADMIN && !user.companyName)) {  
+      throw new ForbiddenException("Accès refusé. Seuls les admins et les compagnies sont autorisés.");
     }
     return true;
   }
