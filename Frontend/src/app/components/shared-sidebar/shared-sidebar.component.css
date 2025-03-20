@@ -450,10 +450,34 @@ body.dark #content nav .profile-menu li a {
 
 
 
+
+
+
 /* NAVBAR */
 
 
-
+.notification {
+	position: absolute;
+	right: 0; /* Positionne la notification à l'extrémité droite */
+    left: 0;
+  }
+  
+  .notification .num {
+	position: absolute;
+	top: -6px;
+	right: 20px;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 2px solid var(--light);
+	background: var(--red);
+	color: var(--light);
+	font-weight: 700;
+	font-size: 12px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  }
 
 
 /* MAIN */

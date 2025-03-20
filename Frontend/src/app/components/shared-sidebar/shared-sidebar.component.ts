@@ -5,6 +5,7 @@ import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router'; // Importez RouterModule
+import { CongesService } from '../../services/conges.service';
 
 @Component({
   selector: 'app-shared-sidebar',
@@ -16,16 +17,35 @@ import { RouterModule } from '@angular/router'; // Importez RouterModule
 export class SharedSidebarComponent implements AfterViewInit, OnInit {
 
   currentRoute: string = ''; // Déclaration de la propriété currentRoute
+  pendingCongesCount: number = 0; // Propriété pour stocker le nombre de congés en attente
 
-  constructor(private authService: AuthService, private router: Router) {}
+
+  constructor(
+    private authService: AuthService, 
+    private router: Router,
+    private congesService: CongesService
+  ) {}
 
   ngOnInit(): void {
+    this.loadPendingCongesCount();
+
     // S'abonner aux événements de navigation pour mettre à jour currentRoute
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         this.currentRoute = event.url; // Mettre à jour currentRoute avec l'URL actuelle
       });
+  }
+
+  loadPendingCongesCount(): void {
+    this.congesService.getPendingCongesCount().subscribe({
+      next: (response) => {
+        this.pendingCongesCount = response.count; // Mettre à jour le nombre de congés en attente
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement du nombre de congés en attente:', err);
+      }
+    });
   }
 
   logout(): void {

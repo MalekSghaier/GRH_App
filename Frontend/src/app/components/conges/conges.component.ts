@@ -56,9 +56,14 @@ export class CongesComponent implements AfterViewInit ,OnInit{
       this.congesService.updateCongeStatus(id, status).subscribe({
         next: (updatedConge) => {
           this.toastr.success('Statut du congé mis à jour', 'Succès');
+          
           // Supprimer le congé mis à jour du tableau
           this.conges = this.conges.filter(conge => conge._id !== id);
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000); // 1000 millisecondes = 1 seconde
         },
+        
         error: (err) => {
           console.error('Erreur lors de la mise à jour du statut:', err);
           this.toastr.error('Erreur lors de la mise à jour du statut', 'Erreur');

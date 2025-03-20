@@ -24,6 +24,10 @@ export class CongesService {
     return this.congeModel.find({ status: 'pending' }).populate('userId', 'name email').exec();
   }
 
+  async countPendingConges(): Promise<number> {
+     return this.congeModel.countDocuments({ status: 'pending' }).exec();
+  }
+
   async update(id: string, data: Partial<IConge>): Promise<IConge> {
     const conge = await this.congeModel.findByIdAndUpdate(id, data, { new: true });
     if (!conge) throw new NotFoundException("Congé non trouvé");

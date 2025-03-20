@@ -20,6 +20,9 @@
         <a routerLink="/conges">
           <i class='bx bxs-calendar bx-sm'></i>
           <span class="text">Congés</span>
+          <span *ngIf="pendingCongesCount > 0" class="notification">
+            <span class="num">{{ pendingCongesCount }}</span>
+          </span>
         </a>
       </li>
       <li routerLinkActive="active">

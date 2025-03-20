@@ -39,6 +39,13 @@ export class CongesController {
     return this.congesService.findAllPending();
   }
 
+  @Get('pending/count')
+  @UseGuards(AuthGuard('jwt'))
+  async countPendingConges() {
+    const count = await this.congesService.countPendingConges();
+    return { count };
+  }
+
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
   async update(@Param('id') id: string, @Body() data: Partial<IConge>) {

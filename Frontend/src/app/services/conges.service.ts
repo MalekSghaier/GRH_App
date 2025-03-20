@@ -24,6 +24,12 @@ export class CongesService {
     return this.http.get<any[]>(`${this.apiUrl}/pending`, { headers });
   }
 
+  getPendingCongesCount(): Observable<{ count: number }> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<{ count: number }>(`${this.apiUrl}/pending/count`, { headers });
+  }
+
   // Mettre à jour le statut d'un congé (accepter ou rejeter)
   updateCongeStatus(id: string, status: 'approved' | 'rejected'): Observable<any> {
     const token = localStorage.getItem('token');

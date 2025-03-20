@@ -46,11 +46,11 @@
             </thead>
             <tbody>
               <tr *ngFor="let conge of conges">
-                <td>{{ conge.userId?.name || 'Utilisateur inconnu' }}</td> <!-- Afficher le nom de l'utilisateur -->
+                <td>{{ conge.userId?.name || 'Utilisateur inconnu' }}</td> 
                 <td>{{ conge.startDate | date }}</td>
                 <td>{{ conge.endDate | date }}</td>
                 <td>{{ conge.reason }}</td>
-                <td>{{ translateStatus(conge.status) }}</td> <!-- Utilisation de la traduction -->
+                <td>{{ translateStatus(conge.status) }}</td> 
                 <td>
                   <!-- Bouton Accepter -->
                   <button *ngIf="conge.status === 'pending'" class="no-border-button" (click)="updateStatus(conge._id, 'approved')" style="background: none; border: none;">
