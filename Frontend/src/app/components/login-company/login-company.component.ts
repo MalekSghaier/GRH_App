@@ -49,7 +49,7 @@ export class LoginCompanyComponent {
           this.toastr.success(this.successMessage, "Bienvenue");
             setTimeout(() => {
             this.router.navigate(['/admin-dashboard']);
-          }, 1500);
+          }, 500);
         },
         error: (err) => {
           this.errorMessage = 'Email ou mot de passe incorrect';

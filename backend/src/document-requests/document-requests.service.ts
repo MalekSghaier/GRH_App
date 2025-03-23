@@ -2,7 +2,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { DocumentRequest, DocumentRequestDocument } from '../schemas/document-request.schema';
+import { DocumentRequest, DocumentRequestDocument, RequestStatus } from '../schemas/document-request.schema';
 
 @Injectable()
 export class DocumentRequestsService {
@@ -29,6 +29,18 @@ export class DocumentRequestsService {
 
   async findRequestById(id: string): Promise<DocumentRequestDocument> {
     const request = await this.documentRequestModel.findById(id).exec();
+    if (!request) {
+      throw new NotFoundException(`Demande avec ID ${id} non trouvée`);
+    }
+    return request;
+  }
+
+  async updateRequestStatus(id: string, status: RequestStatus): Promise<DocumentRequestDocument> {
+    const request = await this.documentRequestModel.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    ).exec();
     if (!request) {
       throw new NotFoundException(`Demande avec ID ${id} non trouvée`);
     }

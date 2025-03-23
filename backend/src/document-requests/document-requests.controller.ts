@@ -1,14 +1,15 @@
-import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRequestException} from '@nestjs/common';
+import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRequestException, Put} from '@nestjs/common';
   import { AuthGuard } from '@nestjs/passport';
   import { EmployeeInternGuard } from '../auth/employee-intern.guard';
   import { DocumentRequestsService } from './document-requests.service';
   import { Request } from 'express';
-  import { DocumentType } from '../schemas/document-request.schema';
-  import { AdminGuard } from 'src/auth/admin.guard';
+  import { DocumentType, RequestStatus } from '../schemas/document-request.schema';
   
   // Interface pour représenter un utilisateur authentifié
   interface AuthenticatedUser {
     id: string;
+    role: string; // Ajouter cette ligne
+
   }
   
   // Interface pour les données du formulaire
@@ -80,29 +81,29 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
     }
   
     @Get(':id')
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard('jwt')) // Protéger la route avec JWT
     async getRequestById(@Param('id') id: string, @Req() req: Request) {
       const user = req.user as AuthenticatedUser | undefined;
-  
+    
       if (!user || !user.id) {
         throw new UnauthorizedException('Utilisateur non authentifié');
       }
-  
       const request = await this.documentRequestsService.findRequestById(id);
-      if (!request) {
-        throw new BadRequestException('Demande non trouvée');
-      }
-  
-      if (request.userId !== user.id) {
-        throw new UnauthorizedException('Vous n’êtes pas autorisé à consulter cette demande');
-      }
-  
-      return request;
+      return request; // Le champ _id est automatiquement inclus
+
     }
+
     @Get()
-    @UseGuards(AuthGuard('jwt'), AdminGuard)
+    @UseGuards(AuthGuard('jwt'))
     findAll() {
        return this.documentRequestsService.findAll();
+    }
+
+    @Put(':id/status')
+    @UseGuards(AuthGuard('jwt'))
+    async updateRequestStatus(@Param('id') id: string,@Body('status') status: RequestStatus) 
+    {
+      return this.documentRequestsService.updateRequestStatus(id, status);
     }
   }
   

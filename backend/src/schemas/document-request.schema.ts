@@ -1,3 +1,4 @@
+//document-request.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
@@ -13,6 +14,13 @@ export enum DocumentType {
   SALARY_ADVANCE = 'Demande d’avance sur salaire',
   RECOMMENDATION_LETTER = 'Lettre de recommandation',
   DUPLICATE_DOCUMENT = 'Duplicata de documents perdus',
+}
+
+export enum RequestStatus {
+  PENDING = 'En attente',
+  IN_PROGRESS = 'En cours de traitement',
+  APPROVED = 'Approuvée',
+  REJECTED = 'Rejetée',
 }
 
 @Schema({ timestamps: true })
@@ -34,6 +42,9 @@ export class DocumentRequest {
 
   @Prop({ required: true })
   userId: string; 
+
+  @Prop({ required: true, enum: RequestStatus, default: RequestStatus.PENDING })
+  status: RequestStatus;
 }
 
 export const DocumentRequestSchema = SchemaFactory.createForClass(DocumentRequest);

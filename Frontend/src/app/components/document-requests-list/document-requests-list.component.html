@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <title>AdminHub</title>
+</head>
+<body>
+  <app-shared-sidebar></app-shared-sidebar>
+  <section id="content">
+    <app-shared-navbar></app-shared-navbar>
+
+    <!-- MAIN -->
+    <main>
+      <div class="head-title">
+        <div class="left">
+          <h1>Tableau de bord</h1>
+          <ul class="breadcrumb">
+            <li>
+              <a href="#">Tableau de bord</a>
+            </li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li>
+              <a class="active" href="conges">Documents</a>
+            </li>
+          </ul>
+        </div>
+
+
+      </div>
+
+      <div class="table-data">
+        <div class="order">
+          <!-- Afficher le tableau si la liste n'est pas vide -->
+           <!-- src/app/document-requests-list/document-requests-list.component.html -->
+           <table>
+    <thead>
+      <tr>
+        <th>Nom et Prénom</th>
+        <th>Type de Document</th>
+        <th>Date de Soumission</th>
+        <th>État</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let request of documentRequests">
+        <td>{{ request.fullName }}</td>
+        <td>{{ request.documentType }}</td>
+        <td>{{ request.createdAt | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ request.status }}</td>
+        <td>							
+            <div class="register">
+                 <p>
+                    <a [routerLink]="['/document-request-detail', request._id]">
+                        En savoir plus
+                    </a>
+                </p>
+            </div>
+        </td>
+      </tr>
+    </tbody>
+           </table>
+  
+             <!-- Afficher un message si la liste est vide -->
+             <div *ngIf="documentRequests.length === 0">
+               <p>Aucune demande de document trouvée.</p>
+             </div>
+
+
+        </div>
+      </div>
+    </main>
+    <!-- MAIN -->
+  </section>
+  <!-- CONTENT -->
+</body>
+</html>

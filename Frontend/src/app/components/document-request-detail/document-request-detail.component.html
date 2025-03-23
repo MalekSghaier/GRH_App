@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <title>AdminHub</title>
+</head>
+<body>
+  <app-shared-sidebar></app-shared-sidebar>
+  <section id="content">
+    <app-shared-navbar></app-shared-navbar>
+
+    <!-- MAIN -->
+    <main>
+      <div class="head-title">
+        <div class="left">
+          <h1>Tableau de bord</h1>
+          <ul class="breadcrumb">
+            <li>
+              <a href="#">Tableau de bord</a>
+            </li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li>
+              <a class="active" href="conges">Documents</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Centrer le box des détails -->
+      <div class="table-data">
+        <div class="order">
+          <div *ngIf="documentRequest">
+            <h1>Détails de la demande</h1>
+            <p><strong>Nom et Prénom :</strong> {{ documentRequest.fullName }}</p>
+            <p><strong>Poste :</strong> {{ documentRequest.jobPosition }}</p>
+            <p><strong>Type de contrat :</strong> {{ documentRequest.contractType }}</p>
+            <p><strong>Email professionnel :</strong> {{ documentRequest.professionalEmail }}</p>
+            <p><strong>Type de document :</strong> {{ documentRequest.documentType }}</p>
+            <p><strong>Date de soumission :</strong> {{ documentRequest.createdAt | date: 'dd/MM/yyyy' }}</p>
+            <p><strong>État :</strong> {{ documentRequest.status }}</p>
+            <div class="button-container">
+              <!-- Bouton Rejeter -->
+              <button class="no-border-button" style="background: none; border: none;">
+                <i class='bx bx-x bx-sm' style="color: #dc3545;"></i>
+              </button>
+              <!-- Bouton Accepter -->
+              <button class="no-border-button" style="background: none; border: none;">
+                <i class='bx bx-check bx-sm' style="color: #28a745;"></i>
+              </button>
+
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- MAIN -->
+  </section>
+  <!-- CONTENT -->
+</body>
+</html>

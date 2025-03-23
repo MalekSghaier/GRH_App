@@ -16,6 +16,8 @@ import { AddUserFormComponent } from './components/add-user-form/add-user-form.c
 import { UsersComponent } from './components/users/users.component';
 import { UpdateUserComponent } from './components/update-user/update-user.component';
 import { CongesComponent } from './components/conges/conges.component';
+import { DocumentRequestsListComponent } from './components/document-requests-list/document-requests-list.component';
+import { DocumentRequestDetailComponent } from './components/document-request-detail/document-request-detail.component';
 
 import { AuthGuard } from './guards/auth.guards';
 
@@ -93,5 +95,15 @@ export const routes: Routes = [
         path: 'conges', 
         component: CongesComponent 
     },
+    { 
+        path: 'document-requests', 
+        component: DocumentRequestsListComponent 
+    },
+
+    { 
+        path: 'document-request-detail/:id', 
+        component: DocumentRequestDetailComponent 
+    },
+
 
 ];

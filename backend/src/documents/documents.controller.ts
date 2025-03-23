@@ -2,7 +2,6 @@
 import { Controller, Post, Get, Delete, UseGuards, Body, Param, UploadedFile, UseInterceptors, Req, UnauthorizedException } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { AuthGuard } from '@nestjs/passport';
-import { AdminGuard } from '../auth/admin.guard';
 import { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -15,7 +14,7 @@ export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}
 
   @Post('upload')
-  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('file', {
     storage: diskStorage({
       destination: './uploads',
@@ -53,13 +52,13 @@ export class DocumentsController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @UseGuards(AuthGuard('jwt'))
   async findAll(): Promise<DocumentDocument[]> {  //  Ajout du type de retour
     return this.documentsService.findAll();
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @UseGuards(AuthGuard('jwt'))
   async deleteDocument(@Param('id') id: string, @Req() req: Request): Promise<{ message: string }> {  // Ajout du type de retour
     const user = req.user as UserPayload;
     if (!user || !user.id) throw new UnauthorizedException('Utilisateur non authentifié');
