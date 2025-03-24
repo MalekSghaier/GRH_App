@@ -6,6 +6,7 @@ import { RouterModule, Router } from '@angular/router';
 import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component';
 import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.component';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-document-request-detail',
@@ -31,7 +32,9 @@ export class DocumentRequestDetailComponent implements AfterViewInit, OnInit {
   constructor(
     private route: ActivatedRoute,
     private documentRequestsService: DocumentRequestsService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService,
+
   ) {}
 
   ngOnInit(): void {
@@ -66,6 +69,29 @@ export class DocumentRequestDetailComponent implements AfterViewInit, OnInit {
       },
     });
   }
+
+    // Méthode pour rejeter la demande
+    rejectRequest(id: string): void {
+      if (!id) {
+        console.error('ID de la demande non trouvé');
+        return;
+      }
+  
+      // Appeler le service pour mettre à jour le statut
+      this.documentRequestsService.updateRequestStatus(id, 'Rejetée').subscribe({
+        next: (updatedRequest) => {
+          console.log('Demande rejetée avec succès', updatedRequest);
+          this.toastr.error('Demande rejetée avec succès');
+          this.documentRequest.status = updatedRequest.status; // Mettre à jour le statut dans le frontend
+          setTimeout(() => {
+            this.router.navigate(['/document-requests']);
+          }, 400);
+        },
+        error: (err) => {
+          console.error('Erreur lors du rejet de la demande', err);
+        },
+      });
+    }
 
   ngAfterViewInit(): void {
     this.initializeSidebar();

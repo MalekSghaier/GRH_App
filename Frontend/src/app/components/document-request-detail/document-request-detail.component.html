@@ -42,7 +42,7 @@
             <p><strong>État :</strong> {{ documentRequest.status }}</p>
             <div class="button-container">
               <!-- Bouton Rejeter -->
-              <button class="no-border-button" style="background: none; border: none;">
+              <button class="no-border-button" (click)="rejectRequest(documentRequest._id)" style="background: none; border: none;">
                 <i class='bx bx-x bx-sm' style="color: #dc3545;"></i>
               </button>
               <!-- Bouton Accepter -->
