@@ -29,7 +29,10 @@ export class DocumentRequestsListComponent implements AfterViewInit, OnInit {
 
   private loadDocumentRequests(): void {
     this.documentRequestsService.findAllRequests().subscribe(requests => {
-      this.documentRequests = requests;
+      // Filtrer les demandes dont l'état est "En attente" ou "En cours de traitement"
+      this.documentRequests = requests.filter(request => 
+        request.status === 'En attente' || request.status === 'En cours de traitement'
+      );
     });
   }
 
