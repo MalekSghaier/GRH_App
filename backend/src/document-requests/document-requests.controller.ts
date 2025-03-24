@@ -1,9 +1,12 @@
-import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRequestException, Put} from '@nestjs/common';
+import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRequestException, Put, NotFoundException} from '@nestjs/common';
   import { AuthGuard } from '@nestjs/passport';
   import { EmployeeInternGuard } from '../auth/employee-intern.guard';
   import { DocumentRequestsService } from './document-requests.service';
   import { Request } from 'express';
   import { DocumentType, RequestStatus } from '../schemas/document-request.schema';
+  import { MailService } from '../mail/mail.service'; // Ajoutez cette importation
+
+
   
   // Interface pour représenter un utilisateur authentifié
   interface AuthenticatedUser {
@@ -23,7 +26,10 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
   
   @Controller('document-requests')
   export class DocumentRequestsController {
-    constructor(private readonly documentRequestsService: DocumentRequestsService) {}
+    constructor(private readonly documentRequestsService: DocumentRequestsService,
+      private readonly mailService: MailService // Injectez le MailService
+
+    ) {}
   
     @Post()
     @UseGuards(AuthGuard('jwt'), EmployeeInternGuard)
@@ -67,6 +73,9 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
         userId: user.id,
       });
     }
+
+
+    
   
     @Get('mes-demandes')
     @UseGuards(AuthGuard('jwt'), EmployeeInternGuard)
@@ -79,6 +88,8 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
   
       return this.documentRequestsService.findRequestsByUser(user.id);
     }
+
+    
   
     @Get(':id')
     @UseGuards(AuthGuard('jwt')) // Protéger la route avec JWT
@@ -104,6 +115,23 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
     async updateRequestStatus(@Param('id') id: string,@Body('status') status: RequestStatus) 
     {
       return this.documentRequestsService.updateRequestStatus(id, status);
+    }
+
+
+    @Put(':id/approve')
+    @UseGuards(AuthGuard('jwt'))
+    async approveRequest(@Param('id') id: string) {
+      const request = await this.documentRequestsService.findRequestById(id);
+      
+      if (!request) {
+        throw new NotFoundException('Demande non trouvée');
+      }
+    
+      // Mettre à jour seulement le statut
+      return this.documentRequestsService.updateRequestStatus(
+        id, 
+        RequestStatus.APPROVED
+      );
     }
   }
   

@@ -13,10 +13,12 @@ import { DocumentsModule } from './documents/documents.module';
 import { DocumentRequestsModule } from './document-requests/document-requests.module';
 import { InternshipApplicationsModule } from './internship-applications/internship-applications.module';
 import { WorkApplicationsModule } from './work-applications/work-applications.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),  
+    ConfigModule.forRoot({ isGlobal: true,envFilePath: '.env', // Spécifiez explicitement le chemin
+    }),  
     MongooseModule.forRoot('mongodb://localhost:27017/GRH'),
     UsersModule,
     AuthModule,
@@ -26,7 +28,8 @@ import { WorkApplicationsModule } from './work-applications/work-applications.mo
     DocumentsModule, 
     DocumentRequestsModule,
     InternshipApplicationsModule,
-    WorkApplicationsModule, 
+    WorkApplicationsModule,
+    MailModule, 
 
   ],
   controllers: [AppController],

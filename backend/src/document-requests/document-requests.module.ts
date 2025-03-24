@@ -9,6 +9,8 @@ import { UserSchema } from '../schemas/user.schema';
 import { DocumentRequest, DocumentRequestSchema } from '../schemas/document-request.schema';
 import { DocumentRequestsService } from './document-requests.service';
 import { DocumentRequestsController } from './document-requests.controller';
+import { MailModule } from '../mail/mail.module'; // Ajoutez cette importation
+
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { DocumentRequestsController } from './document-requests.controller';
       { name: DocumentRequest.name, schema: DocumentRequestSchema },
     ]),
     UsersModule,
+    MailModule, // Importez le MailModule ici
+
   ],
   controllers: [DocumentsController, DocumentRequestsController],
   providers: [DocumentsService, DocumentRequestsService],

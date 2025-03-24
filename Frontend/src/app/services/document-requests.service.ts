@@ -37,4 +37,13 @@ export class DocumentRequestsService {
     const headers = this.getAuthHeaders();
     return this.http.put<DocumentRequest>(`${this.apiUrl}/${id}/status`, { status }, { headers });
   }
+
+  approveRequest(id: string): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.put(
+      `${this.apiUrl}/${id}/approve`, 
+      {}, 
+      { headers }
+    );
+  }
 }

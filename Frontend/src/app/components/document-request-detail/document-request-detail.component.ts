@@ -81,7 +81,7 @@ export class DocumentRequestDetailComponent implements AfterViewInit, OnInit {
       this.documentRequestsService.updateRequestStatus(id, 'Rejetée').subscribe({
         next: (updatedRequest) => {
           console.log('Demande rejetée avec succès', updatedRequest);
-          this.toastr.error('Demande rejetée avec succès');
+          this.toastr.error('Demande rejetée');
           this.documentRequest.status = updatedRequest.status; // Mettre à jour le statut dans le frontend
           setTimeout(() => {
             this.router.navigate(['/document-requests']);
@@ -92,6 +92,43 @@ export class DocumentRequestDetailComponent implements AfterViewInit, OnInit {
         },
       });
     }
+
+    approveRequest(): void {
+      if (!this.documentRequest?._id) return;
+      
+      // D'abord mettre à jour le statut
+      this.documentRequestsService.approveRequest(this.documentRequest._id)
+        .subscribe({
+          next: (updatedRequest) => {
+            this.toastr.success('Demande approuvée');
+            this.documentRequest.status = updatedRequest.status;
+            
+            // Ouvrir l'interface de composition Gmail
+            this.openGmailComposeWindow();
+          },
+          error: (err) => {
+            this.toastr.error('Erreur lors de l\'approbation');
+            console.error(err);
+          }
+        });
+    }
+
+
+    private openGmailComposeWindow(): void {
+      const subject = `Document approuvé : ${this.documentRequest.documentType}`;
+      const body = `Bonjour ${this.documentRequest.fullName},\n\n` +
+                   `Votre demande de ${this.documentRequest.documentType} a été approuvée.\n\n` +
+                   `Cordialement,\nL'équipe RH`;
+      
+      const gmailUrl = `https://mail.google.com/mail/?view=cm` +
+                       `&to=${encodeURIComponent(this.documentRequest.professionalEmail)}` +
+                       `&su=${encodeURIComponent(subject)}` +
+                       `&body=${encodeURIComponent(body)}` +
+                       `&fs=1`; // Force l'ouverture dans une nouvelle fenêtre
+      
+      window.open(gmailUrl, '_blank');
+    }
+
 
   ngAfterViewInit(): void {
     this.initializeSidebar();
