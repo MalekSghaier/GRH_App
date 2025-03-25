@@ -13,7 +13,6 @@ import { DocumentsModule } from './documents/documents.module';
 import { DocumentRequestsModule } from './document-requests/document-requests.module';
 import { InternshipApplicationsModule } from './internship-applications/internship-applications.module';
 import { WorkApplicationsModule } from './work-applications/work-applications.module';
-import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -29,7 +28,6 @@ import { MailModule } from './mail/mail.module';
     DocumentRequestsModule,
     InternshipApplicationsModule,
     WorkApplicationsModule,
-    MailModule, 
 
   ],
   controllers: [AppController],

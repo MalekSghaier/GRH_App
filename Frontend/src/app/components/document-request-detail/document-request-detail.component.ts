@@ -7,6 +7,8 @@ import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component'
 import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.component';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { GmailHelperService } from '../../services/gmail-helper.service';
+
 
 @Component({
   selector: 'app-document-request-detail',
@@ -32,6 +34,7 @@ export class DocumentRequestDetailComponent implements AfterViewInit, OnInit {
   constructor(
     private route: ActivatedRoute,
     private documentRequestsService: DocumentRequestsService,
+    private gmailHelper: GmailHelperService, 
     private router: Router,
     private toastr: ToastrService,
 
@@ -93,40 +96,34 @@ export class DocumentRequestDetailComponent implements AfterViewInit, OnInit {
       });
     }
 
+
     approveRequest(): void {
       if (!this.documentRequest?._id) return;
-      
-      // D'abord mettre à jour le statut
-      this.documentRequestsService.approveRequest(this.documentRequest._id)
-        .subscribe({
-          next: (updatedRequest) => {
-            this.toastr.success('Demande approuvée');
-            this.documentRequest.status = updatedRequest.status;
-            
-            // Ouvrir l'interface de composition Gmail
-            this.openGmailComposeWindow();
-          },
-          error: (err) => {
-            this.toastr.error('Erreur lors de l\'approbation');
-            console.error(err);
-          }
-        });
-    }
-
-
-    private openGmailComposeWindow(): void {
-      const subject = `Document approuvé : ${this.documentRequest.documentType}`;
-      const body = `Bonjour ${this.documentRequest.fullName},\n\n` +
-                   `Votre demande de ${this.documentRequest.documentType} a été approuvée.\n\n` +
-                   `Cordialement,\nL'équipe RH`;
-      
-      const gmailUrl = `https://mail.google.com/mail/?view=cm` +
-                       `&to=${encodeURIComponent(this.documentRequest.professionalEmail)}` +
-                       `&su=${encodeURIComponent(subject)}` +
-                       `&body=${encodeURIComponent(body)}` +
-                       `&fs=1`; // Force l'ouverture dans une nouvelle fenêtre
-      
-      window.open(gmailUrl, '_blank');
+    
+      // 1. D'abord approuver la demande via l'API
+      this.documentRequestsService.approveRequest(this.documentRequest._id).subscribe({
+        next: (updatedRequest) => {
+          // 2. Mettre à jour le statut localement
+          this.documentRequest.status = updatedRequest.status;
+          this.toastr.success('Demande approuvée');
+    
+          // 3. Préparer les données pour Gmail
+          const emailData = {
+            to: this.documentRequest.professionalEmail,
+            subject: `Document approuvé : ${this.documentRequest.documentType}`,
+            body: `Bonjour ${this.documentRequest.fullName},\n\n` +
+                  `Votre demande de ${this.documentRequest.documentType} a été approuvée.\n\n` +
+                  `Cordialement,\nService RH`
+          };
+    
+          // 4. Ouvrir Gmail
+          this.gmailHelper.openGmailDraft(emailData);
+        },
+        error: (err) => {
+          this.toastr.error('Échec de l\'approbation');
+          console.error(err);
+        }
+      });
     }
 
 

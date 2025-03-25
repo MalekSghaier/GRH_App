@@ -4,7 +4,6 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
   import { DocumentRequestsService } from './document-requests.service';
   import { Request } from 'express';
   import { DocumentType, RequestStatus } from '../schemas/document-request.schema';
-  import { MailService } from '../mail/mail.service'; // Ajoutez cette importation
 
 
   
@@ -27,7 +26,6 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
   @Controller('document-requests')
   export class DocumentRequestsController {
     constructor(private readonly documentRequestsService: DocumentRequestsService,
-      private readonly mailService: MailService // Injectez le MailService
 
     ) {}
   
@@ -75,7 +73,8 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
     }
 
 
-    
+
+
   
     @Get('mes-demandes')
     @UseGuards(AuthGuard('jwt'), EmployeeInternGuard)
@@ -88,8 +87,6 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
   
       return this.documentRequestsService.findRequestsByUser(user.id);
     }
-
-    
   
     @Get(':id')
     @UseGuards(AuthGuard('jwt')) // Protéger la route avec JWT
@@ -117,7 +114,6 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
       return this.documentRequestsService.updateRequestStatus(id, status);
     }
 
-
     @Put(':id/approve')
     @UseGuards(AuthGuard('jwt'))
     async approveRequest(@Param('id') id: string) {
@@ -127,7 +123,6 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
         throw new NotFoundException('Demande non trouvée');
       }
     
-      // Mettre à jour seulement le statut
       return this.documentRequestsService.updateRequestStatus(
         id, 
         RequestStatus.APPROVED
