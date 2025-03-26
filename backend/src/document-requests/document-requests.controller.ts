@@ -72,10 +72,6 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
       });
     }
 
-
-
-
-  
     @Get('mes-demandes')
     @UseGuards(AuthGuard('jwt'), EmployeeInternGuard)
     async getMyRequests(@Req() req: Request) {
@@ -105,6 +101,13 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
     @UseGuards(AuthGuard('jwt'))
     findAll() {
        return this.documentRequestsService.findAll();
+    }
+
+    @Get('pending/count')
+    @UseGuards(AuthGuard('jwt'))
+    async countPendingDocs() {
+      const count = await this.documentRequestsService.countPendingDocs();
+      return { count };
     }
 
     @Put(':id/status')

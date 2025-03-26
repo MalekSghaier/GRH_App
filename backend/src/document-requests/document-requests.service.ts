@@ -46,4 +46,8 @@ export class DocumentRequestsService {
     }
     return request;
   }
+
+  async countPendingDocs(): Promise<number> {
+    return this.documentRequestModel.countDocuments({ status: 'En attente' }).exec();
+ }
 }

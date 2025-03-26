@@ -29,6 +29,9 @@
         <a routerLink="/document-requests">
           <i class='bx bxs-file-doc bx-sm'></i>
           <span class="text">Documents</span>
+          <span *ngIf="pendingDocsCount > 0" class="notification">
+            <span class="num">{{ pendingDocsCount }}</span>
+          </span>
         </a>
       </li>
     </ul>

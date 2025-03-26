@@ -47,5 +47,11 @@ export class DocumentRequestsService {
     );
   }
 
+  getPendingDocsCount(): Observable<{ count: number }> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<{ count: number }>(`${this.apiUrl}/pending/count`, { headers });
+  }
+
 
 }
