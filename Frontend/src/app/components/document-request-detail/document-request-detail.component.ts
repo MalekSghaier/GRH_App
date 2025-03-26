@@ -8,11 +8,13 @@ import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.compone
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GmailHelperService } from '../../services/gmail-helper.service';
+import { ToastrModule } from 'ngx-toastr'; 
+
 
 
 @Component({
   selector: 'app-document-request-detail',
-  imports: [SharedNavbarComponent, SharedSidebarComponent, CommonModule, RouterModule],
+  imports: [SharedNavbarComponent, SharedSidebarComponent, CommonModule, RouterModule,ToastrModule],
   templateUrl: './document-request-detail.component.html',
   styleUrls: ['./document-request-detail.component.css'],
   encapsulation: ViewEncapsulation.None,
@@ -84,7 +86,10 @@ export class DocumentRequestDetailComponent implements AfterViewInit, OnInit {
       this.documentRequestsService.updateRequestStatus(id, 'Rejetée').subscribe({
         next: (updatedRequest) => {
           console.log('Demande rejetée avec succès', updatedRequest);
-          this.toastr.error('Demande rejetée');
+          this.toastr.error('Demande rejetée','Erreur', {
+            timeOut: 1500,
+            progressBar: true
+          });
           this.documentRequest.status = updatedRequest.status; // Mettre à jour le statut dans le frontend
           setTimeout(() => {
             this.router.navigate(['/document-requests']);
@@ -100,30 +105,45 @@ export class DocumentRequestDetailComponent implements AfterViewInit, OnInit {
     approveRequest(): void {
       if (!this.documentRequest?._id) return;
     
-      // 1. D'abord approuver la demande via l'API
-      this.documentRequestsService.approveRequest(this.documentRequest._id).subscribe({
-        next: (updatedRequest) => {
-          // 2. Mettre à jour le statut localement
-          this.documentRequest.status = updatedRequest.status;
-          this.toastr.success('Demande approuvée');
-    
-          // 3. Préparer les données pour Gmail
-          const emailData = {
-            to: this.documentRequest.professionalEmail,
-            subject: `Document approuvé : ${this.documentRequest.documentType}`,
-            body: `Bonjour ${this.documentRequest.fullName},\n\n` +
-                  `Votre demande de ${this.documentRequest.documentType} a été approuvée.\n\n` +
-                  `Cordialement,\nService RH`
-          };
-    
-          // 4. Ouvrir Gmail
-          this.gmailHelper.openGmailDraft(emailData);
-        },
-        error: (err) => {
-          this.toastr.error('Échec de l\'approbation');
-          console.error(err);
-        }
+      // 1. Afficher un toast de confirmation
+      this.toastr.success( 'Demande approuvée','Préparation de l\'email en cours...', {
+        timeOut: 1500, // Durée d'affichage du toast (2 secondes)
+        progressBar: true
       });
+    
+      // 2. Approuver la demande via l'API après un léger délai
+      setTimeout(() => {
+        this.documentRequestsService.approveRequest(this.documentRequest._id).subscribe({
+          next: (updatedRequest) => {
+            this.documentRequest.status = updatedRequest.status;
+            
+            // 3. Préparer les données pour Gmail
+            const emailData = {
+              to: this.documentRequest.professionalEmail,
+              subject: `Demande document approuvé : ${this.documentRequest.documentType}`,
+              body: `Bonjour ${this.documentRequest.fullName},\n\n` +
+                    `Votre demande de ${this.documentRequest.documentType} a été approuvée.\n\n` +
+                    `Cordialement,\nService RH`
+            };
+    
+            // 4. Ouvrir Gmail après un autre léger délai
+            setTimeout(() => {
+              this.gmailHelper.openGmailDraft(emailData);
+              // Redirection après 3 secondes (ajustable)
+              setTimeout(() => {
+                this.router.navigate(['/document-requests']);
+              }, 1500);
+            }, 500);
+          },
+          error: (err) => {
+            this.toastr.error('Échec de l\'approbation','Erreur', {
+              timeOut: 1500,
+              progressBar: true
+            });
+            console.error(err);
+          }
+        });
+      }, 2000); // Délai avant l'approbation (2 secondes)
     }
 
 

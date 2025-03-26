@@ -61,12 +61,18 @@ export class ChangePasswordComponent implements AfterViewInit, OnInit{
           this.changePasswordForm.get('newPassword')?.updateValueAndValidity();
           this.changePasswordForm.get('confirmNewPassword')?.updateValueAndValidity();
         } else {
-          this.toastr.error('Ancien mot de passe incorrect', 'Erreur'); // Toast pour erreur
+          this.toastr.error('Ancien mot de passe incorrect', 'Erreur', {
+            timeOut: 1500,
+            progressBar: true
+          }); // Toast pour erreur
         }
       },
       (error) => {
         console.error('Erreur lors de la vérification du mot de passe', error);
-        this.toastr.error('Une erreur est survenue lors de la vérification du mot de passe', 'Erreur'); // Toast pour erreur
+        this.toastr.error('Une erreur est survenue lors de la vérification du mot de passe', 'Erreur', {
+          timeOut: 1500,
+          progressBar: true
+        }); // Toast pour erreur
       }
     );
   }
@@ -79,19 +85,31 @@ export class ChangePasswordComponent implements AfterViewInit, OnInit{
       if (newPassword === confirmNewPassword) {
         this.userService.changePassword(newPassword).subscribe(
           (data) => {
-            this.toastr.success('Mot de passe mis à jour avec succès !', 'Succès'); // Toast pour succès
+            this.toastr.success('Mot de passe mis à jour avec succès !', 'Succès', {
+              timeOut: 1500,
+              progressBar: true
+            }); // Toast pour succès
             this.router.navigate(['/profil']);
           },
           (error) => {
             console.error('Erreur lors de la mise à jour du mot de passe', error);
-            this.toastr.error('Une erreur est survenue lors de la mise à jour du mot de passe', 'Erreur'); // Toast pour erreur
+            this.toastr.error('Une erreur est survenue lors de la mise à jour du mot de passe', 'Erreur', {
+              timeOut: 1500,
+              progressBar: true
+            }); // Toast pour erreur
           }
         );
       } else {
-        this.toastr.warning('Les nouveaux mots de passe ne correspondent pas', 'Attention'); // Toast pour avertissement
+        this.toastr.warning('Les nouveaux mots de passe ne correspondent pas', 'Attention', {
+          timeOut: 1500,
+          progressBar: true
+        }); // Toast pour avertissement
       }
     } else {
-      this.toastr.warning('Veuillez remplir tous les champs correctement', 'Attention'); // Toast pour avertissement
+      this.toastr.warning('Veuillez remplir tous les champs correctement', 'Attention', {
+        timeOut: 1500,
+        progressBar: true
+      }); // Toast pour avertissement
     }
   }
 

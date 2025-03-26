@@ -35,7 +35,10 @@ export class LoginCompanyComponent {
     if (this.loginCampagnyForm.invalid) {
       this.errorMessage = 'Email ou mot de passe incorrect';
       this.successMessage = '';
-      this.toastr.error('Email ou mot de passe incorrect', 'Erreur');
+      this.toastr.error('Email ou mot de passe incorrect', 'Erreur', {
+        timeOut: 1500,
+        progressBar: true
+      });
       return;
     }
     this.http.post('http://localhost:3000/auth/login/company', this.loginCampagnyForm.value)
@@ -46,15 +49,21 @@ export class LoginCompanyComponent {
           localStorage.setItem('companyName', response.companyName); 
           this.successMessage = "Ravi de vous retrouver ! Gérez vos demandes et accédez à vos documents en toute sérénité.";
           this.errorMessage = ''; 
-          this.toastr.success(this.successMessage, "Bienvenue");
+          this.toastr.success(this.successMessage, "Bienvenue", {
+            timeOut: 1500,
+            progressBar: true
+          });
             setTimeout(() => {
             this.router.navigate(['/admin-dashboard']);
-          }, 500);
+          }, 200);
         },
         error: (err) => {
           this.errorMessage = 'Email ou mot de passe incorrect';
           this.successMessage = '';
-          this.toastr.error(this.errorMessage, 'Erreur');
+          this.toastr.error(this.errorMessage, 'Erreur', {
+            timeOut: 1500,
+            progressBar: true
+          });
         }
       });
   }

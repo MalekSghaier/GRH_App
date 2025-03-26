@@ -89,11 +89,17 @@ export class UsersComponent implements AfterViewInit,OnInit  {
     this.userService.generateQrCode(userId).subscribe({
       next: () => {
         // Afficher une notification de succès
-        this.toastr.success('QR Code généré avec succès', 'Succès');
+        this.toastr.success('QR Code généré avec succès', 'Succès', {
+          timeOut: 1500,
+          progressBar: true
+        });
       },
       error: (err) => {
         console.error('Erreur lors de la génération du QR Code:', err);
-        this.toastr.error('Erreur lors de la génération du QR Code', 'Erreur');
+        this.toastr.error('Erreur lors de la génération du QR Code', 'Erreur', {
+          timeOut: 1500,
+          progressBar: true
+        });
       }
     });
   }
@@ -102,12 +108,18 @@ export class UsersComponent implements AfterViewInit,OnInit  {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
       this.userService.deleteUser(userId).subscribe({
         next: () => {
-          this.toastr.success('Utilisateur supprimé avec succès', 'Succès');
+          this.toastr.success('Utilisateur supprimé avec succès', 'Succès', {
+            timeOut: 1500,
+            progressBar: true
+          });
           this.loadAdminUsers(); // Recharger la liste des utilisateurs après la suppression
         },
         error: (err) => {
           console.error('Erreur lors de la suppression de l\'utilisateur:', err);
-          this.toastr.error('Erreur lors de la suppression de l\'utilisateur', 'Erreur');
+          this.toastr.error('Erreur lors de la suppression de l\'utilisateur', 'Erreur', {
+            timeOut: 1500,
+            progressBar: true
+          });
         }
       });
     }

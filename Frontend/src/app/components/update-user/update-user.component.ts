@@ -39,7 +39,10 @@ export class UpdateUserComponent implements OnInit, AfterViewInit {
     if (this.userId) {
       this.loadUserData(); // Charger les données de l'utilisateur
     } else {
-      this.toastr.error('ID utilisateur non trouvé', 'Erreur');
+      this.toastr.error('ID utilisateur non trouvé', 'Erreur', {
+        timeOut: 1500,
+        progressBar: true
+      });
       this.router.navigate(['/users']); // Rediriger si l'ID est manquant
     }
   }
@@ -58,7 +61,10 @@ export class UpdateUserComponent implements OnInit, AfterViewInit {
       },
       error: (err) => {
         console.error('Erreur lors du chargement des données de l\'utilisateur:', err);
-        this.toastr.error('Erreur lors du chargement des données de l\'utilisateur', 'Erreur');
+        this.toastr.error('Erreur lors du chargement des données de l\'utilisateur', 'Erreur', {
+          timeOut: 1500,
+          progressBar: true
+        });
         this.router.navigate(['/users']); // Rediriger en cas d'erreur
       }
     });
@@ -69,16 +75,25 @@ export class UpdateUserComponent implements OnInit, AfterViewInit {
     if (this.userForm.valid) {
       this.userService.updateUser(this.userId, this.userForm.value).subscribe({
         next: () => {
-          this.toastr.success('Utilisateur mis à jour avec succès', 'Succès');
+          this.toastr.success('Utilisateur mis à jour avec succès', 'Succès', {
+            timeOut: 1500,
+            progressBar: true
+          });
           this.router.navigate(['/users']); // Rediriger vers la liste des utilisateurs
         },
         error: (err) => {
           console.error('Erreur lors de la mise à jour de l\'utilisateur:', err);
-          this.toastr.error('Erreur lors de la mise à jour de l\'utilisateur', 'Erreur');
+          this.toastr.error('Erreur lors de la mise à jour de l\'utilisateur', 'Erreur', {
+            timeOut: 1500,
+            progressBar: true
+          });
         }
       });
     } else {
-      this.toastr.warning('Veuillez remplir tous les champs obligatoires', 'Avertissement');
+      this.toastr.warning('Veuillez remplir tous les champs obligatoires', 'Avertissement', {
+        timeOut: 1500,
+        progressBar: true
+      });
     }
   }
 

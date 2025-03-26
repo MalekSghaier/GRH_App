@@ -118,7 +118,10 @@ export class AddUserFormComponent implements AfterViewInit {
       this.userService.createUser(userData).subscribe({
         next: (response) => {
           console.log('Utilisateur créé avec succès', response);
-          this.toastr.success('Utilisateur créé avec succès', 'Succès'); // Message de succès
+          this.toastr.success('Utilisateur créé avec succès', 'Succès', {
+            timeOut: 1500,
+            progressBar: true
+          }); // Message de succès
           setTimeout(() => {
             this.router.navigate(['/users']);
           }, 1500); // Redirection après 1,5 seconde
@@ -126,14 +129,23 @@ export class AddUserFormComponent implements AfterViewInit {
         error: (error) => {
           console.error('Erreur lors de la création de l\'utilisateur', error);
           if (error.status === 409) {
-            this.toastr.error('Cet email est déjà utilisé.', 'Erreur'); // Message d'erreur spécifique
+            this.toastr.error('Cet email est déjà utilisé.', 'Erreur', {
+              timeOut: 1500,
+              progressBar: true
+            }); // Message d'erreur spécifique
           } else {
-            this.toastr.error('Une erreur s’est produite lors de la création de l’utilisateur.', 'Erreur'); // Message d'erreur générique
+            this.toastr.error('Une erreur s’est produite lors de la création de l’utilisateur.', 'Erreur', {
+              timeOut: 1500,
+              progressBar: true
+            }); // Message d'erreur générique
           }
         }
       });
     } else {
-      this.toastr.error('Veuillez remplir tous les champs requis.', 'Erreur'); // Message d'erreur si le formulaire est invalide
+      this.toastr.error('Veuillez remplir tous les champs requis.', 'Erreur', {
+        timeOut: 1500,
+        progressBar: true
+      }); // Message d'erreur si le formulaire est invalide
     }
   }
 }

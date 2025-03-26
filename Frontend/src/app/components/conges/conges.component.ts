@@ -45,7 +45,10 @@ export class CongesComponent implements AfterViewInit ,OnInit{
         },
         error: (err) => {
           console.error('Erreur lors du chargement des congés:', err);
-          this.toastr.error('Erreur lors du chargement des congés', 'Erreur');
+          this.toastr.error('Erreur lors du chargement des congés', 'Erreur', {
+            timeOut: 1500,
+            progressBar: true
+          });
           this.isEmpty = true; 
           this.isLoading = false;
         }
@@ -55,7 +58,10 @@ export class CongesComponent implements AfterViewInit ,OnInit{
     updateStatus(id: string, status: 'approved' | 'rejected'): void {
       this.congesService.updateCongeStatus(id, status).subscribe({
         next: (updatedConge) => {
-          this.toastr.success('Statut du congé mis à jour', 'Succès');
+          this.toastr.success('Statut du congé mis à jour', 'Succès', {
+            timeOut: 1500,
+            progressBar: true
+          });
           
           // Supprimer le congé mis à jour du tableau
           this.conges = this.conges.filter(conge => conge._id !== id);
@@ -66,7 +72,10 @@ export class CongesComponent implements AfterViewInit ,OnInit{
         
         error: (err) => {
           console.error('Erreur lors de la mise à jour du statut:', err);
-          this.toastr.error('Erreur lors de la mise à jour du statut', 'Erreur');
+          this.toastr.error('Erreur lors de la mise à jour du statut', 'Erreur', {
+            timeOut: 1500,
+            progressBar: true
+          });
         }
       });
     }

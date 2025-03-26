@@ -87,7 +87,10 @@ export class EditCompanyComponent implements AfterViewInit, OnInit {
   onSubmit() {
     if (this.companyForm.invalid) {
       this.errorMessage = 'Veuillez vérifier vos champs de saisie';
-      this.toastr.error('❌ Erreur lors de la modification de la compagnie', 'Veuillez vérifier vos champs de saisie');
+      this.toastr.error('❌ Erreur lors de la modification de la compagnie', 'Veuillez vérifier vos champs de saisie', {
+        timeOut: 1500,
+        progressBar: true
+      });
       return;
     }
   
@@ -126,7 +129,10 @@ export class EditCompanyComponent implements AfterViewInit, OnInit {
         next: (response) => {
           this.successMessage = 'Compagnie modifiée avec succès.';
           this.errorMessage = '';
-          this.toastr.success(this.successMessage);
+          this.toastr.success(this.successMessage,'Succès', {
+            timeOut: 1500,
+            progressBar: true
+          });
           setTimeout(() => {
             this.router.navigate(['/compagnies']);
           }, 1500);
@@ -137,7 +143,10 @@ export class EditCompanyComponent implements AfterViewInit, OnInit {
           } else {
             this.errorMessage = 'Une erreur s’est produite lors de la modification de la compagnie.';
           }
-          this.toastr.error(`❌ ${this.errorMessage}`);
+          this.toastr.error(this.errorMessage, 'Erreur', {
+            timeOut: 1500,
+            progressBar: true
+          });
         },
       });
     }
