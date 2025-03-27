@@ -20,6 +20,7 @@ import { DocumentRequestsListComponent } from './components/document-requests-li
 import { DocumentRequestDetailComponent } from './components/document-request-detail/document-request-detail.component';
 import { ParametersComponent } from './components/parameters/parameters.component';
 import { EditCompanyProfileComponent } from './components/edit-company-profile/edit-company-profile.component';
+import { ChangePasswordProfileComponent } from './components/change-password-profile/change-password-profile.component';
 
 
 import { AuthGuard } from './guards/auth.guards';
@@ -114,6 +115,10 @@ export const routes: Routes = [
     { 
         path: 'edit-company-profile', 
         component: EditCompanyProfileComponent 
+    },
+    {
+        path : 'change-password-profile',
+        component: ChangePasswordProfileComponent
     },
 
 
