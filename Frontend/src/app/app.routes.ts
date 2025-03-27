@@ -18,6 +18,9 @@ import { UpdateUserComponent } from './components/update-user/update-user.compon
 import { CongesComponent } from './components/conges/conges.component';
 import { DocumentRequestsListComponent } from './components/document-requests-list/document-requests-list.component';
 import { DocumentRequestDetailComponent } from './components/document-request-detail/document-request-detail.component';
+import { ParametersComponent } from './components/parameters/parameters.component';
+import { EditCompanyProfileComponent } from './components/edit-company-profile/edit-company-profile.component';
+
 
 import { AuthGuard } from './guards/auth.guards';
 
@@ -103,6 +106,14 @@ export const routes: Routes = [
     { 
         path: 'document-request-detail/:id', 
         component: DocumentRequestDetailComponent 
+    },
+    {
+        path:'parametre',
+        component : ParametersComponent
+    },
+    { 
+        path: 'edit-company-profile', 
+        component: EditCompanyProfileComponent 
     },
 
 

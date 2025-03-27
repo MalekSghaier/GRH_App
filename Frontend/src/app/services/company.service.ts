@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { Company } from '../models/company.model'; // Importer l'interface Company
 
 
@@ -91,7 +91,51 @@ export class CompanyService {
       return new Observable();
     }
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.put(`${this.apiUrl}/${id}`, company, { headers });
+    return this.http.put(`${this.apiUrl}/${id}`, company, { headers }).pipe(
+      catchError(error => {
+        let errorMessage = 'Une erreur est survenue';
+        
+        if (error.status === 409) { // Conflict
+          errorMessage = error.error.message || 'Cet email est déjà utilisé';
+        } else if (error.status === 400) { // Bad Request
+          errorMessage = error.error.message || 'Données invalides';
+        }
+        
+        return throwError(() => ({ 
+          message: errorMessage,
+          details: error.error?.message 
+        }));
+      })
+    );;
+  }
+
+  updateProfile(profileData: FormData): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Aucun token trouvé !');
+      return new Observable();
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  
+    return this.http.put(`${this.apiUrl}/my-info`, profileData, { headers }).pipe(
+      catchError(error => {
+        let errorMessage = 'Une erreur est survenue';
+        
+        if (error.status === 409) { // Conflict
+          errorMessage = error.error.message || 'Cet email est déjà utilisé';
+        } else if (error.status === 400) { // Bad Request
+          errorMessage = error.error.message || 'Données invalides';
+        }
+        
+        return throwError(() => ({ 
+          message: errorMessage,
+          details: error.error?.message 
+        }));
+      })
+    );
   }
 
   searchCompanies(query: string): Observable<Company[]> {
@@ -112,5 +156,41 @@ export class CompanyService {
         }));
       })
     );
+  }
+
+   getMyInfo(): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Aucun token trouvé !');
+      return new Observable();
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`${this.apiUrl}/my-info`, { headers });
+   }
+
+
+
+
+  checkPassword(oldPassword: string): Observable<boolean> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Aucun token trouvé !');
+      return new Observable();
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post<boolean>(`${this.apiUrl}/check-password`, { oldPassword }, { headers });
+  }
+
+  changePassword(newPassword: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Aucun token trouvé !');
+      return new Observable();
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put(`${this.apiUrl}/change-password`, { newPassword }, { headers });
   }
 }

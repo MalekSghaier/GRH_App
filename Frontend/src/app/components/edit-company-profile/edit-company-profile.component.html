@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
+    <title>AdminHub</title>
+</head>
+<body>
+    <!-- SIDEBAR -->
+<app-shared-sidebar></app-shared-sidebar>
+    <!-- SIDEBAR -->
+
+    <!-- CONTENT -->
+    <section id="content">
+        <!-- NAVBAR -->
+<app-shared-navbar></app-shared-navbar>
+        <!-- NAVBAR -->
+
+        <!-- MAIN -->
+        <main>
+            <div class="table-data">
+                <div class="order">
+                    <div class="container">
+                        <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
+                            <h1>Modifier données personnelles</h1>
+
+                            <!-- Nom de la compagnie -->
+                            <div class="input-box">
+                                <label for="name">Nom Compagnie:</label>
+                                <div class="input-container">
+                                    <input type="text" id="name" formControlName="name">
+                                    <p *ngIf="companyForm.get('name')?.invalid && companyForm.get('name')?.touched" class="error-message">
+                                        Le nom de la compagnie est requis.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Adresse -->
+                            <div class="input-box">
+                                <label for="address">Adresse:</label>
+                                <div class="input-container">
+                                    <input type="text" id="address" formControlName="address">
+                                    <p *ngIf="companyForm.get('address')?.invalid && companyForm.get('address')?.touched" class="error-message">
+                                        L'adresse est requise.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Téléphone -->
+                            <div class="input-box">
+                                <label for="phone">Téléphone:</label>
+                                <div class="input-container">
+                                    <input type="text" id="phone" formControlName="phone">
+                                    <p *ngIf="companyForm.get('phone')?.invalid && companyForm.get('phone')?.touched" class="error-message">
+                                        Veuillez entrer un numéro de téléphone valide.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Matricule fiscale -->
+                            <div class="input-box">
+                                <label for="taxId">Matricule Fiscale:</label>
+                                <div class="input-container">
+                                    <input type="text" id="taxId" formControlName="taxId">
+                                    <p *ngIf="companyForm.get('taxId')?.invalid && companyForm.get('taxId')?.touched" class="error-message">
+                                        Le matricule fiscale est requis.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="input-box">
+                                <label for="email">E-mail:</label>
+                                <div class="input-container">
+                                    <input type="email" id="email" formControlName="email">
+                                    <p *ngIf="companyForm.get('email')?.invalid && companyForm.get('email')?.touched" class="error-message">
+                                        Veuillez entrer une adresse e-mail valide.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Logo -->
+                            <div class="input-box">
+                                <label for="logo">Logo:</label>
+                                <div class="input-container">
+                                    <input type="file" id="logo" (change)="onFileChange($event, 'logo')" accept="image/*">
+                                </div>
+                            </div>
+
+                            <!-- Signature numérique -->
+                            <div class="input-box">
+                                <label for="signature">Signature :</label>
+                                <div class="input-container">
+                                    <input type="file" id="signature" (change)="onFileChange($event, 'signature')" accept="image/*">
+                                </div>
+                            </div>
+
+                            <!-- Bouton de soumission -->
+							<div class="btn-container">
+								<button class="btn" type="submit" [disabled]="companyForm.invalid">
+									Modifier Compagnie
+								</button>
+							</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- MAIN -->
+    </section>
+    <!-- CONTENT -->
+    <script src="script.js"></script>
+</body>
+</html>

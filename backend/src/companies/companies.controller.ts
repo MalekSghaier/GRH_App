@@ -1,15 +1,18 @@
-  import {Controller,Get,Post,Put,Delete,Body,Param,UseGuards,UseInterceptors,UploadedFiles,  BadRequestException,Query ,
+  import {Controller,Get,Post,Put,Delete,Body,Param,UseGuards,UseInterceptors,UploadedFiles,  BadRequestException,Query, NotFoundException ,
 } from '@nestjs/common';
   import { CompaniesService } from './companies.service';
-  import { Company } from '../schemas/company.schema';
+  import { Company,CompanyDocument } from '../schemas/company.schema';
   import { AuthGuard } from '@nestjs/passport';
-  import {SuperAdminAdminRolesGuard} from '../auth/SuperAdmin_Admin_roles.guard';
   import { FileFieldsInterceptor } from '@nestjs/platform-express';
+  import { Request } from '@nestjs/common';
+  import { Request as ExpressRequest } from 'express';
   import { UsersService } from 'src/users/users.service';
   import { diskStorage } from 'multer';
   import { extname } from 'path';
+  import * as bcrypt from 'bcrypt';
+
   @Controller('companies')
-  @UseGuards(AuthGuard('jwt'),SuperAdminAdminRolesGuard) 
+  @UseGuards(AuthGuard('jwt')) 
   export class CompaniesController {
     constructor(private readonly companiesService: CompaniesService,
       private readonly usersService: UsersService, // Injecter le service UsersService
@@ -58,10 +61,18 @@
       if (files.signature) {
         company.signature = files.signature[0].path;
       }
-  
-      // Hacher le mot de passe avant de sauvegarder
-      // Le middleware du schéma s'en chargera automatiquement grâce à `pre('save')`
+
       return this.companiesService.create(company);
+    }
+
+    @Post('check-password')
+    @UseGuards(AuthGuard('jwt'))
+    async checkPassword(@Request() req: ExpressRequest, @Body('oldPassword') oldPassword: string): Promise<boolean> {
+      const companyId = req.user?.id;
+      if (!companyId) {
+        throw new NotFoundException("Compagnie non trouvée");
+      }
+      return this.companiesService.checkPassword(companyId, oldPassword);
     }
     
     @Get()
@@ -81,12 +92,119 @@
     async getStatistics() {
       return this.companiesService.getStatistics();
     }
+
+    @Get('my-info')
+    @UseGuards(AuthGuard('jwt')) 
+    async getMyInfo(@Request() req: ExpressRequest): Promise<CompanyDocument> {
+    const companyId = req.user?.id; 
+  
+    if (!companyId) {
+      throw new NotFoundException("Compagnie non trouvée");
+    }
+  
+    // Vérification explicite que `companyId` est bien une chaîne de caractères (string)
+    if (typeof companyId !== 'string') {
+      throw new NotFoundException("ID de compagnie invalide");
+    }
+  
+    const company = await this.companiesService.findById(companyId);
+    if (!company) {
+      throw new NotFoundException("Compagnie non trouvée");
+    }
+  
+    return company;
+    }
   
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<Company> {
       const company = await this.companiesService.findOne(id);
       return company; // Le champ _id est automatiquement inclus
     }
+
+
+    @Put('my-info')
+@UseGuards(AuthGuard('jwt')) 
+@UseInterceptors(
+  FileFieldsInterceptor(
+    [
+      { name: 'logo', maxCount: 1 },
+      { name: 'signature', maxCount: 1 },
+    ],
+    {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, callback) => {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          const filename = `${file.fieldname}-${uniqueSuffix}${ext}`;
+          callback(null, filename);
+        },
+      }),
+      fileFilter: (req, file, callback) => {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+          return callback(new BadRequestException('Seules les images sont autorisées !'), false);
+        }
+        callback(null, true);
+      },
+    },
+  ),
+)
+async updateMyProfile(
+  @Request() req: ExpressRequest,
+  @Body() companyData: Partial<Pick<CompanyDocument, 'name' | 'address' | 'phone' | 'taxId' | 'email' | 'logo' | 'signature'>>,
+  @UploadedFiles()
+  files: { logo?: Express.Multer.File[]; signature?: Express.Multer.File[] },
+): Promise<CompanyDocument> {
+  const companyId = req.user?.id;
+  if (!companyId) {
+    throw new NotFoundException("Compagnie non trouvée");
+  }
+
+  // Récupérer la compagnie existante avec un typage fort
+  const existingCompany = await this.companiesService.findById(companyId);
+  if (!existingCompany) {
+    throw new NotFoundException("Compagnie non trouvée");
+  }
+
+  // Préparer les données de mise à jour avec un typage explicite
+  const updateData: Partial<Pick<CompanyDocument, 'name' | 'address' | 'phone' | 'taxId' | 'email' | 'logo' | 'signature'>> = {
+    ...companyData
+  };
+
+  // Gérer les fichiers avec vérification de type
+  if (files.logo && files.logo[0]) {
+    updateData.logo = files.logo[0].path;
+  } else if (companyData.logo && typeof companyData.logo === 'string') {
+    updateData.logo = existingCompany.logo;
+  }
+
+  if (files.signature && files.signature[0]) {
+    updateData.signature = files.signature[0].path;
+  } else if (companyData.signature && typeof companyData.signature === 'string') {
+    updateData.signature = existingCompany.signature;
+  }
+
+  return this.companiesService.updateProfile(companyId, updateData);
+}
+
+
+
+    @Put('change-password')
+    @UseGuards(AuthGuard('jwt'))
+    async changePassword(@Request() req: ExpressRequest, @Body('newPassword') newPassword: string): Promise<CompanyDocument> {
+      const companyId = req.user?.id;
+      if (!companyId) {
+         throw new NotFoundException("Compagnie non trouvée");
+      }
+
+       // Hacher le nouveau mot de passe
+       const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+       // Mettre à jour le mot de passe
+       const updatedCompany = await this.companiesService.changePassword(companyId, hashedPassword);
+       return updatedCompany;
+}
+
 
 
   

@@ -86,8 +86,7 @@ export class EditCompanyComponent implements AfterViewInit, OnInit {
 
   onSubmit() {
     if (this.companyForm.invalid) {
-      this.errorMessage = 'Veuillez vérifier vos champs de saisie';
-      this.toastr.error('❌ Erreur lors de la modification de la compagnie', 'Veuillez vérifier vos champs de saisie', {
+      this.toastr.error('Veuillez vérifier vos champs de saisie', 'Erreur', {
         timeOut: 1500,
         progressBar: true
       });
@@ -138,16 +137,22 @@ export class EditCompanyComponent implements AfterViewInit, OnInit {
           }, 1500);
         },
         error: (error) => {
-          if (error.error && error.error.message) {
-            this.errorMessage = error.error.message;
-          } else {
-            this.errorMessage = 'Une erreur s’est produite lors de la modification de la compagnie.';
+          console.error('Erreur complète:', error);
+          this.toastr.error(
+            error.message || 'Une erreur est survenue lors de la mise à jour',
+            'Erreur',
+            { 
+              timeOut: 3000, // Augmentez le temps d'affichage
+              progressBar: true,
+              enableHtml: true // Permet d'afficher du HTML si nécessaire
+            }
+          );
+          
+          // Afficher le détail de l'erreur si disponible
+          if (error.details) {
+            console.error('Détails de l\'erreur:', error.details);
           }
-          this.toastr.error(this.errorMessage, 'Erreur', {
-            timeOut: 1500,
-            progressBar: true
-          });
-        },
+        }
       });
     }
   }

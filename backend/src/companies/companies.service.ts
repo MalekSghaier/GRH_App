@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { Company, CompanyDocument } from '../schemas/company.schema';
 import { UsersService } from 'src/users/users.service';
 import { MongoServerError } from 'mongodb'; // Importer MongoServerError
+import * as bcrypt from 'bcrypt';
 
 
 @Injectable()
@@ -88,12 +89,82 @@ export class CompaniesService {
   }
 
   async update(id: string, company: Partial<Company>): Promise<Company> {
+    try {
     const updatedCompany = await this.companyModel
       .findByIdAndUpdate(id, company, { new: true })
       .exec();
     if (!updatedCompany) {
       throw new NotFoundException(`Compagnie avec ID ${id} non trouvée`);
     }
+    return updatedCompany;
+  } catch (error: unknown) {
+    if (error instanceof MongoServerError && error.code === 11000) {
+      // Pas besoin de "as MongoServerError" car l'instanceof le garantit déjà
+      if (error.keyPattern && 'email' in error.keyPattern) {
+        throw new ConflictException('Cet email est déjà utilisé par une autre compagnie');
+      }
+      throw new ConflictException('Une donnée unique existe déjà');
+    }
+    
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('Une erreur inconnue est survenue');
+  }
+  }
+
+  async updateProfile(
+    companyId: string, 
+    updateData: Partial<Pick<CompanyDocument, 'name' | 'address' | 'phone' | 'taxId' | 'email' | 'logo' | 'signature'>>
+  ): Promise<CompanyDocument> {
+    try {
+      const updatedCompany = await this.companyModel.findByIdAndUpdate(
+        companyId, 
+        updateData, 
+        { new: true }
+      ).exec();
+      
+      if (!updatedCompany) {
+        throw new NotFoundException(`Compagnie avec ID ${companyId} non trouvée`);
+      }
+      
+      return updatedCompany;
+    } catch (error: unknown) {
+      if (error instanceof MongoServerError && error.code === 11000) {
+        // Pas besoin de "as MongoServerError" car l'instanceof le garantit déjà
+        if (error.keyPattern && 'email' in error.keyPattern) {
+          throw new ConflictException('Cet email est déjà utilisé par une autre compagnie');
+        }
+        throw new ConflictException('Une donnée unique existe déjà');
+      }
+      
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('Une erreur inconnue est survenue');
+    }
+  }
+  async checkPassword(companyId: string, oldPassword: string): Promise<boolean> {
+    const company = await this.companyModel.findById(companyId).exec();
+    if (!company) {
+      throw new NotFoundException(`Compagnie avec ID ${companyId} non trouvée`);
+    }
+    
+    // Vérifier si l'ancien mot de passe correspond
+    return bcrypt.compare(oldPassword, company.password);
+  }
+
+  async changePassword(companyId: string, newPassword: string): Promise<CompanyDocument> {
+    const updatedCompany = await this.companyModel.findByIdAndUpdate(
+      companyId,
+      { password: newPassword },
+      { new: true }
+    ).exec();
+    
+    if (!updatedCompany) {
+      throw new NotFoundException(`Compagnie avec ID ${companyId} non trouvée`);
+    }
+    
     return updatedCompany;
   }
 
