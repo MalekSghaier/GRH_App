@@ -56,12 +56,12 @@ export class SharedSidebarComponent implements AfterViewInit, OnInit {
   }
 
   loadPendingDocsCount(): void {
-    this.documentRequestsService.getPendingDocsCount().subscribe({
+    this.documentRequestsService.getPendingDocsCountForCompany().subscribe({
       next: (response) => {
-        this.pendingDocsCount = response.count; // Mettre à jour le nombre de congés en attente
+        this.pendingDocsCount = response.count;
       },
       error: (err) => {
-        console.error('Erreur lors du chargement du nombre de demande de document en attente:', err);
+        console.error('Erreur lors du chargement du nombre de demandes en attente:', err);
       }
     });
   }

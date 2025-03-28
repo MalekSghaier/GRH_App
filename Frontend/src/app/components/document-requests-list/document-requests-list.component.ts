@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import {  RouterModule } from '@angular/router';
 import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component';
 import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.component';
+import { ToastrService } from 'ngx-toastr';
+
 
 
 @Component({
@@ -19,21 +21,53 @@ export class DocumentRequestsListComponent implements AfterViewInit, OnInit {
 
   documentRequests: DocumentRequest[] = [];
 
-  constructor(private documentRequestsService: DocumentRequestsService) {}
+  isLoading: boolean = true;
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalItems: number = 0;
+
+  constructor(private documentRequestsService: DocumentRequestsService,    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.loadDocumentRequests();
-
-    
   }
 
   private loadDocumentRequests(): void {
-    this.documentRequestsService.findAllRequests().subscribe(requests => {
-      // Filtrer les demandes dont l'état est "En attente" ou "En cours de traitement"
-      this.documentRequests = requests.filter(request => 
-        request.status === 'En attente' || request.status === 'En cours de traitement'
-      );
-    });
+    this.isLoading = true;
+    this.documentRequestsService.getCompanyDocumentRequestsPaginated(this.currentPage, this.itemsPerPage)
+      .subscribe({
+        next: (response) => {
+          this.documentRequests = response.data;
+          this.totalItems = response.total;
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Erreur lors du chargement des demandes:', err);
+          this.toastr.error('Erreur lors du chargement des demandes', 'Erreur');
+          this.isLoading = false;
+        }
+      });
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadDocumentRequests();
+  }
+
+  updateRequestStatus(id: string, status: string): void {
+    this.documentRequestsService.updateRequestStatus(id, status)
+      .subscribe({
+        next: (updatedRequest) => {
+          this.toastr.success('Statut de la demande mis à jour', 'Succès');
+          // Supprimer la demande mise à jour du tableau
+          this.documentRequests = this.documentRequests.filter(req => req._id !== id);
+        },
+        error: (err) => {
+          console.error('Erreur lors de la mise à jour:', err);
+          this.toastr.error('Erreur lors de la mise à jour', 'Erreur');
+        }
+      });
   }
 
   ngAfterViewInit(): void {

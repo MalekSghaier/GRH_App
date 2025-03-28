@@ -4,6 +4,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { DocumentRequest } from '../models/document-request.model';
 
+
+interface PaginatedDocumentRequests {
+  data: DocumentRequest[];
+  total: number;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -36,6 +41,22 @@ export class DocumentRequestsService {
   updateRequestStatus(id: string, status: string): Observable<DocumentRequest> {
     const headers = this.getAuthHeaders();
     return this.http.put<DocumentRequest>(`${this.apiUrl}/${id}/status`, { status }, { headers });
+  }
+
+  getCompanyDocumentRequestsPaginated(page: number = 1, limit: number = 5): Observable<PaginatedDocumentRequests> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<PaginatedDocumentRequests>(
+      `${this.apiUrl}/company/paginated?page=${page}&limit=${limit}`,
+      { headers }
+    );
+  }
+
+  getPendingDocsCountForCompany(): Observable<{ count: number }> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<{ count: number }>(
+      `${this.apiUrl}/company/pending/count`,
+      { headers }
+    );
   }
 
   approveRequest(id: string): Observable<any> {

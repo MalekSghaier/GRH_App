@@ -1,9 +1,10 @@
-import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRequestException, Put, NotFoundException} from '@nestjs/common';
+import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRequestException, Put, NotFoundException, Query} from '@nestjs/common';
   import { AuthGuard } from '@nestjs/passport';
   import { EmployeeInternGuard } from '../auth/employee-intern.guard';
   import { DocumentRequestsService } from './document-requests.service';
   import { Request } from 'express';
   import { DocumentType, RequestStatus } from '../schemas/document-request.schema';
+  import { UserPayload } from 'src/schemas/user-payload';
 
 
   
@@ -101,6 +102,34 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
     @UseGuards(AuthGuard('jwt'))
     findAll() {
        return this.documentRequestsService.findAll();
+    }
+
+    @Get('company/paginated')
+    @UseGuards(AuthGuard('jwt'))
+    async getCompanyDocumentRequestsPaginated(
+      @Req() req: Request & { user?: UserPayload },
+      @Query('page') page: number = 1,
+      @Query('limit') limit: number = 5
+    ) {
+      if (!req.user?.companyName) {
+        throw new UnauthorizedException('Company name not found in token');
+      }
+  
+      return this.documentRequestsService.findByCompanyPaginated(
+        req.user.companyName,
+        page,
+        limit
+      );
+    }
+    @Get('company/pending/count')
+    @UseGuards(AuthGuard('jwt'))
+    async countPendingDocsForCompany(@Req() req: Request & { user?: UserPayload }) {
+      if (!req.user?.companyName) {
+        throw new UnauthorizedException('Company name not found in token');
+      }
+  
+      const count = await this.documentRequestsService.countPendingByCompany(req.user.companyName);
+      return { count };
     }
 
     @Get('pending/count')
