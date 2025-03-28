@@ -131,6 +131,38 @@ export class UsersService {
     }).exec();
   }
 
+  async findByCompany(company: string): Promise<UserDocument[]> {
+    return this.userModel.find({
+      company,
+      role: { $in: [UserRole.EMPLOYEE, UserRole.INTERN] }
+    }).exec();
+  }
+
+  async findByCompanyPaginated(
+    company: string,
+    page: number = 1,
+    limit: number = 5
+  ): Promise<{ data: UserDocument[]; total: number }> {
+    const skip = (page - 1) * limit;
+    const data = await this.userModel
+      .find({
+        company,
+        role: { $in: [UserRole.EMPLOYEE, UserRole.INTERN] }
+      })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+      
+    const total = await this.userModel
+      .countDocuments({
+        company,
+        role: { $in: [UserRole.EMPLOYEE, UserRole.INTERN] }
+      })
+      .exec();
+      
+    return { data, total };
+  }
+
 async findUsersForAdminPaginated(page: number = 1, limit: number = 5): Promise<{ data: UserDocument[]; total: number }> {
   const skip = (page - 1) * limit;
   const data = await this.userModel

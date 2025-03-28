@@ -1,47 +1,51 @@
-import { Component, AfterViewInit ,ViewEncapsulation,OnInit  } from '@angular/core';
+import { Component, AfterViewInit, ViewEncapsulation, OnInit } from '@angular/core';
 import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component';
 import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.component';
 import { UserService } from '../../services/user.service';
-import { CommonModule } from '@angular/common'; // Importer CommonModule pour *ngFor
+import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr'; 
 import { RouterLink } from '@angular/router'; 
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-
-
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [SharedNavbarComponent,SharedSidebarComponent,CommonModule,RouterLink],
+  imports: [SharedNavbarComponent, SharedSidebarComponent, CommonModule, RouterLink],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
-  encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
-
+  encapsulation: ViewEncapsulation.None
 })
-export class UsersComponent implements AfterViewInit,OnInit  {
+export class UsersComponent implements AfterViewInit, OnInit {
   users: any[] = []; 
   isEmpty: boolean = false; 
   currentPage: number = 1;
   itemsPerPage: number = 5;
   totalItems: number = 0;
   private searchTerms = new Subject<string>();
-
+  private currentCompanyName: string | null = null;
 
   constructor(
     private userService: UserService,
-    private toastr: ToastrService // Injecter ToastrService pour les notifications
-
-  ) {} // Injecter le service
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
-    this.loadAdminUsers(); // Charger les utilisateurs au démarrage
+    this.currentCompanyName = localStorage.getItem('companyName');
+    this.loadUsers();
     
-    // Gérer la recherche en temps réel
     this.searchTerms.pipe(
-      debounceTime(100),        // Attendre 300ms après chaque frappe
-      distinctUntilChanged(),   // Ignorer si le terme de recherche n'a pas changé
-      switchMap((query: string) => this.userService.searchUsers(query)) // Changer de recherche
+      debounceTime(100),
+      distinctUntilChanged(),
+      switchMap((query: string) => {
+        if (this.currentCompanyName) {
+          return this.userService.searchUsers(query).pipe(
+            map(users => users.filter(user => user.company === this.currentCompanyName))
+          );
+        } else {
+          return this.userService.searchUsers(query);
+        }
+      })
     ).subscribe({
       next: (users) => {
         this.users = users;
@@ -53,42 +57,62 @@ export class UsersComponent implements AfterViewInit,OnInit  {
       }
     });
   }
+
   search(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     const query = inputElement.value;
     this.searchTerms.next(query);
   }
 
-    // Charger la liste des utilisateurs
-    loadAdminUsers(): void {
-      this.userService.getPaginatedAdminUsers(this.currentPage, this.itemsPerPage).subscribe({
-        next: (response) => {
-          this.users = response.data;
-          this.totalItems = response.total;
-          this.isEmpty = this.users.length === 0;
-        },
-        error: (err) => {
-          console.error('Erreur lors du chargement des utilisateurs:', err);
-          this.isEmpty = true;
-        },
-      });
+  loadUsers(): void {
+    if (this.currentCompanyName) {
+      this.loadCompanyUsers(this.currentCompanyName);
+    } else {
+      this.loadAllUsers();
     }
+  }
 
-    onPageChange(page: number): void {
-      this.currentPage = page;
-      this.loadAdminUsers();
-    }
-  
-    getPages(): number[] {
-      const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
-    }
+  loadCompanyUsers(companyName: string): void {
+    this.userService.getUsersByCompanyPaginated(companyName, this.currentPage, this.itemsPerPage).subscribe({
+      next: (response) => {
+        this.users = response.data;
+        this.totalItems = response.total;
+        this.isEmpty = this.users.length === 0;
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des utilisateurs:', err);
+        this.isEmpty = true;
+      },
+    });
+  }
 
-  // Générer le QR Code pour un utilisateur
+  loadAllUsers(): void {
+    this.userService.getPaginatedAdminUsers(this.currentPage, this.itemsPerPage).subscribe({
+      next: (response) => {
+        this.users = response.data;
+        this.totalItems = response.total;
+        this.isEmpty = this.users.length === 0;
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des utilisateurs:', err);
+        this.isEmpty = true;
+      },
+    });
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadUsers();
+  }
+
+  getPages(): number[] {
+    const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
   generateQRCode(userId: string): void {
     this.userService.generateQrCode(userId).subscribe({
       next: () => {
-        // Afficher une notification de succès
         this.toastr.success('QR Code généré avec succès', 'Succès', {
           timeOut: 1500,
           progressBar: true
@@ -112,7 +136,7 @@ export class UsersComponent implements AfterViewInit,OnInit  {
             timeOut: 1500,
             progressBar: true
           });
-          this.loadAdminUsers(); // Recharger la liste des utilisateurs après la suppression
+          this.loadUsers();
         },
         error: (err) => {
           console.error('Erreur lors de la suppression de l\'utilisateur:', err);
@@ -125,10 +149,8 @@ export class UsersComponent implements AfterViewInit,OnInit  {
     }
   }
 
-
   ngAfterViewInit(): void {
     this.initializeSidebar();
- 
   }
 
   private initializeSidebar(): void {
@@ -174,5 +196,4 @@ export class UsersComponent implements AfterViewInit,OnInit  {
       }
     }
   }
-
 }

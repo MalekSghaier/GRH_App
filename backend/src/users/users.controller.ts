@@ -115,6 +115,22 @@ export class UsersController {
     }
   }
 
+  @Get('by-company')
+@UseGuards(AuthGuard('jwt'))
+async getUsersByCompany(@Query('company') company: string): Promise<UserDocument[]> {
+  return this.usersService.findByCompany(company);
+}
+
+@Get('by-company/paginated')
+@UseGuards(AuthGuard('jwt'))
+async getUsersByCompanyPaginated(
+  @Query('company') company: string,
+  @Query('page') page: number = 1,
+  @Query('limit') limit: number = 5
+): Promise<{ data: UserDocument[]; total: number }> {
+  return this.usersService.findByCompanyPaginated(company, page, limit);
+}
+
   @Get('admin-users')
   @UseGuards(AuthGuard('jwt'))
   async findUsersForAdmin() {

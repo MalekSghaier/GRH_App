@@ -21,16 +21,7 @@ export class UserService {
     return this.http.get(`${this.apiUrl}/my-info`, { headers });
   }
 
-    // Récupérer la liste des utilisateurs pour l'admin
-    getAdminUsers(): Observable<any[]> {
-      const token = localStorage.getItem('token'); // Récupérer le token JWT
-      if (!token) {
-        throw new Error('Aucun token trouvé !');
-      }
-  
-      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`); // Ajouter le token dans les en-têtes
-      return this.http.get<any[]>(`${this.apiUrl}/admin-users`, { headers });
-    }
+
   
 
   updateProfile(profileData: any): Observable<any> {
@@ -126,6 +117,31 @@ export class UserService {
   
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<{ data: any[]; total: number }>(`${this.apiUrl}/admin-users/paginated?page=${page}&limit=${limit}`, { headers });
+  }
+
+  getUsersByCompany(companyName: string): Observable<any[]> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Aucun token trouvé !');
+    }
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any[]>(`${this.apiUrl}/by-company?company=${encodeURIComponent(companyName)}`, { headers });
+  }
+
+
+
+  getUsersByCompanyPaginated(companyName: string, page: number = 1, limit: number = 5): Observable<{ data: any[]; total: number }> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Aucun token trouvé !');
+    }
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<{ data: any[]; total: number }>(
+      `${this.apiUrl}/by-company/paginated?company=${encodeURIComponent(companyName)}&page=${page}&limit=${limit}`,
+      { headers }
+    );
   }
 
   searchUsers(query: string): Observable<any[]> {
