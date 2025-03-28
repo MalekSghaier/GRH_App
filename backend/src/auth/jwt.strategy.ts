@@ -19,7 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  async validate(payload: { sub: string; email: string; role: string }) {
+  async validate(payload: { sub: string; email: string; role: string ;companyName?: string}) {
     // Vérifiez si le token appartient à un utilisateur ou à une entreprise
     if (payload.role === 'admin') {
       // Si le rôle est 'admin', c'est une entreprise
@@ -27,8 +27,13 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       if (!company) {
         return null;
       }
-      return company;
-    } else {
+      return {
+        id: company._id,
+        email: company.email,
+        role: payload.role,
+        companyName: payload.companyName || company.name // Fallback au cas où
+      };
+      } else {
       // Sinon, c'est un utilisateur
       const user = await this.usersService.findById(payload.sub);
       if (!user) {

@@ -19,6 +19,9 @@ export class CongesComponent implements AfterViewInit ,OnInit{
   conges: any[] = [];
   isLoading: boolean = true;
   isEmpty: boolean = false; 
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalItems: number = 0
 
     // Mappage des statuts en français
     statusMap: { [key: string]: string } = {
@@ -35,24 +38,32 @@ export class CongesComponent implements AfterViewInit ,OnInit{
     ngOnInit(): void {
       this.loadConges();
     }
-
+  
     loadConges(): void {
-      this.congesService.getAllPendingConges().subscribe({
-        next: (data) => {
-          this.conges = data;
-          this.isEmpty = this.conges.length === 0; 
-          this.isLoading = false;
-        },
-        error: (err) => {
-          console.error('Erreur lors du chargement des congés:', err);
-          this.toastr.error('Erreur lors du chargement des congés', 'Erreur', {
-            timeOut: 1500,
-            progressBar: true
-          });
-          this.isEmpty = true; 
-          this.isLoading = false;
-        }
-      });
+      this.isLoading = true;
+      this.congesService.getCompanyCongesPaginated(this.currentPage, this.itemsPerPage)
+        .subscribe({
+          next: (response) => {
+            this.conges = response.data;
+            this.totalItems = response.total;
+            this.isEmpty = this.conges.length === 0;
+            this.isLoading = false;
+          },
+          error: (err) => {
+            console.error('Erreur lors du chargement des congés:', err);
+            this.toastr.error('Erreur lors du chargement des congés', 'Erreur', {
+              timeOut: 1500,
+              progressBar: true
+            });
+            this.isEmpty = true;
+            this.isLoading = false;
+          }
+        });
+    }
+
+    onPageChange(page: number): void {
+      this.currentPage = page;
+      this.loadConges();
     }
 
     updateStatus(id: string, status: 'approved' | 'rejected'): void {

@@ -30,51 +30,66 @@
 
       </div>
 
-      <div class="table-data">
-        <div class="order">
-          <!-- Afficher le tableau si la liste n'est pas vide -->
-          <table *ngIf="!isEmpty; else emptyMessage">
-            <thead>
-              <tr>
-                <th>Employé</th>
-                <th>Début du Congé</th>
-                <th>Fin du Congé</th>
-                <th>Motif</th>
-                <th>État</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let conge of conges">
-                <td>{{ conge.userId?.name || 'Utilisateur inconnu' }}</td> 
-                <td>{{ conge.startDate | date }}</td>
-                <td>{{ conge.endDate | date }}</td>
-                <td>{{ conge.reason }}</td>
-                <td>{{ translateStatus(conge.status) }}</td> 
-                <td>
-                  <!-- Bouton Accepter -->
-                  <button *ngIf="conge.status === 'pending'" class="no-border-button" (click)="updateStatus(conge._id, 'approved')" style="background: none; border: none;">
-                    <i class='bx bx-check bx-sm' style="color: #28a745;"></i>
-                  </button>
-                  <!-- Bouton Rejeter -->
-                  <button *ngIf="conge.status === 'pending'" class="no-border-button" (click)="updateStatus(conge._id, 'rejected')" style="background: none; border: none;">
-                    <i class='bx bx-x bx-sm' style="color: #dc3545;"></i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+<!-- ... contenu existant avant le tableau ... -->
 
-          <!-- Afficher un message si la liste est vide -->
-          <ng-template #emptyMessage>
-            <div class="empty-message">
-              <p>Aucun congé trouvé.</p>
-            </div>
-          </ng-template>
+<div class="table-data">
+  <div class="order">
+    <table *ngIf="!isEmpty; else emptyMessage">
+      <thead>
+        <tr>
+          <th>Employé</th>
+          <th>Début du Congé</th>
+          <th>Fin du Congé</th>
+          <th>Motif</th>
+          <th>État</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let conge of conges">
+          <td>{{ conge.userId?.name || 'Utilisateur inconnu' }}</td>
+          <td>{{ conge.startDate | date }}</td>
+          <td>{{ conge.endDate | date }}</td>
+          <td>{{ conge.reason }}</td>
+          <td>{{ translateStatus(conge.status) }}</td>
+          <td>
+            <button *ngIf="conge.status === 'pending'" class="no-border-button" (click)="updateStatus(conge._id, 'approved')">
+              <i class='bx bx-check bx-sm' style="color: #28a745;"></i>
+            </button>
+            <button *ngIf="conge.status === 'pending'" class="no-border-button" (click)="updateStatus(conge._id, 'rejected')">
+              <i class='bx bx-x bx-sm' style="color: #dc3545;"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="totalItems > itemsPerPage">
+      <button 
+        (click)="onPageChange(currentPage - 1)" 
+        [disabled]="currentPage === 1">
+        Précédent
+      </button>
+      
+      <span>Page {{ currentPage }}</span>
+      
+      <button 
+        (click)="onPageChange(currentPage + 1)" 
+        [disabled]="currentPage * itemsPerPage >= totalItems">
+        Suivant
+      </button>
+    </div>
 
-        </div>
+    <ng-template #emptyMessage>
+      <div class="empty-message">
+        <p>Aucun congé trouvé.</p>
       </div>
+    </ng-template>
+  </div>
+</div>
+
+<!-- ... reste du contenu ... -->
     </main>
     <!-- MAIN -->
   </section>

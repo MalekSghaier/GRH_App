@@ -42,7 +42,7 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
       role: 'admin',
-      companyName: company.name, // Retourner le nom de la compagnie
+      companyName: company.name // Assurez-vous d'inclure le companyName
 
     };
   }

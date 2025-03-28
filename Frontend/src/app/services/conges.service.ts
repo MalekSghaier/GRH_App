@@ -3,6 +3,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+interface PaginatedCongesResponse {
+  data: any[];
+  total: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,6 +28,25 @@ export class CongesService {
      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any[]>(`${this.apiUrl}/pending`, { headers });
   }
+
+  getCompanyCongesPaginated(page: number = 1, limit: number = 5): Observable<PaginatedCongesResponse> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<PaginatedCongesResponse>(
+      `${this.apiUrl}/company/paginated?page=${page}&limit=${limit}`,
+      { headers }
+    );
+  }
+
+  getPendingCongesCountForCompany(): Observable<{ count: number }> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<{ count: number }>(
+      `${this.apiUrl}/company/pending/count`, 
+      { headers }
+    );
+  }
+
 
   getPendingCongesCount(): Observable<{ count: number }> {
     const token = localStorage.getItem('token');

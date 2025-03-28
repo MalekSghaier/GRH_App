@@ -45,9 +45,9 @@ export class SharedSidebarComponent implements AfterViewInit, OnInit {
   }
 
   loadPendingCongesCount(): void {
-    this.congesService.getPendingCongesCount().subscribe({
+    this.congesService.getPendingCongesCountForCompany().subscribe({
       next: (response) => {
-        this.pendingCongesCount = response.count; // Mettre à jour le nombre de docs en attente
+        this.pendingCongesCount = response.count;
       },
       error: (err) => {
         console.error('Erreur lors du chargement du nombre de congés en attente:', err);

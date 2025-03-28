@@ -1,5 +1,5 @@
 //controller.ts
-import { Controller, Get, Post, Body, Put, Delete, Param, UseGuards, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Delete, Param, UseGuards, Req, UnauthorizedException, Query } from '@nestjs/common';
 import { CongesService } from './conges.service';
 import { AuthGuard } from '@nestjs/passport';
 import { EmployeeInternGuard } from '../auth/employee-intern.guard';
@@ -39,10 +39,14 @@ export class CongesController {
     return this.congesService.findAllPending();
   }
 
-  @Get('pending/count')
+  @Get('company/pending/count')
   @UseGuards(AuthGuard('jwt'))
-  async countPendingConges() {
-    const count = await this.congesService.countPendingConges();
+  async countPendingCongesForCompany(@Req() req: Request & { user?: UserPayload }) {
+    if (!req.user?.companyName) {
+      throw new UnauthorizedException('Company name not found in token');
+    }
+    
+    const count = await this.congesService.countPendingByCompany(req.user.companyName);
     return { count };
   }
 
@@ -58,6 +62,29 @@ export class CongesController {
   async delete(@Param('id') id: string) {
     await this.congesService.delete(id);
     return { message: 'Congé supprimé avec succès' };
+  }
+
+  @Get('company/paginated')
+  @UseGuards(AuthGuard('jwt'))
+  async getCompanyCongesPaginated(
+    @Req() req: Request & { user?: UserPayload },
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 5
+  ) {
+    // Vérification stricte du user et companyName
+    if (!req.user?.companyName) {
+      throw new UnauthorizedException('Company name not found in token');
+    }
+
+    // Conversion explicite des query params
+    const pageNumber = Number(page) || 1;
+    const limitNumber = Number(limit) || 10;
+
+    return this.congesService.findByCompanyPaginated(
+      req.user.companyName,
+      pageNumber,
+      limitNumber
+    );
   }
 
 }
