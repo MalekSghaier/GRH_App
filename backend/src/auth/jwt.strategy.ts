@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UsersService } from '../users/users.service';
-import { CompaniesService } from '../companies/companies.service'; // Importez le service des entreprises
+import { CompaniesService } from '../companies/companies.service';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(
     private readonly usersService: UsersService,
-    private readonly companiesService: CompaniesService, // Injectez le service des entreprises
+    private readonly companiesService: CompaniesService,
     private readonly configService: ConfigService
   ) {
     super({
@@ -19,22 +19,21 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  async validate(payload: { sub: string; email: string; role: string ;companyName?: string}) {
-    // Vérifiez si le token appartient à un utilisateur ou à une entreprise
+  async validate(payload: { sub: string; email: string; role: string; companyName?: string }) {
     if (payload.role === 'admin') {
-      // Si le rôle est 'admin', c'est une entreprise
       const company = await this.companiesService.findById(payload.sub);
-      if (!company) {
+      if (!company || !company._id) {
         return null;
       }
+
       return {
-        id: company._id,
-        email: company.email,
+        id: company._id.toString(),
+        email: payload.email, // Utilise l'email du JWT plutôt que de la base
         role: payload.role,
-        companyName: payload.companyName || company.name // Fallback au cas où
+        companyName: payload.companyName || company.name
       };
-      } else {
-      // Sinon, c'est un utilisateur
+    } else {
+      // Partie utilisateur inchangée
       const user = await this.usersService.findById(payload.sub);
       if (!user) {
         return null;

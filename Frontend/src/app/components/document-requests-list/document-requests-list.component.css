@@ -335,10 +335,13 @@ body {
 
 .register p a{
     font-weight: 400;
-    color: #3C91E6;
+    color: #6e6e6e;
     font-size: 16px;
 }
 
+.register p a:hover{
+    color: #3C91E6;
+}
 
 .pagination {
 	display: flex;
