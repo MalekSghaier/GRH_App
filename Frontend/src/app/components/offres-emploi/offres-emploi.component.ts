@@ -52,7 +52,7 @@ export class OffresEmploiComponent implements AfterViewInit {
 
   private adjustSidebar(): void {
     const sidebar = document.getElementById('sidebar');
-    if (sidebar) {
+    if (sidebar) { 
       if (window.innerWidth <= 576) {
         sidebar.classList.add('hide');
         sidebar.classList.remove('show');
@@ -61,5 +61,5 @@ export class OffresEmploiComponent implements AfterViewInit {
         sidebar.classList.add('show');
       }
     }
-  }
+  } 
  }
