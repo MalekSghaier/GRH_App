@@ -20,16 +20,16 @@
             <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
               <h1>Modifier Utilisateur</h1>
 
-              <!-- Nom de l'utilisateur -->
-              <div class="input-box">
-                <label for="name">Nom:</label>
-                <div class="input-container">
-                  <input type="text" id="name" formControlName="name">
-                  <p *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched" class="error-message">
-                    Le nom est requis.
-                  </p>
-                </div>
-              </div>
+                        <!-- Nom et Prénom -->
+                        <div class="input-box">
+                          <label for="name">Nom et Prénom:</label>
+                          <div class="input-container">
+                            <input type="text" id="name" formControlName="name">
+                            <p *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched" class="error-message">
+                              Le nom et prénom sont requis.
+                            </p>
+                          </div>
+                        </div>
 
               <!-- Email -->
               <div class="input-box">

@@ -113,6 +113,7 @@ body {
 	align-items: center;
 	grid-gap: 10px;
 	font-weight: 500;
+	
 }
 
 
@@ -137,17 +138,13 @@ body {
   }
   
   .form-input button {
-	width: 36px;
-	height: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background: var(--blue);
-	color: var(--light);
-	font-size: 18px;
+	background-color: #007bff;
+	color: white;
+	padding: 10px 20px;
 	border: none;
-	outline: none;
+	border-radius: 5px;
 	cursor: pointer;
+	transition: 0.3s;
   }
 #content main .box-info {
 	display: grid;
@@ -155,40 +152,7 @@ body {
 	grid-gap: 24px;
 	margin-top: 36px;
 }
-#content main .box-info li {
-	padding: 24px;
-	background: var(--light);
-	border-radius: 20px;
-	display: flex;
-	align-items: center;
-	grid-gap: 24px;
-}
-#content main .box-info li .bx {
-	width: 80px;
-	height: 80px;
-	border-radius: 10px;
-	font-size: 36px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-#content main .box-info li:nth-child(1) .bx {
-	background: var(--light-blue);
-	color: var(--blue);
-}
-#content main .box-info li:nth-child(2) .bx {
-	background: var(--light-yellow);
-	color: var(--yellow);
-}
-#content main .box-info li:nth-child(3) .bx {
-	background: var(--light-orange);
-	color: var(--orange);
-}
-#content main .box-info li .text h3 {
-	font-size: 24px;
-	font-weight: 600;
-	color: var(--dark);
-}
+
 #content main .box-info li .text p {
 	color: var(--dark);	
 }
@@ -201,7 +165,7 @@ body {
 	color: var(--dark);
 }
 #content main .table-data > div {
-	border-radius: 20px;
+	border-radius: 10px;
 	background: var(--light);
 	padding: 24px;
 	overflow-x: auto;
@@ -253,53 +217,8 @@ body {
 #content main .table-data .order table tbody tr:hover {
 	background: var(--grey);
 }
-#content main .table-data .order table tr td .status {
-	font-size: 10px;
-	padding: 6px 16px;
-	color: var(--light);
-	border-radius: 20px;
-	font-weight: 700;
-}
-#content main .table-data .order table tr td .status.completed {
-	background: var(--blue);
-}
-#content main .table-data .order table tr td .status.process {
-	background: var(--yellow);
-}
-#content main .table-data .order table tr td .status.pending {
-	background: var(--orange);
-}
 
 
-#content main .table-data .todo {
-	flex-grow: 1;
-	flex-basis: 300px;
-}
-#content main .table-data .todo .todo-list {
-	width: 100%;
-}
-#content main .table-data .todo .todo-list li {
-	width: 100%;
-	margin-bottom: 16px;
-	background: var(--grey);
-	border-radius: 10px;
-	padding: 14px 20px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-#content main .table-data .todo .todo-list li .bx {
-	cursor: pointer;
-}
-#content main .table-data .todo .todo-list li.completed {
-	border-left: 10px solid var(--blue);
-}
-#content main .table-data .todo .todo-list li.not-completed {
-	border-left: 10px solid var(--orange);
-}
-#content main .table-data .todo .todo-list li:last-child {
-	margin-bottom: 0;
-}
 /* MAIN */
 /* CONTENT */
 .empty-message {
@@ -308,6 +227,39 @@ body {
 	font-size: 18px;
 	color: #666;
 }
+
+/* Style pour le bouton primary */
+.btn-primary {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--blue);
+	color: var(--light);
+	padding: 8px 16px;
+	border: none;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	font-weight: 500;
+	text-decoration: none;
+	gap: 8px;
+	height: 36px;
+  }
+  
+  .btn-primary:hover {
+	background-color: #2b7bd8; /* Une nuance légèrement plus foncée */
+	box-shadow: 0 4px 8px rgba(60, 145, 230, 0.2);
+	transform: translateY(-1px);
+  }
+  
+  .btn-primary:active {
+	transform: translateY(0);
+	box-shadow: none;
+  }
+  
+  .btn-primary i {
+	font-size: 18px;
+  }
 .no-border-button {
 	background: none;
 	border: none;

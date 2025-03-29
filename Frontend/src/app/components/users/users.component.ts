@@ -136,6 +136,9 @@ export class UsersComponent implements AfterViewInit, OnInit {
             timeOut: 1500,
             progressBar: true
           });
+          
+          // Solution alternative: recharger toujours depuis la première page
+          this.currentPage = 1;
           this.loadUsers();
         },
         error: (err) => {

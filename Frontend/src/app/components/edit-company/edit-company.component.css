@@ -62,34 +62,37 @@ body {
     transform: translateY(-50%);
     font-size: 20px;
 }
-.btn {
-    width: 40%;
-    height: 40px;
-    background: #3C91E6;
-    color: #2b2a2a;
-    border: none;
-    outline: none;
-    border-radius: 20px;
-    box-shadow: 0 0 20px #3C91E6;
-    font-size: 15px;
-    font-weight: 600;
-    transition: 0.5s;
-    margin-top: 8px;
-    cursor: pointer;
-}
-.btn:hover {
-    background: transparent;
-    border: 2px solid #3C91E6;
-    color: #2b2a2a;
-    transform: scale(1.1);
-    box-shadow: 0 0 20px #3C91E6;
-}
-
-.btn-container {
-    display: flex;
-    justify-content: center; /* Centre horizontalement */
-    margin-top: 20px; /* Espacement au-dessus */
-}
+.btn{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--blue);
+	color: var(--light);
+	padding: 8px 16px;
+	border: none;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	font-weight: 500;
+	text-decoration: none;
+	gap: 8px;
+	height: 36px;
+  }
+  
+  .btn:hover {
+	background-color: #2b7bd8; /* Une nuance légèrement plus foncée */
+	box-shadow: 0 4px 8px rgba(60, 145, 230, 0.2);
+	transform: translateY(-1px);
+  }
+  
+  .btn:active {
+	transform: translateY(0);
+	box-shadow: none;
+  }
+  
+  .btn i {
+	font-size: 18px;
+  }
 
 .btn:disabled {
     background-color: #cccccc; /* Couleur de fond grise */

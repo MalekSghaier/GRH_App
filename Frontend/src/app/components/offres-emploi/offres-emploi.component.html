@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <title>AdminHub</title>
+</head>
+<body>
+  <app-shared-sidebar></app-shared-sidebar>
+  <section id="content">
+    <app-shared-navbar></app-shared-navbar>
+
+    <!-- MAIN -->
+    <main>
+      <div class="head-title">
+        <div class="left">
+          <h1>Tableau de bord</h1>
+          <ul class="breadcrumb">
+            <li>
+              <a href="#">Tableau de bord</a>
+            </li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li>
+              <a class="active" href="parametre">Offres d'Emploi</a>
+            </li>
+          </ul>
+        </div>
+
+
+      </div>
+
+      <div class="table-data">
+        <div class="order">
+            <div class="container">
+
+                <mat-tab-group>
+                    <!-- Onglet 1 : Ajouter une offre -->
+                    <mat-tab label="📌 Ajouter une offre">
+                      <div class="tab-content">
+                        <h2>Créer une nouvelle offre d'emploi</h2>
+                        <button class="btn-primary">+ Ajouter</button>
+                      </div>
+                    </mat-tab>
+                  
+                    <!-- Onglet 2 : Mes offres publiées -->
+                    <mat-tab label="📂 Mes offres publiées">
+                      <div class="tab-content">
+                        <h2>Liste de mes offres</h2>
+                        <p>Gérez et modifiez les offres que vous avez publiées.</p>
+                      </div>
+                    </mat-tab>
+                  
+                    <!-- Onglet 3 : Candidatures reçues -->
+                    <mat-tab label="📑 Candidatures reçues">
+                      <div class="tab-content">
+                        <h2>Candidatures reçues</h2>
+                        <p>Consultez les candidatures pour vos offres d'emploi.</p>
+                      </div>
+                    </mat-tab>
+                  </mat-tab-group>
+
+            </div>
+        </div>
+    </div>
+    </main>
+    <!-- MAIN -->
+  </section>
+  <!-- CONTENT -->
+</body>
+</html>
