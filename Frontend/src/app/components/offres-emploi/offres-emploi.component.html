@@ -11,60 +11,94 @@
   <section id="content">
     <app-shared-navbar></app-shared-navbar>
 
-    <!-- MAIN -->
-    <main>
-      <div class="head-title">
-        <div class="left">
-          <h1>Tableau de bord</h1>
-          <ul class="breadcrumb">
-            <li>
-              <a href="#">Tableau de bord</a>
-            </li>
-            <li><i class='bx bx-chevron-right'></i></li>
-            <li>
-              <a class="active" href="parametre">Offres d'Emploi</a>
-            </li>
-          </ul>
-        </div>
-
-
+  <!-- MAIN -->
+  <main>
+    <div class="head-title">
+      <div class="left">
+        <h1>Offres d'Emploi</h1>
+        <ul class="breadcrumb">
+          <li>
+            <a href="#">Tableau de bord</a>
+          </li>
+          <li><i class='bx bx-chevron-right'></i></li>
+          <li>
+            <a class="active" href="#">Offres d'Emploi</a>
+          </li>
+        </ul>
       </div>
-
-      <div class="table-data">
-        <div class="order">
-            <div class="container">
-
-                <mat-tab-group>
-                    <!-- Onglet 1 : Ajouter une offre -->
-                    <mat-tab label="📌 Ajouter une offre">
-                      <div class="tab-content">
-                        <h2>Créer une nouvelle offre d'emploi</h2>
-                        <button class="btn-primary">+ Ajouter</button>
-                      </div>
-                    </mat-tab>
-                  
-                    <!-- Onglet 2 : Mes offres publiées -->
-                    <mat-tab label="📂 Mes offres publiées">
-                      <div class="tab-content">
-                        <h2>Liste de mes offres</h2>
-                        <p>Gérez et modifiez les offres que vous avez publiées.</p>
-                      </div>
-                    </mat-tab>
-                  
-                    <!-- Onglet 3 : Candidatures reçues -->
-                    <mat-tab label="📑 Candidatures reçues">
-                      <div class="tab-content">
-                        <h2>Candidatures reçues</h2>
-                        <p>Consultez les candidatures pour vos offres d'emploi.</p>
-                      </div>
-                    </mat-tab>
-                  </mat-tab-group>
-
-            </div>
-        </div>
     </div>
-    </main>
-    <!-- MAIN -->
+
+    <div class="table-data">
+      <div class="order">
+        <div class="container">
+          <mat-tab-group>
+            <!-- Onglet 1 : Ajouter une offre -->
+            <mat-tab label="📌 Ajouter une offre">
+              <div class="tab-content">
+                <h2>Créer une nouvelle offre d'emploi</h2>
+                <button class="btn-primary" (click)="openAddOfferDialog()">+ Ajouter</button>
+              </div>
+            
+            </mat-tab>
+          
+            <!-- Onglet 2 : Mes offres publiées -->
+            <mat-tab label="📂 Mes offres publiées">
+              <div class="tab-content">
+                <h2>Liste de mes offres</h2>
+                <div class="table-container">
+                  <table mat-table [dataSource]="offers" class="mat-elevation-z8">
+                    <!-- Colonne Titre -->
+                    <ng-container matColumnDef="title">
+                      <th mat-header-cell *matHeaderCellDef>Titre</th>
+                      <td mat-cell *matCellDef="let offer">{{ offer.title }}</td>
+                    </ng-container>
+
+                    <!-- Colonne Société -->
+                    <ng-container matColumnDef="company">
+                      <th mat-header-cell *matHeaderCellDef>Société</th>
+                      <td mat-cell *matCellDef="let offer">{{ offer.company }}</td>
+                    </ng-container>
+
+                    <!-- Colonne Lieu -->
+                    <ng-container matColumnDef="location">
+                      <th mat-header-cell *matHeaderCellDef>Lieu</th>
+                      <td mat-cell *matCellDef="let offer">{{ offer.location }}</td>
+                    </ng-container>
+
+                    <!-- Colonne Actions -->
+                    <ng-container matColumnDef="actions">
+                      <th mat-header-cell *matHeaderCellDef>Actions</th>
+                      <td mat-cell *matCellDef="let offer">
+                        <button mat-icon-button color="primary">
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" (click)="deleteOffer(offer._id)">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                </div>
+              </div>
+            </mat-tab>
+          
+            <!-- Onglet 3 : Candidatures reçues -->
+            <mat-tab label="📑 Candidatures reçues">
+              <div class="tab-content">
+                <h2>Candidatures reçues</h2>
+                <p>Consultez les candidatures pour vos offres d'emploi.</p>
+                <!-- À implémenter -->
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- MAIN -->
   </section>
   <!-- CONTENT -->
 </body>

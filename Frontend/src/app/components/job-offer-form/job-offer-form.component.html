@@ -1,0 +1,51 @@
+<div class="form-wrapper">
+    <div class="form-container">
+      <form (ngSubmit)="onSubmit()" class="job-offer-form">
+        <h2 class="form-title">Nouvelle Offre d'Emploi</h2>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Titre du poste</mat-label>
+          <input matInput [(ngModel)]="jobOffer.title" name="title" required>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Description du poste</mat-label>
+          <textarea matInput [(ngModel)]="jobOffer.description" name="description" rows="3" required></textarea>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Société</mat-label>
+          <input matInput [(ngModel)]="jobOffer.company" name="company" required>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Lieu de travail</mat-label>
+          <input matInput [(ngModel)]="jobOffer.location" name="location" required>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Expérience requise (années)</mat-label>
+          <input matInput type="number" [(ngModel)]="jobOffer.experienceRequired" name="experienceRequired" required min="0">
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Niveau d'étude</mat-label>
+          <mat-select [(ngModel)]="jobOffer.educationLevel" name="educationLevel" required>
+            <mat-option *ngFor="let level of educationLevels" [value]="level">
+              {{ level }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Exigences de l'emploi</mat-label>
+          <textarea matInput [(ngModel)]="jobOffer.jobRequirements" name="jobRequirements" rows="3" required></textarea>
+        </mat-form-field>
+  
+        <div class="button-group">
+          <button class="btn-primary" type="submit">Enregistrer</button>
+
+        </div>
+      </form>
+    </div>
+  </div>

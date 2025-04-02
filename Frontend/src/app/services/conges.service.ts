@@ -12,7 +12,7 @@ interface PaginatedCongesResponse {
   providedIn: 'root'
 })
 export class CongesService {
-  private apiUrl = 'http://localhost:3000/conges'; // Remplacez par l'URL de votre API
+  private apiUrl = 'http://localhost:3000/conges';
 
   constructor(private http: HttpClient) {}
 
