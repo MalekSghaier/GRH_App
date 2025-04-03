@@ -13,6 +13,7 @@ import { JobOfferFormComponent } from '../job-offer-form/job-offer-form.componen
 import { JobOffersService } from '../../services/job-offers.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ToastrService } from 'ngx-toastr';
+import { EditJobOfferComponent } from '../edit-job-offer/edit-job-offer.component';
 
 
 @Component({
@@ -84,6 +85,38 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loadMyOffers();
+      }
+    });
+  }
+
+  openEditOfferDialog(offer: any): void {
+    // Sauvegarder l'ObjectId original
+    const originalCreatedBy = offer.createdBy;
+  
+    const dialogRef = this.dialog.open(EditJobOfferComponent, {
+      width: '600px',
+      data: { 
+        offer: {
+          ...offer,
+          experienceRequired: typeof offer.experienceRequired === 'string' 
+            ? parseInt(offer.experienceRequired.replace(' ans', '')) 
+            : offer.experienceRequired
+        }
+      }
+    });
+  
+    dialogRef.afterClosed().subscribe(updatedOffer => {
+      if (updatedOffer) {
+        // Mise à jour locale en conservant le format original
+        const index = this.offers.findIndex(o => o._id === updatedOffer._id);
+        if (index !== -1) {
+          this.offers[index] = {
+            ...updatedOffer,
+            createdBy: originalCreatedBy, // Garde l'ObjectId
+            experienceRequired: `${updatedOffer.experienceRequired} ans`
+          };
+          this.offers = [...this.offers]; // Nouvelle référence
+        }
       }
     });
   }

@@ -48,10 +48,15 @@ export class JobOffersService {
       experienceRequired: number;
       educationLevel: string;
       jobRequirements: string;
+      createdBy?: never; // Indique explicitement que ce champ ne doit pas être utilisé
     }>
   ): Promise<JobOfferDocument | null> {
+    // Créer une copie des données sans createdBy
+    const updateData = {...offerData};
+    delete updateData.createdBy;
+    
     return this.jobOfferModel
-      .findByIdAndUpdate(id, offerData, { new: true })
+      .findByIdAndUpdate(id, updateData, { new: true })
       .exec();
   }
 

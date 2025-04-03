@@ -73,7 +73,7 @@
                     <ng-container matColumnDef="actions">
                       <th mat-header-cell *matHeaderCellDef>Actions</th>
                       <td mat-cell *matCellDef="let offer">
-                        <button mat-icon-button color="primary" matTooltip="Modifier">
+                        <button mat-icon-button color="primary" matTooltip="Modifier" (click)="openEditOfferDialog(offer)">
                           <mat-icon>edit</mat-icon>
                         </button>
                         <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deleteOffer(offer._id)">
