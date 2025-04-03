@@ -20,7 +20,7 @@ export interface JobOffer {
   providedIn: 'root'
 })
 export class JobOffersService {
-  private apiUrl = 'http://localhost:3000/job-offers'; // Remplacez par l'URL de votre API
+  private apiUrl = 'http://localhost:3000/job-offers';
 
 
   constructor(private http: HttpClient) {}
@@ -48,14 +48,33 @@ export class JobOffersService {
   }
 
   getJobOfferById(id: string): Observable<JobOffer> {
-    return this.http.get<JobOffer>(`${this.apiUrl}/${id}`);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Aucun token trouvé !');
+      return new Observable();
+    }
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<JobOffer>(`${this.apiUrl}/${id}`, { headers });
   }
 
   updateJobOffer(id: string, offerData: Partial<JobOffer>): Observable<JobOffer> {
-    return this.http.put<JobOffer>(`${this.apiUrl}/${id}`, offerData);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Aucun token trouvé !');
+      return new Observable();
+    }
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put<JobOffer>(`${this.apiUrl}/${id}`, offerData, { headers });
   }
 
   deleteJobOffer(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Aucun token trouvé !');
+      return new Observable();
+    }
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
 }
