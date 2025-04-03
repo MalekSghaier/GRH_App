@@ -35,8 +35,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 })
 export class OffresEmploiComponent implements AfterViewInit, OnInit {
   offers: any[] = [];
-  displayedColumns: string[] = ['title', 'company', 'location', 'actions'];
-  noDataMessage = "Aucune offre disponible";
+  displayedColumns: string[] = ['title', 'experienceRequired', 'educationLevel', 'jobRequirements', 'actions'];  noDataMessage = "Aucune offre disponible";
 
 
   constructor(
@@ -46,7 +45,7 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadMyOffers(); // Au lieu de loadOffers()
+    this.loadMyOffers();
   }
 
   ngAfterViewInit(): void {
@@ -55,20 +54,22 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
 
 
 
-    // Nouvelle méthode pour charger les offres de la compagnie
-    loadMyOffers(): void {
-      this.jobOffersService.getMyJobOffers().subscribe({
-        next: (offers) => {
-          this.offers = offers;
-        },
-        error: (err) => {
-          this.snackBar.open('Erreur lors du chargement de vos offres', 'Fermer', {
-            duration: 3000
-          });
-          console.error(err);
-        }
-      });
-    }
+  loadMyOffers(): void {
+    this.jobOffersService.getMyJobOffers().subscribe({
+      next: (offers) => {
+        this.offers = offers.map(offer => ({
+          ...offer,
+          experienceRequired: `${offer.experienceRequired} ans` // Formatage de l'expérience
+        }));
+      },
+      error: (err) => {
+        this.snackBar.open('Erreur lors du chargement de vos offres', 'Fermer', {
+          duration: 3000
+        });
+        console.error(err);
+      }
+    });
+  }
 
   openAddOfferDialog(): void {
     const dialogRef = this.dialog.open(JobOfferFormComponent, {

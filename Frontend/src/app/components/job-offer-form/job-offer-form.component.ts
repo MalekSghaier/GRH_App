@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,OnInit  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -23,7 +23,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './job-offer-form.component.html',
   styleUrls: ['./job-offer-form.component.css']
 })
-export class JobOfferFormComponent {
+export class JobOfferFormComponent implements OnInit {
   jobOffer = {
     title: '',
     description: '',
@@ -47,6 +47,26 @@ export class JobOfferFormComponent {
     private jobOffersService: JobOffersService,
     private snackBar: MatSnackBar
   ) {}
+
+  ngOnInit(): void {
+    this.loadCompanyName();
+  }
+
+
+  private loadCompanyName(): void {
+    // Récupération du token depuis le localStorage
+    const token = localStorage.getItem('token');
+    
+    if (token) {
+      try {
+        // Décodage du token JWT pour obtenir les informations
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        this.jobOffer.company = payload.companyName || '';
+      } catch (e) {
+        console.error('Erreur lors du décodage du token', e);
+      }
+    }
+  }
 
   onSubmit(): void {
     this.jobOffersService.createJobOffer(this.jobOffer).subscribe({

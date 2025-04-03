@@ -64,9 +64,27 @@ td, th {
   padding: 12px;
 }
 
+/* Ajoutez ceci à votre fichier CSS */
+.mat-column-jobRequirements {
+  max-width: 500px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-cell {
+  padding: 8px 16px;
+}
+
+.mat-header-cell {
+  font-weight: bold;
+  background-color: #f5f5f5;
+}
+
 td.mat-column-title,
-td.mat-column-company,
-td.mat-column-location,
+td.mat-column-experienceRequired,
+td.mat-column-educationLevel,
+td.mat-column-jobRequirements,
 td.mat-column-actions {
   display: table-cell !important;
 }
