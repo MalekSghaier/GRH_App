@@ -9,7 +9,7 @@ export interface JobOffer {
   description: string;
   company: string;
   location: string;
-  experienceRequired: number;
+  experienceRequired: number | string; // Modifié pour accepter soit number soit string
   educationLevel: string;
   jobRequirements: string;
   createdAt: Date;

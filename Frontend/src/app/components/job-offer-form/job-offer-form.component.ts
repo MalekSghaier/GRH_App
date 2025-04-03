@@ -8,6 +8,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialogRef } from '@angular/material/dialog';
 import { JobOffersService } from '../../services/job-offers.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-job-offer-form',
@@ -18,7 +20,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatInputModule,
     MatFormFieldModule,
     MatButtonModule,
-    MatSelectModule
+    MatSelectModule,
   ],
   templateUrl: './job-offer-form.component.html',
   styleUrls: ['./job-offer-form.component.css']
@@ -45,7 +47,9 @@ export class JobOfferFormComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<JobOfferFormComponent>,
     private jobOffersService: JobOffersService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private toastr: ToastrService
+
   ) {}
 
   ngOnInit(): void {
@@ -71,14 +75,16 @@ export class JobOfferFormComponent implements OnInit {
   onSubmit(): void {
     this.jobOffersService.createJobOffer(this.jobOffer).subscribe({
       next: () => {
-        this.snackBar.open('Offre créée avec succès!', 'Fermer', {
-          duration: 3000
-        });
+        this.toastr.success('Offre créée avec succès!', 'Succès', {
+          timeOut: 1500,
+          progressBar: true
+          });
         this.dialogRef.close(true);
       },
       error: (err) => {
-        this.snackBar.open('Erreur lors de la création', 'Fermer', {
-          duration: 3000
+        this.toastr.success('Erreur lors de la création', 'Fermer', {
+          timeOut: 1500,
+          progressBar: true 
         });
         console.error(err);
       }

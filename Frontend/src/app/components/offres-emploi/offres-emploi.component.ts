@@ -12,6 +12,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { JobOfferFormComponent } from '../job-offer-form/job-offer-form.component';
 import { JobOffersService } from '../../services/job-offers.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-offres-emploi',
@@ -41,7 +43,9 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
   constructor(
     private dialog: MatDialog,
     private jobOffersService: JobOffersService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private toastr: ToastrService,
+
   ) {}
 
   ngOnInit(): void {
@@ -63,8 +67,9 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
         }));
       },
       error: (err) => {
-        this.snackBar.open('Erreur lors du chargement de vos offres', 'Fermer', {
-          duration: 3000
+        this.toastr.error('Erreur lors du chargement de vos offres', 'Erreur', {
+          timeOut: 1500,
+          progressBar: true
         });
         console.error(err);
       }
@@ -87,14 +92,16 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette offre ?')) {
       this.jobOffersService.deleteJobOffer(id).subscribe({
         next: () => {
-          this.snackBar.open('Offre supprimée avec succès', 'Fermer', {
-            duration: 3000
+          this.toastr.success('Offre supprimée avec succès', 'Succès', {
+            timeOut: 1500,
+            progressBar: true
           });
           this.loadMyOffers();
         },
         error: (err) => {
-          this.snackBar.open('Erreur lors de la suppression', 'Fermer', {
-            duration: 3000
+          this.toastr.error('Erreur lors du chargement de vos offres', 'Erreur', {
+            timeOut: 1500,
+            progressBar: true
           });
           console.error(err);
         }
