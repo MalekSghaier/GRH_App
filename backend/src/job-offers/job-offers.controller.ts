@@ -7,11 +7,14 @@ import {
     Put, 
     Delete,
     BadRequestException,
-    UseGuards
+    UseGuards,
+    Request
   } from '@nestjs/common';
   import { JobOffersService } from './job-offers.service';
   import { Types } from 'mongoose';
-import { AuthGuard } from '@nestjs/passport';
+  import { AuthGuard } from '@nestjs/passport';
+  import { UserPayload } from 'src/schemas/user-payload';
+
   
   @Controller('job-offers')
   export class JobOffersController {
@@ -19,22 +22,34 @@ import { AuthGuard } from '@nestjs/passport';
   
     @Post()
     @UseGuards(AuthGuard('jwt'))
-    create(@Body() offerData: {
-      title: string;
-      description: string;
-      company: string;
-      location: string;
-      experienceRequired: number;
-      educationLevel: string;
-      jobRequirements: string;
-    }) {
-      return this.jobOffersService.create(offerData);
+    create(
+      @Request() req: { user: UserPayload },
+      @Body() offerData: {
+        title: string;
+        description: string;
+        company: string;
+        location: string;
+        experienceRequired: number;
+        educationLevel: string;
+        jobRequirements: string;
+      }
+    ) {
+      return this.jobOffersService.create({
+        ...offerData,
+        createdBy: new Types.ObjectId(req.user.id) // Conversion en ObjectId
+      });
     }
   
     @Get()
     @UseGuards(AuthGuard('jwt'))
     findAll() {
       return this.jobOffersService.findAll();
+    }
+
+    @Get('my-offers')
+    @UseGuards(AuthGuard('jwt'))
+    findMyOffers(@Request() req: { user: UserPayload }) {
+      return this.jobOffersService.findByCompany(req.user.id); // Utilisez id
     }
   
     @Get(':id')

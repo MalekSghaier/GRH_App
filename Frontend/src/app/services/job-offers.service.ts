@@ -47,6 +47,13 @@ export class JobOffersService {
     return this.http.get<JobOffer[]>(this.apiUrl, { headers });
   }
 
+  getMyJobOffers(): Observable<JobOffer[]> {
+     const token = localStorage.getItem('token');
+     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
+    return this.http.get<JobOffer[]>(`${this.apiUrl}/my-offers`, { headers });
+  }
+
   getJobOfferById(id: string): Observable<JobOffer> {
     const token = localStorage.getItem('token');
     if (!token) {

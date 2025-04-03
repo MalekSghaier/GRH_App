@@ -27,6 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       }
 
       return {
+        sub: company._id.toString(), 
         id: company._id.toString(),
         email: payload.email, // Utilise l'email du JWT plutôt que de la base
         role: payload.role,

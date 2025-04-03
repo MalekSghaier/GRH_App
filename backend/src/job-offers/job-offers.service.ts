@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { JobOffer, JobOfferDocument } from '../schemas/job-offer.schema';
 
 @Injectable()
@@ -17,6 +17,7 @@ export class JobOffersService {
     experienceRequired: number;
     educationLevel: string;
     jobRequirements: string;
+    createdBy: Types.ObjectId;
   }): Promise<JobOfferDocument> {
     const createdOffer = new this.jobOfferModel(offerData);
     return createdOffer.save();
@@ -24,6 +25,13 @@ export class JobOffersService {
 
   async findAll(): Promise<JobOfferDocument[]> {
     return this.jobOfferModel.find().exec();
+  }
+
+  async findByCompany(companyId: string): Promise<JobOfferDocument[]> {
+    return this.jobOfferModel
+      .find({ createdBy: new Types.ObjectId(companyId) })
+      .exec();
+  
   }
 
   async findById(id: string): Promise<JobOfferDocument | null> {

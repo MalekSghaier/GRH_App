@@ -24,6 +24,10 @@ export class JobOffer extends Document {
   @Prop({ required: true })
   jobRequirements: string;
 
+  @Prop({ type: Types.ObjectId, ref: 'Company', required: true })
+  createdBy: Types.ObjectId;
+
+
   @Prop({ default: Date.now })
   createdAt: Date;
 

@@ -46,26 +46,29 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadOffers();
+    this.loadMyOffers(); // Au lieu de loadOffers()
   }
 
   ngAfterViewInit(): void {
     this.initializeSidebar();
   }
 
-  loadOffers(): void {
-    this.jobOffersService.getJobOffers().subscribe({
-      next: (offers) => {
-        this.offers = offers;
-      },
-      error: (err) => {
-        this.snackBar.open('Erreur lors du chargement des offres', 'Fermer', {
-          duration: 3000
-        });
-        console.error(err);
-      }
-    });
-  }
+
+
+    // Nouvelle méthode pour charger les offres de la compagnie
+    loadMyOffers(): void {
+      this.jobOffersService.getMyJobOffers().subscribe({
+        next: (offers) => {
+          this.offers = offers;
+        },
+        error: (err) => {
+          this.snackBar.open('Erreur lors du chargement de vos offres', 'Fermer', {
+            duration: 3000
+          });
+          console.error(err);
+        }
+      });
+    }
 
   openAddOfferDialog(): void {
     const dialogRef = this.dialog.open(JobOfferFormComponent, {
@@ -74,7 +77,7 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.loadOffers();
+        this.loadMyOffers();
       }
     });
   }
@@ -86,7 +89,7 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
           this.snackBar.open('Offre supprimée avec succès', 'Fermer', {
             duration: 3000
           });
-          this.loadOffers();
+          this.loadMyOffers();
         },
         error: (err) => {
           this.snackBar.open('Erreur lors de la suppression', 'Fermer', {
