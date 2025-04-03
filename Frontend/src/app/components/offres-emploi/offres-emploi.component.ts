@@ -36,6 +36,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 export class OffresEmploiComponent implements AfterViewInit, OnInit {
   offers: any[] = [];
   displayedColumns: string[] = ['title', 'company', 'location', 'actions'];
+  noDataMessage = "Aucune offre disponible";
+
 
   constructor(
     private dialog: MatDialog,

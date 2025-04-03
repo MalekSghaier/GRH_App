@@ -23,3 +23,85 @@ h2 {
 .btn-primary:hover {
   background-color: #0056b3;
 }
+.table-container {
+  width: 100%;
+  overflow-x: auto; /* Permet d'éviter les débordements */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  padding: 12px;
+}
+
+th {
+  background-color: #f4f4f4; /* Met un fond pour différencier les colonnes */
+}
+
+.mat-elevation-z8 {
+  box-shadow: none; /* Supprime l'ombre excessive */
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td, th {
+  vertical-align: middle !important;
+  padding: 12px;
+}
+
+td.mat-column-title,
+td.mat-column-company,
+td.mat-column-location,
+td.mat-column-actions {
+  display: table-cell !important;
+}
+tr.mat-row,
+tr.mat-header-row {
+  border-bottom: 1px solid #ddd !important;
+}
+
+/* Empêche le désalignement des icônes */
+td.mat-column-actions {
+  text-align: center;
+  width: 120px;
+}
+
+/* Assure que le texte des colonnes est bien aligné */
+td.mat-column-title, 
+td.mat-column-company, 
+td.mat-column-location {
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.mat-elevation-z8 {
+  box-shadow: none; /* Enlève l'effet d'ombre excessif */
+}
+
+.mat-header-row {
+  background: #f9fafb !important;
+}
+
+.mat-row:hover {
+  background: #f1f1f1 !important; /* Ajoute un effet au survol */
+}
+
