@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Planifier l'entretien</h2>
+<mat-dialog-content>
+  <form [formGroup]="interviewForm" class="interview-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Date de l'entretien</mat-label>
+      <input matInput 
+             [matDatepicker]="picker" 
+             formControlName="date" 
+             required
+             [value]="formatDateForDisplay(interviewForm.value.date)"
+             readonly>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker 
+                      (selectedChanged)="onDateSelected($event)"
+                      [startAt]="today"></mat-datepicker>
+      <mat-error *ngIf="interviewForm.get('date')?.hasError('required')">
+        La date est requise
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Heure de l'entretien</mat-label>
+      <input matInput type="time" formControlName="time" required>
+      <mat-error *ngIf="interviewForm.get('time')?.hasError('required')">
+        L'heure est requise
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Annuler</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!interviewForm.valid">
+    Confirmer
+  </button>
+</mat-dialog-actions>

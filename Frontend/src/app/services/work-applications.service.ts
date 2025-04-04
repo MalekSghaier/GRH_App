@@ -27,4 +27,10 @@ export class WorkApplicationsService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.put(`${this.apiUrl}/${id}`, { status }, { headers });
   }
+
+  approveWithInterview(id: string, date: string, time: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put(`${this.apiUrl}/${id}/approve`, { date, time }, { headers });
+  }
 }

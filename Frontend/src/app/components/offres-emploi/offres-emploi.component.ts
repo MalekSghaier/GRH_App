@@ -16,6 +16,13 @@ import { ToastrService } from 'ngx-toastr';
 import { EditJobOfferComponent } from '../edit-job-offer/edit-job-offer.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { WorkApplicationsService } from '../../services/work-applications.service';
+// Dans votre composant principal ou module
+import { InterviewFormComponent } from '../interview-form/interview-form.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -33,7 +40,9 @@ import { WorkApplicationsService } from '../../services/work-applications.servic
     MatTableModule,
     MatIconModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   templateUrl: './offres-emploi.component.html',
   styleUrls: ['./offres-emploi.component.css'],
@@ -62,6 +71,7 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
     private toastr: ToastrService,
     private http: HttpClient,
     private workApplicationsService: WorkApplicationsService,
+    
 
   ) {}
 
@@ -103,14 +113,35 @@ loadApplications(): void {
     error: (err) => console.error('Erreur chargement applications', err)
   });
 }
+
+// offres-emploi.component.ts
 updateStatus(appId: string, status: string): void {
-  this.workApplicationsService.updateStatus(appId, status).subscribe({
-    next: () => {
-      this.toastr.success('Statut mis à jour', 'Succès');
-      this.loadApplications();
-    },
-    error: (err) => this.toastr.error('Erreur mise à jour', 'Erreur')
-  });
+  if (status === 'Rejeté') {
+    this.workApplicationsService.updateStatus(appId, status).subscribe({
+      next: () => {
+        this.toastr.error('Demande de travail rejetée', 'Succès', {
+          timeOut: 1500,
+          progressBar: true
+        });
+        this.loadApplications();
+      },
+      error: (err) => this.toastr.error('Erreur mise à jour', 'Erreur', {
+        timeOut: 1500,
+        progressBar: true
+      })
+    });
+  } else if (status === 'Approuvé') {
+    const dialogRef = this.dialog.open(InterviewFormComponent, {
+      width: '400px',
+      data: { applicationId: appId }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadApplications();
+      }
+    });
+  }
 }
   openAddOfferDialog(): void {
     const dialogRef = this.dialog.open(JobOfferFormComponent, {
@@ -123,6 +154,8 @@ updateStatus(appId: string, status: string): void {
       }
     });
   }
+
+
   openEditOfferDialog(offer: any): void {
     // Sauvegarder l'ObjectId original
     const originalCreatedBy = offer.createdBy;
@@ -152,6 +185,12 @@ updateStatus(appId: string, status: string): void {
           this.offers = [...this.offers]; // Nouvelle référence
         }
       }
+    });
+  }
+
+  openInterviewDialog() {
+    this.dialog.open(InterviewFormComponent, {
+      // vos configurations de dialog
     });
   }
 

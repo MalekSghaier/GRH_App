@@ -1,6 +1,7 @@
 //work-applications.controller.ts
 import { Controller, Get, Post, Body,Put, Param, Delete, UseInterceptors, UploadedFiles ,BadRequestException, Query} from '@nestjs/common';
 import { WorkApplicationsService } from './work-applications.service';
+import { EmailService } from '../email/email.service';
 import { WorkApplication } from '../schemas/work-application.schema';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -8,7 +9,9 @@ import { extname } from 'path';
 
 @Controller('work-applications')
 export class WorkApplicationsController {
-  constructor(private readonly workApplicationsService: WorkApplicationsService) {}
+  constructor(private readonly workApplicationsService: WorkApplicationsService,
+    private readonly emailService: EmailService,
+  ) {}
 
   @Post()
   @UseInterceptors(
@@ -96,6 +99,32 @@ export class WorkApplicationsController {
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<WorkApplication> {
     return this.workApplicationsService.findOne(id);
+  }
+
+  @Put(':id/approve')
+  async approveWithInterview(
+    @Param('id') id: string,
+    @Body() interviewData: { date: string; time: string },
+  ): Promise<{ message: string; data: WorkApplication }> {
+    const updatedApp = await this.workApplicationsService.update(id, {
+      status: 'Approuvé',
+      interviewDate: interviewData.date,
+      interviewTime: interviewData.time,
+    });
+
+    // Envoyer l'email
+    await this.emailService.sendInterviewEmail(
+      updatedApp.data.email,
+      updatedApp.data.fullName,
+      updatedApp.data.position,
+      interviewData.date,
+      interviewData.time,
+    );
+
+    return {
+      message: 'Demande approuvée et email envoyé',
+      data: updatedApp.data,
+    };
   }
 
   @Put(':id')

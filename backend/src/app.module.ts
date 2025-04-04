@@ -14,6 +14,8 @@ import { DocumentRequestsModule } from './document-requests/document-requests.mo
 import { InternshipApplicationsModule } from './internship-applications/internship-applications.module';
 import { WorkApplicationsModule } from './work-applications/work-applications.module';
 import { JobOffersModule } from './job-offers/job-offers.module';
+import { EmailService } from './email/email.service';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -30,9 +32,10 @@ import { JobOffersModule } from './job-offers/job-offers.module';
     InternshipApplicationsModule,
     WorkApplicationsModule,
     JobOffersModule,
+    EmailModule,
 
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, EmailService],
 })
 export class AppModule {}

@@ -45,6 +45,13 @@ export class WorkApplication {
     default: 'En cours de traitement'
   })
   status: string;
+
+  @Prop()
+  interviewDate?: string;
+
+  @Prop()
+  interviewTime?: string;
+
 }
 
 export const WorkApplicationSchema = SchemaFactory.createForClass(WorkApplication);
