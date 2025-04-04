@@ -15,6 +15,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ToastrService } from 'ngx-toastr';
 import { EditJobOfferComponent } from '../edit-job-offer/edit-job-offer.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { WorkApplicationsService } from '../../services/work-applications.service';
+
 
 
 @Component({
@@ -59,6 +61,7 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
     private snackBar: MatSnackBar,
     private toastr: ToastrService,
     private http: HttpClient,
+    private workApplicationsService: WorkApplicationsService,
 
   ) {}
 
@@ -91,36 +94,24 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
       }
     });
   }
+loadApplications(): void {
+  const companyName = localStorage.getItem('companyName');
+  if (!companyName) return;
 
-
-  loadApplications(): void {
-    const companyName = localStorage.getItem('companyName');
-    if (!companyName) return;
-
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    this.http.get<any[]>(`http://localhost:3000/work-applications/company/${companyName}`, { headers })
-      .subscribe({
-        next: (apps) => this.applications = apps,
-        error: (err) => console.error('Erreur chargement applications', err)
-      });
-  }
-
-  updateStatus(appId: string, status: string): void {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    this.http.put(`http://localhost:3000/work-applications/${appId}`, { status }, { headers })
-      .subscribe({
-        next: () => {
-          this.toastr.success('Statut mis à jour', 'Succès');
-          this.loadApplications();
-        },
-        error: (err) => this.toastr.error('Erreur mise à jour', 'Erreur')
-      });
-  }
-
+  this.workApplicationsService.getApplicationsByCompany(companyName).subscribe({
+    next: (apps) => this.applications = apps,
+    error: (err) => console.error('Erreur chargement applications', err)
+  });
+}
+updateStatus(appId: string, status: string): void {
+  this.workApplicationsService.updateStatus(appId, status).subscribe({
+    next: () => {
+      this.toastr.success('Statut mis à jour', 'Succès');
+      this.loadApplications();
+    },
+    error: (err) => this.toastr.error('Erreur mise à jour', 'Erreur')
+  });
+}
   openAddOfferDialog(): void {
     const dialogRef = this.dialog.open(JobOfferFormComponent, {
       width: '600px'
@@ -132,7 +123,6 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
       }
     });
   }
-
   openEditOfferDialog(offer: any): void {
     // Sauvegarder l'ObjectId original
     const originalCreatedBy = offer.createdBy;

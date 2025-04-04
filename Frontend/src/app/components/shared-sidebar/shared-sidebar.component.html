@@ -38,7 +38,9 @@
         <a routerLink="/offres-emploi">
           <i class='bx bxs-briefcase bx-sm'></i>
           <span class="text">Offres d'Emploi</span>
-
+          <span *ngIf="pendingApplicationsCount > 0" class="notification">
+            <span class="num">{{ pendingApplicationsCount }}</span>
+          </span>
         </a>
       </li>
       <li routerLinkActive="active">

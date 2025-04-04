@@ -1,5 +1,5 @@
 //work-applications.controller.ts
-import { Controller, Get, Post, Body,Put, Param, Delete, UseInterceptors, UploadedFiles ,BadRequestException} from '@nestjs/common';
+import { Controller, Get, Post, Body,Put, Param, Delete, UseInterceptors, UploadedFiles ,BadRequestException, Query} from '@nestjs/common';
 import { WorkApplicationsService } from './work-applications.service';
 import { WorkApplication } from '../schemas/work-application.schema';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
@@ -78,11 +78,20 @@ export class WorkApplicationsController {
   async findAll(): Promise<WorkApplication[]> {
     return this.workApplicationsService.findAll();
   }
-  // Ajouter une nouvelle route pour les applications par entreprise
+
   @Get('company/:companyName')
-  async findByCompany(@Param('companyName') companyName: string): Promise<WorkApplication[]> {
-    return this.workApplicationsService.findByCompany(companyName);
+   async findByCompany( @Param('companyName') companyName: string, @Query('status') status?: string): Promise<WorkApplication[]> {
+   return this.workApplicationsService.findByCompany(companyName, status);
   }
+
+  @Get('count/:companyName')
+  async countPendingApplications( @Param('companyName') companyName: string): Promise<{ count: number }> {
+  const count = await this.workApplicationsService.countByCompanyAndStatus(
+    companyName, 
+    'En cours de traitement'
+  );
+  return { count };
+}
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<WorkApplication> {

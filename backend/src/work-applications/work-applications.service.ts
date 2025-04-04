@@ -1,7 +1,7 @@
 // work-applications.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { WorkApplication, WorkApplicationDocument } from '../schemas/work-application.schema';
 
 @Injectable()
@@ -27,8 +27,19 @@ export class WorkApplicationsService {
     return workApplication;
   }
 
-  async findByCompany(companyName: string): Promise<WorkApplication[]> {
-    return this.workApplicationModel.find({ company: companyName }).exec();
+  async findByCompany(companyName: string, status?: string): Promise<WorkApplication[]> {
+    const query: FilterQuery<WorkApplicationDocument> = { company: companyName };
+    if (status) {
+      query.status = status;
+    }
+    return this.workApplicationModel.find(query).exec();
+  }
+
+  async countByCompanyAndStatus(companyName: string, status: string): Promise<number> {
+    return this.workApplicationModel.countDocuments({
+      company: companyName,
+      status: status
+    } as FilterQuery<WorkApplicationDocument>).exec();
   }
 
   async update(id: string, updateData: Partial<WorkApplication>): Promise<{ message: string; data: WorkApplication }> {

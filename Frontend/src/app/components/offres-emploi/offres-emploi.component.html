@@ -46,7 +46,6 @@
                       <td mat-cell *matCellDef="let offer">{{ offer.title || '-' }}</td>
                     </ng-container>
 
-                
                     <!-- Colonne Experience requise -->
                     <ng-container matColumnDef="experienceRequired">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Expérience Requise</th>
@@ -59,7 +58,6 @@
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Niveau d'Étude</th>
                       <td mat-cell *matCellDef="let offer">{{ offer.educationLevel || '-' }}</td>
                     </ng-container>
-
 
                       <!-- Colonne Exigences -->
                       <ng-container matColumnDef="jobRequirements">
@@ -96,7 +94,7 @@
               </mat-tab>
 
               <!-- Onglet 3 : Candidatures reçues -->
-               
+
               <mat-tab label="📑 Candidatures reçues">
                 <div class="table-container">
                   <table mat-table [dataSource]="applications" class="mat-elevation-z8">

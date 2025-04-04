@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router'; // Importez RouterModule
 import { CongesService } from '../../services/conges.service';
 import { DocumentRequestsService } from '../../services/document-requests.service';
+import { WorkApplicationsService } from '../../services/work-applications.service';
 
 @Component({
   selector: 'app-shared-sidebar',
@@ -20,6 +21,8 @@ export class SharedSidebarComponent implements AfterViewInit, OnInit {
   currentRoute: string = ''; // Déclaration de la propriété currentRoute
   pendingCongesCount: number = 0; // Propriété pour stocker le nombre de congés en attente
   pendingDocsCount: number = 0; // Propriété pour stocker le nombre de congés en attente
+  pendingApplicationsCount: number = 0; // Propriété pour stocker le nombre de demande de travail en attente
+
   
 
 
@@ -28,12 +31,15 @@ export class SharedSidebarComponent implements AfterViewInit, OnInit {
     private authService: AuthService, 
     private router: Router,
     private congesService: CongesService,
-    private documentRequestsService :DocumentRequestsService
+    private documentRequestsService :DocumentRequestsService,
+    private workApplicationsService: WorkApplicationsService,
   ) {}
 
   ngOnInit(): void {
     this.loadPendingCongesCount();
     this.loadPendingDocsCount();
+    this.loadPendingApplicationsCount();
+
 
 
     // S'abonner aux événements de navigation pour mettre à jour currentRoute
@@ -65,6 +71,20 @@ export class SharedSidebarComponent implements AfterViewInit, OnInit {
       }
     });
   }
+
+loadPendingApplicationsCount(): void {
+  const companyName = localStorage.getItem('companyName');
+  if (!companyName) return;
+
+  this.workApplicationsService.getPendingApplicationsCount(companyName).subscribe({
+    next: (response) => {
+      this.pendingApplicationsCount = response.count;
+    },
+    error: (err) => {
+      console.error('Erreur chargement candidatures en attente', err);
+    }
+  });
+}
 
   logout(): void {
     this.authService.logout(); // Appelez la méthode logout
