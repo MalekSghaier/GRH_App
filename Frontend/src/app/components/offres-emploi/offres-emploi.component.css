@@ -64,14 +64,14 @@ td, th {
   padding: 12px;
 }
 .error-message {
-  font-size: 12px; 
-  color: rgb(247, 95, 95);
-  margin-top: 1px; 
+    font-size: 12px; 
+    color: rgb(247, 95, 95);
+    margin-top: 1px; 
 }
 .success-message {
-  font-size: 12px;
-  color: green;
-  margin-top: 5px; 
+    font-size: 12px;
+    color: green;
+    margin-top: 5px; 
 }
 
 /* Ajoutez ceci à votre fichier CSS */
@@ -98,6 +98,16 @@ td.mat-column-jobRequirements,
 td.mat-column-actions {
   display: table-cell !important;
 }
+
+td.mat-column-position,
+td.mat-column-fullName,
+td.mat-column-email,
+td.mat-column-phone,
+td.mat-column-cv,
+td.mat-column-coverLetter,
+td.mat-column-actions {
+  display: table-cell !important;
+}
 tr.mat-row,
 tr.mat-header-row {
   border-bottom: 1px solid #ddd !important;
@@ -109,12 +119,7 @@ td.mat-column-actions {
   width: 120px;
 }
 
-/* Assure que le texte des colonnes est bien aligné */
-td.mat-column-title, 
-td.mat-column-company, 
-td.mat-column-location {
-  text-align: left;
-}
+
 
 th {
   background-color: #f4f4f4;
@@ -133,3 +138,33 @@ th {
   background: #f1f1f1 !important; /* Ajoute un effet au survol */
 }
 
+
+
+
+
+/* Style pour les liens PDF */
+.document-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.document-link:hover {
+  text-decoration: underline;
+}
+
+.document-link mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+
+/* Message quand pas de données */
+.no-data-row {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}

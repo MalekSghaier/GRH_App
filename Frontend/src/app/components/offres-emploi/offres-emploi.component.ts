@@ -14,6 +14,7 @@ import { JobOffersService } from '../../services/job-offers.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ToastrService } from 'ngx-toastr';
 import { EditJobOfferComponent } from '../edit-job-offer/edit-job-offer.component';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 
 @Component({
@@ -38,19 +39,33 @@ import { EditJobOfferComponent } from '../edit-job-offer/edit-job-offer.componen
 })
 export class OffresEmploiComponent implements AfterViewInit, OnInit {
   offers: any[] = [];
-  displayedColumns: string[] = ['title', 'experienceRequired', 'educationLevel', 'jobRequirements', 'actions'];  noDataMessage = "Aucune offre disponible";
-
+  displayedColumns: string[] = ['title', 'experienceRequired', 'educationLevel', 'jobRequirements', 'actions'];  
+  noDataMessage = "Aucune offre disponible";
+  applications: any[] = [];
+  appDisplayedColumns: string[] = [
+    'position', 
+    'fullName', 
+    'email', 
+    'phone', 
+    'cv', 
+    'coverLetter', 
+    'availability', 
+    'actions'
+  ];
 
   constructor(
     private dialog: MatDialog,
     private jobOffersService: JobOffersService,
     private snackBar: MatSnackBar,
     private toastr: ToastrService,
+    private http: HttpClient,
 
   ) {}
 
   ngOnInit(): void {
     this.loadMyOffers();
+    this.loadApplications();
+
   }
 
   ngAfterViewInit(): void {
@@ -75,6 +90,35 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
         console.error(err);
       }
     });
+  }
+
+
+  loadApplications(): void {
+    const companyName = localStorage.getItem('companyName');
+    if (!companyName) return;
+
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    this.http.get<any[]>(`http://localhost:3000/work-applications/company/${companyName}`, { headers })
+      .subscribe({
+        next: (apps) => this.applications = apps,
+        error: (err) => console.error('Erreur chargement applications', err)
+      });
+  }
+
+  updateStatus(appId: string, status: string): void {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    this.http.put(`http://localhost:3000/work-applications/${appId}`, { status }, { headers })
+      .subscribe({
+        next: () => {
+          this.toastr.success('Statut mis à jour', 'Succès');
+          this.loadApplications();
+        },
+        error: (err) => this.toastr.error('Erreur mise à jour', 'Erreur')
+      });
   }
 
   openAddOfferDialog(): void {

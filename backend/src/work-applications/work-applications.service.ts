@@ -27,6 +27,10 @@ export class WorkApplicationsService {
     return workApplication;
   }
 
+  async findByCompany(companyName: string): Promise<WorkApplication[]> {
+    return this.workApplicationModel.find({ company: companyName }).exec();
+  }
+
   async update(id: string, updateData: Partial<WorkApplication>): Promise<{ message: string; data: WorkApplication }> {
     const workApplication = await this.workApplicationModel.findByIdAndUpdate(id, updateData, { new: true }).exec();
     if (!workApplication) {

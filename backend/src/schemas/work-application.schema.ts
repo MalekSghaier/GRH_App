@@ -1,4 +1,4 @@
-//work-application.schema.ts
+// work-application.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
@@ -9,41 +9,42 @@ export class WorkApplication {
   @Prop({ required: true })
   fullName: string;
 
-  @Prop({ required: true })
-  phone: string;
-
-  @Prop({ required: true })
+  @Prop({ required: true,match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*\.\w{2,3}$/, 'Veuillez fournir un email valide'],}) // Validation email
   email: string;
 
   @Prop({ required: true })
-  address: string;
+  birthDate: Date; // Date de naissance
+
+  @Prop({ 
+    required: true,
+    validate: {
+      validator: (v: string) => /^\d{8,10}$/.test(v),
+      message: 'Le téléphone doit contenir 8 à 10 chiffres'
+    }
+  })
+  phone: string;
 
   @Prop({ required: true })
-  experience: string; // Années d'expérience
+  availability: string;
 
   @Prop({ required: true })
-  education: string; // Niveau d'études et diplôme
+  company: string;
 
   @Prop({ required: true })
-  position: string; // Poste souhaité
+  position: string;
 
   @Prop({ required: true })
-  contractType: string; // Type de contrat (CDI, CDD, etc.)
+  cv: string;
 
   @Prop({ required: true })
-  availability: string; // Disponibilité
+  coverLetter: string;
 
-  @Prop({ required: true })
-  salaryExpectation: string; // Salaire souhaité
-
-  @Prop({ required: true })
-  company: string; // Entreprise ciblée
-
-  @Prop({ required: true })
-  cv: string; // Nom du fichier CV
-
-  @Prop({ required: true })
-  coverLetter: string; // Nom du fichier lettre de motivation
+  @Prop({ 
+    required: true,
+    enum: ['En cours de traitement', 'Rejeté', 'Approuvé'],
+    default: 'En cours de traitement'
+  })
+  status: string;
 }
 
 export const WorkApplicationSchema = SchemaFactory.createForClass(WorkApplication);
