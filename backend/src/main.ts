@@ -1,25 +1,24 @@
-//main.ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as dotenv from 'dotenv';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as path from 'path';
-
-// Charger les variables d'environnement
-dotenv.config();
+import { Response } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.enableCors({
-    origin: 'http://localhost:4200', // Autorise Angular
+    origin: 'http://localhost:4200',
     credentials: true,
   });
 
-    // Servir les fichiers statiques du dossier "uploads"
-    app.useStaticAssets(path.join(__dirname, '..', 'uploads'), {
-      prefix: '/uploads', // Accès aux fichiers via http://localhost:3000/uploads/
-    });
+  // Configuration améliorée pour les fichiers statiques
+  app.useStaticAssets(path.join(process.cwd(), 'uploads'), {
+    prefix: '/uploads',
+    setHeaders: (res: Response) => {
+      res.setHeader('Content-Disposition', 'inline');
+    },
+  });
 
   await app.listen(3000);
 }

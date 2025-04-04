@@ -96,7 +96,7 @@
               </mat-tab>
 
               <!-- Onglet 3 : Candidatures reçues -->
-
+               
               <mat-tab label="📑 Candidatures reçues">
                 <div class="table-container">
                   <table mat-table [dataSource]="applications" class="mat-elevation-z8">
@@ -107,53 +107,46 @@
                         {{ app.position || '-' }}
                       </td>
                     </ng-container>
-              
                     <!-- Colonne Nom complet -->
                     <ng-container matColumnDef="fullName">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom complet</th>
                       <td mat-cell *matCellDef="let app">{{ app.fullName || '-' }}</td>
                     </ng-container>
-              
                     <!-- Colonne Email -->
                     <ng-container matColumnDef="email">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
                       <td mat-cell *matCellDef="let app">{{ app.email || '-' }}</td>
                     </ng-container>
-              
                     <!-- Colonne Téléphone -->
                     <ng-container matColumnDef="phone">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Téléphone</th>
                       <td mat-cell *matCellDef="let app">{{ app.phone || '-' }}</td>
                     </ng-container>
-              
                     <!-- Colonne CV -->
                     <ng-container matColumnDef="cv">
                       <th mat-header-cell *matHeaderCellDef>CV</th>
                       <td mat-cell *matCellDef="let app">
-                        <a *ngIf="app.cv" href="/uploads/{{app.cv}}" target="_blank" class="document-link">
+                        <a *ngIf="app.cv" href="http://localhost:3000/uploads/{{app.cv}}" target="_blank" class="document-link">
                           <mat-icon>picture_as_pdf</mat-icon> Voir CV
                         </a>
                         <span *ngIf="!app.cv">-</span>
                       </td>
                     </ng-container>
-              
                     <!-- Colonne Lettre de motivation -->
                     <ng-container matColumnDef="coverLetter">
                       <th mat-header-cell *matHeaderCellDef>Lettre de motivation</th>
                       <td mat-cell *matCellDef="let app">
-                        <a *ngIf="app.coverLetter" href="/uploads/{{app.coverLetter}}" target="_blank" class="document-link">
+                        <a *ngIf="app.coverLetter" href="http://localhost:3000/uploads/{{app.coverLetter}}" target="_blank" class="document-link">
                           <mat-icon>picture_as_pdf</mat-icon> Voir lettre
                         </a>
                         <span *ngIf="!app.coverLetter">-</span>
                       </td>
                     </ng-container>
-              
                     <!-- Colonne Disponibilité -->
                     <ng-container matColumnDef="availability">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Disponibilité</th>
                       <td mat-cell *matCellDef="let app">{{ app.availability || '-' }}</td>
                     </ng-container>
-              
                     <!-- Colonne Actions -->
                     <ng-container matColumnDef="actions">
                       <th mat-header-cell *matHeaderCellDef>Actions</th>
@@ -166,11 +159,9 @@
                         </button>
                       </td>
                     </ng-container>
-              
                     <tr mat-header-row *matHeaderRowDef="appDisplayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: appDisplayedColumns;"></tr>
                   </table>
-              
                   <ng-container *ngIf="applications.length === 0">
                     <div class="no-data-row">
                       Aucune candidature reçue
