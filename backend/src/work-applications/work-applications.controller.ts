@@ -119,6 +119,8 @@ export class WorkApplicationsController {
       updatedApp.data.position,
       interviewData.date,
       interviewData.time,
+      false // Indique que c'est pour un emploi
+
     );
 
     return {

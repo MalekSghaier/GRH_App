@@ -17,26 +17,36 @@ export class EmailService {
     });
   }
 
-  async sendInterviewEmail(
-    to: string,
-    fullName: string,
-    position: string,
-    interviewDate: string, // Reçoit déjà le format jj/mm/aaaa
-    interviewTime: string,
-  ): Promise<void> {
-    try {
-      const mailOptions = {
-        from: '"Service RH" <maleksg0@gmail.com>',
-        to,
-        subject: `Convocation à l'entretien pour le poste de ${position}`, 
-        text: `Bonjour ${fullName},\n\nVotre demande pour le poste ${position} est approuvée.\n\nDate de l'entretien: ${interviewDate}\nHeure: ${interviewTime} h\n\nCordialement,\nService RH`,
-      };
-  
-      await this.transporter.sendMail(mailOptions);
-    } catch (error) {
-      console.error('Error sending email:', error);
-      throw new Error('Failed to send email');
-    }
+// email.service.ts
+async sendInterviewEmail(
+  to: string,
+  fullName: string,
+  position: string,
+  interviewDate: string,
+  interviewTime: string,
+  isInternship: boolean = false
+): Promise<void> {
+  try {
+    const subject = isInternship 
+      ? `Convocation à l'entretien pour le stage de ${position}`
+      : `Convocation à l'entretien pour le poste de ${position}`;
+
+    const text = isInternship
+      ? `Bonjour ${fullName},\n\nVotre demande pour le stage ${position} est approuvée.\n\nDate de l'entretien: ${interviewDate}\nHeure: ${interviewTime} h\n\nCordialement,\nService RH`
+      : `Bonjour ${fullName},\n\nVotre demande pour le poste ${position} est approuvée.\n\nDate de l'entretien: ${interviewDate}\nHeure: ${interviewTime} h\n\nCordialement,\nService RH`;
+
+    const mailOptions = {
+      from: '"Service RH" <maleksg0@gmail.com>',
+      to,
+      subject,
+      text,
+    };
+
+    await this.transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error('Error sending email:', error);
+    throw new Error('Failed to send email');
   }
+}
   
 }

@@ -115,16 +115,16 @@ export class InternshipApplicationsController {
       interviewDate: interviewData.date,
       interviewTime: interviewData.time,
     });
-
-    // Envoyer l'email
+  
     await this.emailService.sendInterviewEmail(
       updatedApp.data.email,
       updatedApp.data.fullName,
       updatedApp.data.position,
       interviewData.date,
       interviewData.time,
+      true // Indique que c'est pour un stage
     );
-
+  
     return {
       message: 'Demande de stage approuvée et email envoyé',
       data: updatedApp.data,

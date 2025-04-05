@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WorkApplicationsService } from '../../services/work-applications.service';
+import { InternshipApplicationsService } from '../../services/internship-applications.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -12,8 +13,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatNativeDateModule, DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
-// Définir le format de date français
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -46,37 +47,37 @@ export const MY_DATE_FORMATS = {
     { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ],
-  
 })
 export class InterviewFormComponent {
   interviewForm: FormGroup;
   today: Date = new Date();
+  isInternshipRoute: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<InterviewFormComponent>,
     private workApplicationsService: WorkApplicationsService,
+    private internshipApplicationsService: InternshipApplicationsService,
     private toastr: ToastrService,
     private datePipe: DatePipe,
     private dateAdapter: DateAdapter<Date>,
+    private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: { applicationId: string },
   ) {
-    // Configurer l'adapter de date
     this.dateAdapter.setLocale('fr-FR');
-    
-    // Initialiser avec des champs vides
     this.interviewForm = this.fb.group({
       date: [null, Validators.required],
       time: ['', Validators.required],
     });
+
+    // Vérifier la route actuelle
+    this.isInternshipRoute = this.router.url.includes('offres-stage');
   }
 
-  // Méthode pour formater la date
   formatDateForDisplay(date: Date | null): string {
     return date ? this.datePipe.transform(date, 'dd/MM/yyyy') || '' : '';
   }
 
-  // Quand une date est sélectionnée
   onDateSelected(event: any): void {
     if (event.value) {
       this.interviewForm.patchValue({
@@ -95,28 +96,55 @@ export class InterviewFormComponent {
         return;
       }
 
-      this.workApplicationsService
-        .approveWithInterview(
-          this.data.applicationId,
-          formattedDate,
-          this.interviewForm.value.time,
-        )
-        .subscribe({
-          next: () => {
-            this.toastr.success(
-              'Demande approuvée et date d\'entretien envoyée',
-              'Succès',
-            );
-            this.dialogRef.close(true);
-          },
-          error: (error) => {
-            console.error('Error:', error);
-            this.toastr.error(
-              'Erreur lors de l\'approbation',
-              'Erreur',
-            );
-          },
-        });
+      if (this.isInternshipRoute) {
+        // Utiliser le service des stages
+        this.internshipApplicationsService
+          .approveWithInterview(
+            this.data.applicationId,
+            formattedDate,
+            this.interviewForm.value.time,
+          )
+          .subscribe({
+            next: () => {
+              this.toastr.success(
+                'Demande de stage approuvée et date d\'entretien envoyée',
+                'Succès',
+              );
+              this.dialogRef.close(true);
+            },
+            error: (error) => {
+              console.error('Error:', error);
+              this.toastr.error(
+                'Erreur lors de l\'approbation de la demande de stage',
+                'Erreur',
+              );
+            },
+          });
+      } else {
+        // Utiliser le service des emplois
+        this.workApplicationsService
+          .approveWithInterview(
+            this.data.applicationId,
+            formattedDate,
+            this.interviewForm.value.time,
+          )
+          .subscribe({
+            next: () => {
+              this.toastr.success(
+                'Demande approuvée et date d\'entretien envoyée',
+                'Succès',
+              );
+              this.dialogRef.close(true);
+            },
+            error: (error) => {
+              console.error('Error:', error);
+              this.toastr.error(
+                'Erreur lors de l\'approbation',
+                'Erreur',
+              );
+            },
+          });
+      }
     }
   }
 
