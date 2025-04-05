@@ -29,7 +29,8 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">Annuler</button>
-  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!interviewForm.valid">
-    Confirmer
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!interviewForm.valid || isLoading">
+    <span *ngIf="!isLoading">Confirmer</span>
+    <span *ngIf="isLoading">Envoi en cours...</span>
   </button>
 </mat-dialog-actions>

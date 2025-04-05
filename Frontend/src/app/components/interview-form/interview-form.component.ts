@@ -52,6 +52,8 @@ export class InterviewFormComponent {
   interviewForm: FormGroup;
   today: Date = new Date();
   isInternshipRoute: boolean = false;
+  isLoading: boolean = false; // <-- Nouvelle propriété
+
 
   constructor(
     private fb: FormBuilder,
@@ -87,64 +89,48 @@ export class InterviewFormComponent {
   }
 
   onSubmit(): void {
-    if (this.interviewForm.valid) {
+    if (this.interviewForm.valid && !this.isLoading) { // <-- Vérifier isLoading
+      this.isLoading = true; // <-- Désactiver le bouton
+  
       const selectedDate = this.interviewForm.value.date;
       const formattedDate = this.datePipe.transform(selectedDate, 'dd/MM/yyyy');
       
       if (!formattedDate) {
         this.toastr.error('Date invalide', 'Erreur');
+        this.isLoading = false;
         return;
       }
-
-      if (this.isInternshipRoute) {
-        // Utiliser le service des stages
-        this.internshipApplicationsService
-          .approveWithInterview(
-            this.data.applicationId,
-            formattedDate,
-            this.interviewForm.value.time,
-          )
-          .subscribe({
-            next: () => {
-              this.toastr.success(
-                'Demande de stage approuvée et date d\'entretien envoyée',
-                'Succès',
-              );
-              this.dialogRef.close(true);
-            },
-            error: (error) => {
-              console.error('Error:', error);
-              this.toastr.error(
-                'Erreur lors de l\'approbation de la demande de stage',
-                'Erreur',
-              );
-            },
-          });
-      } else {
-        // Utiliser le service des emplois
-        this.workApplicationsService
-          .approveWithInterview(
-            this.data.applicationId,
-            formattedDate,
-            this.interviewForm.value.time,
-          )
-          .subscribe({
-            next: () => {
-              this.toastr.success(
-                'Demande approuvée et date d\'entretien envoyée',
-                'Succès',
-              );
-              this.dialogRef.close(true);
-            },
-            error: (error) => {
-              console.error('Error:', error);
-              this.toastr.error(
-                'Erreur lors de l\'approbation',
-                'Erreur',
-              );
-            },
-          });
-      }
+  
+      const service = this.isInternshipRoute 
+        ? this.internshipApplicationsService 
+        : this.workApplicationsService;
+  
+      service.approveWithInterview(
+          this.data.applicationId,
+          formattedDate,
+          this.interviewForm.value.time,
+        )
+        .subscribe({
+          next: () => {
+            const message = this.isInternshipRoute
+              ? 'Demande de stage approuvée et date d\'entretien envoyée'
+              : 'Demande approuvée et date d\'entretien envoyée';
+            
+            this.toastr.success(message, 'Succès');
+            this.dialogRef.close(true);
+          },
+          error: (error) => {
+            console.error('Error:', error);
+            this.toastr.error(
+              `Erreur lors de l'approbation${this.isInternshipRoute ? ' de la demande de stage' : ''}`,
+              'Erreur'
+            );
+            this.isLoading = false; // <-- Réactiver en cas d'erreur
+          },
+          complete: () => {
+            this.isLoading = false; // <-- S'assurer qu'il est toujours réactivé
+          }
+        });
     }
   }
 
