@@ -28,7 +28,7 @@ export class EmailService {
       const mailOptions = {
         from: '"Service RH" <maleksg0@gmail.com>',
         to,
-        subject: `Convocation à l'entretien pour le poste de ${position}`, // <-- ici tu modifies le sujet
+        subject: `Convocation à l'entretien pour le poste de ${position}`, 
         text: `Bonjour ${fullName},\n\nVotre demande pour le poste ${position} est approuvée.\n\nDate de l'entretien: ${interviewDate}\nHeure: ${interviewTime} h\n\nCordialement,\nService RH`,
       };
   
