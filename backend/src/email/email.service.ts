@@ -26,10 +26,10 @@ export class EmailService {
   ): Promise<void> {
     try {
       const mailOptions = {
-        from: 'maleksg0@gmail.com',
+        from: '"Service RH" <maleksg0@gmail.com>',
         to,
-        subject: 'Confirmation de votre entretien',
-        text: `Bonjour ${fullName},\n\nVotre demande pour le poste ${position} est approuvée.\n\nDate de l'entretien: ${interviewDate}\nHeure: ${interviewTime}\n\nCordialement,\nService RH`,
+        subject: `Convocation à l'entretien pour le poste de ${position}`, // <-- ici tu modifies le sujet
+        text: `Bonjour ${fullName},\n\nVotre demande pour le poste ${position} est approuvée.\n\nDate de l'entretien: ${interviewDate}\nHeure: ${interviewTime} h\n\nCordialement,\nService RH`,
       };
   
       await this.transporter.sendMail(mailOptions);
