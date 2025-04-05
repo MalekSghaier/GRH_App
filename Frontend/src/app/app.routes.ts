@@ -22,6 +22,7 @@ import { ParametersComponent } from './components/parameters/parameters.componen
 import { EditCompanyProfileComponent } from './components/edit-company-profile/edit-company-profile.component';
 import { ChangePasswordProfileComponent } from './components/change-password-profile/change-password-profile.component';
 import { OffresEmploiComponent } from './components/offres-emploi/offres-emploi.component';
+import { InternshipOffersComponent } from './components/internship-offers/internship-offers.component';
 
 
 import { AuthGuard } from './guards/auth.guards';
@@ -125,6 +126,11 @@ export const routes: Routes = [
         path: 'offres-emploi', 
         component: OffresEmploiComponent 
     },
+
+    { 
+        path: 'offres-stage', 
+        component: InternshipOffersComponent,
+      },
 
 
 

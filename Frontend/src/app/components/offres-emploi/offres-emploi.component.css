@@ -74,12 +74,9 @@ td, th {
     margin-top: 5px; 
 }
 
-/* Ajoutez ceci à votre fichier CSS */
-.mat-column-jobRequirements {
-  max-width: 500px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+td.mat-column-title{
+  width: 185px;
+
 }
 
 .mat-cell {

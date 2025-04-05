@@ -16,6 +16,7 @@ import { WorkApplicationsModule } from './work-applications/work-applications.mo
 import { JobOffersModule } from './job-offers/job-offers.module';
 import { EmailService } from './email/email.service';
 import { EmailModule } from './email/email.module';
+import { InternshipOffersModule } from './internship-offers/internship-offers.module';
 
 @Module({
   imports: [
@@ -33,6 +34,8 @@ import { EmailModule } from './email/email.module';
     WorkApplicationsModule,
     JobOffersModule,
     EmailModule,
+    InternshipOffersModule,
+
 
   ],
   controllers: [AppController],

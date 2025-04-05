@@ -1,0 +1,51 @@
+<!-- src/app/components/edit-internship-offer/edit-internship-offer.component.html -->
+<div class="form-wrapper">
+    <div class="form-container">
+      <form (ngSubmit)="onSubmit()" class="internship-offer-form">
+        <h2 class="form-title">{{ formTitle }}</h2>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Titre du stage</mat-label>
+          <input matInput [(ngModel)]="internshipOffer.title" name="title" required>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Description du stage</mat-label>
+          <textarea matInput [(ngModel)]="internshipOffer.description" name="description" rows="3" required></textarea>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Société</mat-label>
+          <input matInput [(ngModel)]="internshipOffer.company" name="company" required readonly>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Lieu de stage</mat-label>
+          <input matInput [(ngModel)]="internshipOffer.location" name="location" required>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Durée (mois)</mat-label>
+          <input matInput type="number" [(ngModel)]="internshipOffer.duration" name="duration" required min="1">
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Niveau d'étude</mat-label>
+          <mat-select [(ngModel)]="internshipOffer.educationLevel" name="educationLevel" required>
+            <mat-option *ngFor="let level of educationLevels" [value]="level">
+              {{ level }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Exigences du stage</mat-label>
+          <textarea matInput [(ngModel)]="internshipOffer.requirements" name="requirements" rows="3" required></textarea>
+        </mat-form-field>
+  
+        <div class="button-group">
+          <button class="btn-primary" type="submit">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>

@@ -1,0 +1,170 @@
+<!-- src/app/components/internship-offers/internship-offers.component.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <title>AdminHub</title>
+</head>
+<body>
+  <app-shared-sidebar></app-shared-sidebar>
+  <section id="content">
+    <app-shared-navbar></app-shared-navbar>
+
+    <!-- MAIN -->
+    <main>
+      <div class="head-title">
+        <div class="left">
+          <h1>Offres de Stage</h1>
+          <ul class="breadcrumb">
+            <li><a href="#">Tableau de bord</a></li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li><a class="active" href="#">Offres de Stage</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="table-data">
+        <div class="order">
+          <div class="container">
+            <mat-tab-group>
+              <!-- Onglet 1 : Ajouter une offre -->
+              <mat-tab label="📌 Ajouter une offre">
+                <div class="tab-content">
+                  <h2>Créer une nouvelle offre de stage</h2>
+                  <button class="btn-primary" (click)="openAddOfferDialog()">+ Ajouter</button>
+                </div>
+              </mat-tab>
+
+              <!-- Onglet 2 : Mes offres publiées -->
+              <mat-tab label="📂 Mes offres publiées">
+                <div class="table-container">
+                  <table mat-table [dataSource]="offers" matSort class="mat-elevation-z8">
+                    <!-- Colonne Titre -->
+                    <ng-container matColumnDef="title">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Titre</th>
+                      <td mat-cell *matCellDef="let offer">{{ offer.title || '-' }}</td>
+                    </ng-container>
+
+                    <!-- Colonne Durée -->
+                    <ng-container matColumnDef="duration">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Durée</th>
+                      <td mat-cell *matCellDef="let offer">{{ offer.duration || '-' }}</td>
+                    </ng-container>
+                
+                    <!-- Colonne niveau d etude -->
+                    <ng-container matColumnDef="educationLevel">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Niveau d'Étude</th>
+                      <td mat-cell *matCellDef="let offer">{{ offer.educationLevel || '-' }}</td>
+                    </ng-container>
+
+                    <!-- Colonne Exigences -->
+                    <ng-container matColumnDef="requirements">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Exigences</th>
+                      <td mat-cell *matCellDef="let offer">{{ offer.requirements || '-' }}</td>
+                    </ng-container>
+
+                    <!-- Colonne Actions -->
+                    <ng-container matColumnDef="actions">
+                      <th mat-header-cell *matHeaderCellDef>Actions</th>
+                      <td mat-cell *matCellDef="let offer">
+                        <button mat-icon-button color="primary" matTooltip="Modifier" (click)="openEditOfferDialog(offer)">
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deleteOffer(offer._id)">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+
+                  <ng-container *ngIf="offers.length === 0">
+                    <div class="no-data-row">
+                      {{ noDataMessage }}
+                    </div>
+                  </ng-container>
+                </div>
+              </mat-tab>
+
+              <!-- Onglet 3 : Candidatures reçues -->
+              <mat-tab label="📑 Candidatures reçues">
+                <div class="table-container">
+                  <table mat-table [dataSource]="applications" class="mat-elevation-z8">
+                    <!-- Colonne Position -->
+                    <ng-container matColumnDef="position">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Poste</th>
+                      <td mat-cell *matCellDef="let app">
+                        {{ app.position || '-' }}
+                      </td>
+                    </ng-container>
+                    <!-- Colonne Nom complet -->
+                    <ng-container matColumnDef="fullName">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom complet</th>
+                      <td mat-cell *matCellDef="let app">{{ app.fullName || '-' }}</td>
+                    </ng-container>
+                    <!-- Colonne Email -->
+                    <ng-container matColumnDef="email">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                      <td mat-cell *matCellDef="let app">{{ app.email || '-' }}</td>
+                    </ng-container>
+                    <!-- Colonne Téléphone -->
+                    <ng-container matColumnDef="phone">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Téléphone</th>
+                      <td mat-cell *matCellDef="let app">{{ app.phone || '-' }}</td>
+                    </ng-container>
+                    <!-- Colonne CV -->
+                    <ng-container matColumnDef="cv">
+                      <th mat-header-cell *matHeaderCellDef>CV</th>
+                      <td mat-cell *matCellDef="let app">
+                        <a *ngIf="app.cv" href="http://localhost:3000/uploads/{{app.cv}}" target="_blank" class="document-link">
+                          <mat-icon>picture_as_pdf</mat-icon> Voir CV
+                        </a>
+                        <span *ngIf="!app.cv">-</span>
+                      </td>
+                    </ng-container>
+                    <!-- Colonne Lettre de motivation -->
+                    <ng-container matColumnDef="coverLetter">
+                      <th mat-header-cell *matHeaderCellDef>Lettre de motivation</th>
+                      <td mat-cell *matCellDef="let app">
+                        <a *ngIf="app.coverLetter" href="http://localhost:3000/uploads/{{app.coverLetter}}" target="_blank" class="document-link">
+                          <mat-icon>picture_as_pdf</mat-icon> Voir lettre
+                        </a>
+                        <span *ngIf="!app.coverLetter">-</span>
+                      </td>
+                    </ng-container>
+                    <!-- Colonne Actions -->
+                    <ng-container matColumnDef="actions">
+                      <th mat-header-cell *matHeaderCellDef>Actions</th>
+                      <td mat-cell *matCellDef="let app">
+                        <button mat-icon-button color="primary" matTooltip="Approuver" (click)="updateStatus(app._id, 'Approuvé')">
+                          <mat-icon>check</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" matTooltip="Rejeter" (click)="updateStatus(app._id, 'Rejeté')">
+                          <mat-icon>close</mat-icon>
+                        </button>
+                      </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="appDisplayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: appDisplayedColumns;"></tr>
+                  </table>
+                  <ng-container *ngIf="applications.length === 0">
+                    <div class="no-data-row">
+                      Aucune candidature reçue
+                    </div>
+                  </ng-container>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- MAIN -->
+  </section>
+  <!-- CONTENT -->
+</body>
+</html>
