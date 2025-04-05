@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router'; // Importez RouterModule
 import { CongesService } from '../../services/conges.service';
 import { DocumentRequestsService } from '../../services/document-requests.service';
 import { WorkApplicationsService } from '../../services/work-applications.service';
+import { InternshipApplicationsService } from '../../services/internship-applications.service';
 
 @Component({
   selector: 'app-shared-sidebar',
@@ -22,6 +23,8 @@ export class SharedSidebarComponent implements AfterViewInit, OnInit {
   pendingCongesCount: number = 0; // Propriété pour stocker le nombre de congés en attente
   pendingDocsCount: number = 0; // Propriété pour stocker le nombre de congés en attente
   pendingApplicationsCount: number = 0; // Propriété pour stocker le nombre de demande de travail en attente
+  pendingInternshipCount: number = 0; // Propriété pour stocker le nombre de demande de travail en attente
+
 
   
 
@@ -33,12 +36,15 @@ export class SharedSidebarComponent implements AfterViewInit, OnInit {
     private congesService: CongesService,
     private documentRequestsService :DocumentRequestsService,
     private workApplicationsService: WorkApplicationsService,
+    private internshipApplicationsService : InternshipApplicationsService
   ) {}
 
   ngOnInit(): void {
     this.loadPendingCongesCount();
     this.loadPendingDocsCount();
     this.loadPendingApplicationsCount();
+    this.loadPendingInternshipCount();
+
 
 
 
@@ -79,6 +85,21 @@ loadPendingApplicationsCount(): void {
   this.workApplicationsService.getPendingApplicationsCount(companyName).subscribe({
     next: (response) => {
       this.pendingApplicationsCount = response.count;
+    },
+    error: (err) => {
+      console.error('Erreur chargement candidatures en attente', err);
+    }
+  });
+}
+
+
+loadPendingInternshipCount(): void {
+  const companyName = localStorage.getItem('companyName');
+  if (!companyName) return;
+
+  this.internshipApplicationsService.getPendingInternshipCount(companyName).subscribe({
+    next: (response) => {
+      this.pendingInternshipCount = response.count;
     },
     error: (err) => {
       console.error('Erreur chargement candidatures en attente', err);

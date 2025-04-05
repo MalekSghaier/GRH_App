@@ -123,7 +123,7 @@ updateStatus(appId: string, status: string): void {
           timeOut: 1500,
           progressBar: true
         });
-        this.loadApplications();
+        window.location.reload();
       },
       error: (err) => this.toastr.error('Erreur mise à jour', 'Erreur', {
         timeOut: 1500,
@@ -138,7 +138,7 @@ updateStatus(appId: string, status: string): void {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.loadApplications();
+        window.location.reload();
       }
     });
   }

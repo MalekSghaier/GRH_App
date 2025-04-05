@@ -47,6 +47,9 @@
         <a routerLink="/offres-stage">
           <i class='bx bxs-graduation bx-sm'></i>
           <span class="text">Offres de Stage</span>
+          <span *ngIf="pendingInternshipCount > 0" class="notification">
+            <span class="num">{{ pendingInternshipCount }}</span>
+          </span>
 
         </a>
       </li>

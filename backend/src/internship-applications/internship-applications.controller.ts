@@ -100,6 +100,8 @@ export class InternshipApplicationsController {
     return { count };
   }
 
+  
+
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<InternshipApplication> {
     return this.internshipApplicationsService.findOne(id);

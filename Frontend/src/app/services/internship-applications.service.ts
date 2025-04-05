@@ -34,4 +34,10 @@ export class InternshipApplicationsService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.put(`${this.apiUrl}/${id}/approve`, { date, time }, { headers });
   }
+
+  getPendingInternshipCount(companyName: string): Observable<{count: number}> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<{count: number}>(`${this.apiUrl}/count/${companyName}`, { headers });
+  }
 }
