@@ -47,7 +47,6 @@ export class CongesService {
     );
   }
 
-
   getPendingCongesCount(): Observable<{ count: number }> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);

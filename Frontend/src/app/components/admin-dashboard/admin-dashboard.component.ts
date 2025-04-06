@@ -1,6 +1,7 @@
-import { Component, AfterViewInit ,ViewEncapsulation } from '@angular/core';
+import { Component, AfterViewInit ,ViewEncapsulation,OnInit  } from '@angular/core';
 import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component';
 import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.component';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -11,10 +12,33 @@ import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.compone
   encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
 
 })
-export class AdminDashboardComponent implements AfterViewInit {
+export class AdminDashboardComponent implements AfterViewInit,OnInit {
+
+  employeeCount: number = 0;
+  internCount: number = 0;
+
+  constructor(private userService: UserService) {}
+
+
+
+  ngOnInit(): void {
+    this.loadCounts();
+  }
   ngAfterViewInit(): void {
     this.initializeSidebar();
  
+  }
+
+  private loadCounts(): void {
+    this.userService.countEmployees().subscribe({
+      next: (count) => this.employeeCount = count,
+      error: (err) => console.error('Erreur lors du chargement des employés', err)
+    });
+
+    this.userService.countInterns().subscribe({
+      next: (count) => this.internCount = count,
+      error: (err) => console.error('Erreur lors du chargement des stagiaires', err)
+    });
   }
 
   private initializeSidebar(): void {

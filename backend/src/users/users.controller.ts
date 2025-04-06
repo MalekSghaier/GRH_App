@@ -1,11 +1,12 @@
 //users.controller.ts
-import { Controller, Get, Post, Body, ConflictException, UseGuards ,NotFoundException ,Put, Delete,Param, InternalServerErrorException, Query} from '@nestjs/common';
+import { Controller, Get, Post, Body, ConflictException, UseGuards ,NotFoundException ,Put, Delete,Param, InternalServerErrorException, Query, BadRequestException} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDocument } from '../schemas/user.schema'; 
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from '@nestjs/common';
 import { Request as ExpressRequest } from 'express';
 import * as bcrypt from 'bcrypt';
+import { UserPayload } from 'src/schemas/user-payload';
 
 
 
@@ -41,6 +42,26 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   async searchUsers(@Query('query') query: string): Promise<UserDocument[]> {
     return this.usersService.searchUsers(query);
+  }
+
+  @Get('count-employees')
+  @UseGuards(AuthGuard('jwt'))
+  async countEmployees(@Request() req: ExpressRequest): Promise<number> {
+    const user = req.user as UserPayload;
+    if (!user.companyName) {
+      throw new BadRequestException("Utilisateur non associé à une compagnie");
+    }
+    return this.usersService.countEmployeesByCompany(user.companyName);
+    }
+
+  @Get('count-interns')
+  @UseGuards(AuthGuard('jwt'))
+  async countInterns(@Request() req: ExpressRequest): Promise<number> {
+    const user = req.user as UserPayload;
+  if (!user.companyName) {
+    throw new BadRequestException("Utilisateur non associé à une compagnie");
+  }
+  return this.usersService.countInternsByCompany(user.companyName);
   }
 
 

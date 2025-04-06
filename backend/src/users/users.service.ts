@@ -237,6 +237,19 @@ async findUsersForAdminPaginated(page: number = 1, limit: number = 5): Promise<{
     }).exec();
   }
 
+  async countEmployeesByCompany(company: string): Promise<number> {
+    return this.userModel.countDocuments({
+      company,
+      role: UserRole.EMPLOYEE
+    }).exec();
+  }
+  
+  async countInternsByCompany(company: string): Promise<number> {
+    return this.userModel.countDocuments({
+      company,
+      role: UserRole.INTERN
+    }).exec();
+  }
 
   
   private handleError(error: unknown): never {
