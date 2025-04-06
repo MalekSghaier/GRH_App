@@ -134,7 +134,25 @@
 
   }
 
-  
+  .tab-notification {
+    background: var(--red);
+    color: var(--light);
+    border-radius: 50%;
+    right: 20px;
+    width: 20px;
+    height: 20px;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-left: 5px;
+    vertical-align: top;
+    border: 2px solid var(--light);
+    font-weight: 700;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   
   
   th {

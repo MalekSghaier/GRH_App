@@ -1,13 +1,15 @@
 // src/internship-applications/internship-applications.controller.ts
-import { Controller, Get, Post, Body, Put, Delete, UseInterceptors, UploadedFiles, BadRequestException, Param, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Delete, UseInterceptors, UploadedFiles, BadRequestException, Param, Query, UseGuards } from '@nestjs/common';
 import { InternshipApplicationsService } from './internship-applications.service';
 import { EmailService } from '../email/email.service';
 import { InternshipApplication } from '../schemas/internship-application.schema';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('internship-applications')
+@UseGuards(AuthGuard('jwt')) // Protection JWT + Vérification du rôle SuperAdmin
 export class InternshipApplicationsController {
   constructor(
     private readonly internshipApplicationsService: InternshipApplicationsService,

@@ -84,4 +84,14 @@ export class JobOffersService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
+
+  searchJobOffers(query: string): Observable<JobOffer[]> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Aucun token trouvé !');
+    }
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<JobOffer[]>(`${this.apiUrl}/search?query=${encodeURIComponent(query)}`, { headers });
+  }
 }

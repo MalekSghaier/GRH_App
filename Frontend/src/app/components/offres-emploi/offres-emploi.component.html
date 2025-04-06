@@ -38,6 +38,13 @@
 
               <!-- Onglet 2 : Mes offres publiées -->
               <mat-tab label="📂 Mes offres publiées">
+
+                <form action="#">
+                  <div class="form-input">
+                    <input type="search" placeholder="Rechercher..." (input)="search($event)">
+                    <button type="button" class="search-btn"><i class='bx bx-search'></i></button>
+                  </div>
+                </form>
                 <div class="table-container">
                   <table mat-table [dataSource]="offers" matSort class="mat-elevation-z8">
                     <!-- Colonne Titre -->
@@ -96,6 +103,12 @@
               <!-- Onglet 3 : Candidatures reçues -->
 
               <mat-tab label="📑 Candidatures reçues">
+                <ng-template mat-tab-label>
+                  📑 Candidatures reçues 
+                  <span *ngIf="pendingCount > 0" class="tab-notification">
+                    {{ pendingCount }}
+                  </span>
+                </ng-template>
                 <div class="table-container">
                   <table mat-table [dataSource]="applications" class="mat-elevation-z8">
                     <!-- Colonne Position -->

@@ -10,7 +10,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { JobOfferFormComponent } from '../job-offer-form/job-offer-form.component';
-import { JobOffersService } from '../../services/job-offers.service';
+import { JobOffer, JobOffersService } from '../../services/job-offers.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ToastrService } from 'ngx-toastr';
 import { EditJobOfferComponent } from '../edit-job-offer/edit-job-offer.component';
@@ -23,6 +23,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
 
 
 
@@ -49,6 +50,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   encapsulation: ViewEncapsulation.None
 })
 export class OffresEmploiComponent implements AfterViewInit, OnInit {
+  private searchTerms = new Subject<string>();
+
   offers: any[] = [];
   displayedColumns: string[] = ['title', 'experienceRequired', 'educationLevel', 'jobRequirements', 'actions'];  
   noDataMessage = "Aucune offre disponible";
@@ -64,6 +67,10 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
     'actions'
   ];
 
+
+  pendingCount: number = 0;
+
+
   constructor(
     private dialog: MatDialog,
     private jobOffersService: JobOffersService,
@@ -78,8 +85,43 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.loadMyOffers();
     this.loadApplications();
-
+    this.loadPendingCount();
+    
+    // Configurez la recherche réactive
+    this.searchTerms.pipe(
+      debounceTime(300), // Délai de 300ms après la dernière frappe
+      distinctUntilChanged(), // Ignore si le terme n'a pas changé
+      switchMap((query: string) => {
+        if (query && query.trim() !== '') {
+          return this.jobOffersService.searchJobOffers(query);
+        } else {
+          // Si la recherche est vide, rechargez les offres normales
+          return this.jobOffersService.getMyJobOffers();
+        }
+      })
+    ).subscribe({
+      next: (offers) => {
+        this.offers = offers.map(offer => ({
+          ...offer,
+          experienceRequired: `${offer.experienceRequired} ans`
+        }));
+      },
+      error: (err) => {
+        this.toastr.error('Erreur lors de la recherche', 'Erreur', {
+          timeOut: 1500,
+          progressBar: true
+        });
+        console.error(err);
+      }
+    });
   }
+
+  // Ajoutez cette méthode pour gérer l'input de recherche
+  search(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.searchTerms.next(inputElement.value);
+  }
+
 
   ngAfterViewInit(): void {
     this.initializeSidebar();
@@ -114,7 +156,22 @@ loadApplications(): void {
   });
 }
 
-// offres-emploi.component.ts
+loadPendingCount(): void {
+  const companyName = localStorage.getItem('companyName');
+  if (!companyName) return;
+
+  this.workApplicationsService.getPendingApplicationsCount(companyName).subscribe({
+    next: (response) => {
+      this.pendingCount = response.count;
+    },
+    error: (err) => {
+      console.error('Erreur chargement compteur candidatures', err);
+    }
+  });
+}
+
+
+
 updateStatus(appId: string, status: string): void {
   if (status === 'Rejeté') {
     this.workApplicationsService.updateStatus(appId, status).subscribe({

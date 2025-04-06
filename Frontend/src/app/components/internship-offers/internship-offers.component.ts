@@ -61,6 +61,9 @@ export class InternshipOffersComponent implements AfterViewInit, OnInit {
     'actions'
   ];
 
+  pendingCount: number = 0;
+
+
   constructor(
     private dialog: MatDialog,
     private internshipOffersService: InternshipOffersService,
@@ -72,6 +75,8 @@ export class InternshipOffersComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.loadMyOffers();
     this.loadApplications();
+    this.loadPendingCount(); // Ajoutez cet appel
+
   }
 
   ngAfterViewInit(): void {
@@ -108,6 +113,22 @@ export class InternshipOffersComponent implements AfterViewInit, OnInit {
     });
   }
 
+
+    loadPendingCount(): void {
+      const companyName = localStorage.getItem('companyName');
+      if (!companyName) return;
+  
+      this.internshipApplicationsService.getPendingApplicationsCount(companyName).subscribe({
+        next: (response) => {
+          this.pendingCount = response.count;
+        },
+        error: (err) => {
+          console.error('Erreur chargement compteur candidatures', err);
+        }
+      });
+    }
+  
+
 // Dans la méthode updateStatus()
 updateStatus(appId: string, status: string): void {
   if (status === 'Rejeté') {
@@ -118,6 +139,8 @@ updateStatus(appId: string, status: string): void {
           progressBar: true
         });
         window.location.reload();
+        this.loadPendingCount(); // Recharge le compteur
+
       },
       error: (err) => this.toastr.error('Erreur mise à jour', 'Erreur', {
         timeOut: 1500,
@@ -133,6 +156,8 @@ updateStatus(appId: string, status: string): void {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         window.location.reload();
+        this.loadPendingCount(); // Recharge le compteur
+
       }
     });
   }

@@ -92,6 +92,13 @@
 
               <!-- Onglet 3 : Candidatures reçues -->
               <mat-tab label="📑 Candidatures reçues">
+
+                <ng-template mat-tab-label>
+                  📑 Candidatures reçues 
+                  <span *ngIf="pendingCount > 0" class="tab-notification">
+                    {{ pendingCount }}
+                  </span>
+                </ng-template>
                 
                 <div class="table-container">
                   <table mat-table [dataSource]="applications" class="mat-elevation-z8">

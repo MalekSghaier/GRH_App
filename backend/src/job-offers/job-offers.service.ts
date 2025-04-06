@@ -63,4 +63,22 @@ export class JobOffersService {
   async delete(id: string): Promise<JobOfferDocument | null> {
     return this.jobOfferModel.findByIdAndDelete(id).exec();
   }
+
+  async searchJobOffers(query: string, companyId?: Types.ObjectId): Promise<JobOfferDocument[]> {
+    const regex = new RegExp(query, 'i'); // 'i' pour insensible à la casse
+    
+    const searchConditions: any = {
+      $or: [
+        { title: { $regex: regex } },
+        { jobRequirements: { $regex: regex } }
+      ]
+    };
+  
+    // Si companyId est fourni, on filtre aussi par entreprise
+    if (companyId) {
+      searchConditions.createdBy = companyId;
+    }
+  
+    return this.jobOfferModel.find(searchConditions).exec();
+  }
 }

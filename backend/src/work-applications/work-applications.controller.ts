@@ -1,13 +1,15 @@
 //work-applications.controller.ts
-import { Controller, Get, Post, Body,Put, Param, Delete, UseInterceptors, UploadedFiles ,BadRequestException, Query} from '@nestjs/common';
+import { Controller, Get, Post, Body,Put, Param, Delete, UseInterceptors, UploadedFiles ,BadRequestException, Query, UseGuards} from '@nestjs/common';
 import { WorkApplicationsService } from './work-applications.service';
 import { EmailService } from '../email/email.service';
 import { WorkApplication } from '../schemas/work-application.schema';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('work-applications')
+@UseGuards(AuthGuard('jwt')) // Protection JWT + Vérification du rôle SuperAdmin
 export class WorkApplicationsController {
   constructor(private readonly workApplicationsService: WorkApplicationsService,
     private readonly emailService: EmailService,

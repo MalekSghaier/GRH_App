@@ -8,12 +8,14 @@ import {
     Delete,
     BadRequestException,
     UseGuards,
-    Request
+    Request,
+    Query
   } from '@nestjs/common';
   import { JobOffersService } from './job-offers.service';
   import { Types } from 'mongoose';
   import { AuthGuard } from '@nestjs/passport';
   import { UserPayload } from 'src/schemas/user-payload';
+import { JobOfferDocument } from 'src/schemas/job-offer.schema';
 
   
   @Controller('job-offers')
@@ -51,6 +53,22 @@ import {
     findMyOffers(@Request() req: { user: UserPayload }) {
       return this.jobOffersService.findByCompany(req.user.id); // Utilisez id
     }
+
+    @Get('search')
+@UseGuards(AuthGuard('jwt'))
+async searchJobOffers(
+  @Request() req: { user: UserPayload },
+  @Query('query') query: string
+): Promise<JobOfferDocument[]> {
+  if (!query || query.trim() === '') {
+    return this.jobOffersService.findByCompany(req.user.id);
+  }
+  
+  return this.jobOffersService.searchJobOffers(
+    query, 
+    new Types.ObjectId(req.user.id)
+  );
+}
   
     @Get(':id')
     @UseGuards(AuthGuard('jwt'))
