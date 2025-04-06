@@ -9,12 +9,14 @@ import {
     Delete,
     BadRequestException,
     UseGuards,
-    Request
+    Request,
+    Query
   } from '@nestjs/common';
   import { InternshipOffersService } from './internship-offers.service';
   import { Types } from 'mongoose';
   import { AuthGuard } from '@nestjs/passport';
   import { UserPayload } from '../schemas/user-payload';
+import { InternshipOffer } from 'src/schemas/internship-offer.schema';
   
   @Controller('internship-offers')
   export class InternshipOffersController {
@@ -51,6 +53,22 @@ import {
     findMyOffers(@Request() req: { user: UserPayload }) {
       return this.internshipOffersService.findByCompany(req.user.id);
     }
+
+    @Get('search')
+@UseGuards(AuthGuard('jwt'))
+async searchOffers(
+  @Request() req: { user: UserPayload },
+  @Query('query') query: string
+): Promise<InternshipOffer[]> {
+  if (!query || query.trim() === '') {
+    return this.internshipOffersService.findByCompany(req.user.id);
+  }
+  
+  return this.internshipOffersService.searchOffers(
+    query, 
+    new Types.ObjectId(req.user.id)
+  );
+}
   
     @Get(':id')
     @UseGuards(AuthGuard('jwt'))

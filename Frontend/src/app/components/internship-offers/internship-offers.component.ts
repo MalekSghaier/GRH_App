@@ -20,6 +20,9 @@ import { InternshipApplicationsService } from '../../services/internship-applica
 import { InterviewFormComponent } from '../interview-form/interview-form.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { of, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+
 
 
 
@@ -47,6 +50,10 @@ import { MatNativeDateModule } from '@angular/material/core';
   encapsulation: ViewEncapsulation.None
 })
 export class InternshipOffersComponent implements AfterViewInit, OnInit {
+  private searchTerms = new Subject<string>();
+  private appSearchTerms = new Subject<string>();
+
+
   offers: any[] = [];
   displayedColumns: string[] = ['title', 'duration', 'educationLevel', 'requirements', 'actions'];  
   noDataMessage = "Aucune offre disponible";
@@ -75,12 +82,72 @@ export class InternshipOffersComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.loadMyOffers();
     this.loadApplications();
-    this.loadPendingCount(); // Ajoutez cet appel
+    this.loadPendingCount();
+    
+    // Configurez la recherche réactive
+    this.searchTerms.pipe(
+      debounceTime(300), // Délai de 300ms après la dernière frappe
+      distinctUntilChanged(), // Ignore si le terme n'a pas changé
+      switchMap((query: string) => {
+        if (query && query.trim() !== '') {
+          return this.internshipOffersService.searchInternshipOffers(query);
+        } else {
+          // Si la recherche est vide, rechargez les offres normales
+          return this.internshipOffersService.getMyInternshipOffers();
+        }
+      })
+    ).subscribe({
+      next: (offers) => {
+        this.offers = offers.map(offer => ({
+          ...offer,
+          duration: `${offer.duration} mois`
+        }));
+      },
+      error: (err) => {
+        this.toastr.error('Erreur lors de la recherche', 'Erreur', {
+          timeOut: 1500,
+          progressBar: true
+        });
+        console.error(err);
+      }
+    });
 
+        // Configurez la recherche réactive pour les applications
+        this.appSearchTerms.pipe(
+          debounceTime(300),
+          distinctUntilChanged(),
+          switchMap((query: string) => {
+            const companyName = localStorage.getItem('companyName');
+            if (!companyName) return of([]);
+            
+            if (query && query.trim() !== '') {
+              return this.internshipApplicationsService.searchApplications(query, companyName);
+            } else {
+              return this.internshipApplicationsService.getApplicationsByCompany(companyName);
+            }
+          })
+        ).subscribe({
+          next: (apps) => {
+            this.applications = apps;
+          },
+          error: (err) => {
+            this.toastr.error('Erreur lors de la recherche des candidatures', 'Erreur', {
+              timeOut: 1500,
+              progressBar: true
+            });
+            console.error(err);
+          }
+        });
   }
+
 
   ngAfterViewInit(): void {
     this.initializeSidebar();
+  }
+  // Ajoutez cette méthode pour gérer l'input de recherche des applications
+  searchApplications(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.appSearchTerms.next(inputElement.value);
   }
 
   loadMyOffers(): void {
@@ -100,6 +167,12 @@ export class InternshipOffersComponent implements AfterViewInit, OnInit {
       }
     });
   }
+
+    // Ajoutez cette méthode pour gérer l'input de recherche
+    search(event: Event): void {
+      const inputElement = event.target as HTMLInputElement;
+      this.searchTerms.next(inputElement.value);
+    }
 
 
 

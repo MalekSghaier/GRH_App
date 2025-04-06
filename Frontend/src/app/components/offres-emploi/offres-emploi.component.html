@@ -41,7 +41,7 @@
 
                 <form action="#">
                   <div class="form-input">
-                    <input type="search" placeholder="Rechercher..." (input)="search($event)">
+                    <input type="search" placeholder="Rechercher par titre, exigences..." (input)="search($event)">
                     <button type="button" class="search-btn"><i class='bx bx-search'></i></button>
                   </div>
                 </form>
@@ -109,6 +109,14 @@
                     {{ pendingCount }}
                   </span>
                 </ng-template>
+
+                <form action="#">
+                  <div class="form-input">
+                    <input type="search" placeholder="Rechercher par poste, nom, email ou téléphone..." 
+                           (input)="searchApplications($event)">
+                    <button type="button" class="search-btn"><i class='bx bx-search'></i></button>
+                  </div>
+                </form>
                 <div class="table-container">
                   <table mat-table [dataSource]="applications" class="mat-elevation-z8">
                     <!-- Colonne Position -->

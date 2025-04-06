@@ -59,4 +59,22 @@ export class InternshipOffersService {
   async delete(id: string): Promise<InternshipOfferDocument | null> {
     return this.internshipOfferModel.findByIdAndDelete(id).exec();
   }
+
+  async searchOffers(query: string, companyId?: Types.ObjectId): Promise<InternshipOfferDocument[]> {
+    const regex = new RegExp(query, 'i'); // 'i' pour insensible à la casse
+    
+    const searchConditions: any = {
+      $or: [
+        { title: { $regex: regex } },
+        { requirements: { $regex: regex } }
+      ]
+    };
+  
+    // Si companyId est fourni, on filtre aussi par entreprise
+    if (companyId) {
+      searchConditions.createdBy = companyId;
+    }
+  
+    return this.internshipOfferModel.find(searchConditions).exec();
+  }
 }

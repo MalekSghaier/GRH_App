@@ -59,4 +59,14 @@ export class InternshipOffersService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
+
+  searchInternshipOffers(query: string): Observable<InternshipOffer[]> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Aucun token trouvé !');
+    }
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<InternshipOffer[]>(`${this.apiUrl}/search?query=${encodeURIComponent(query)}`, { headers });
+  }
 }

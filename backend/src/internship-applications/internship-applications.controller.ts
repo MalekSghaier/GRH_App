@@ -102,6 +102,19 @@ export class InternshipApplicationsController {
     return { count };
   }
 
+  @Get('search/:companyName')
+  @UseGuards(AuthGuard('jwt'))
+  async searchApplications(
+    @Param('companyName') companyName: string,
+    @Query('query') query: string
+  ): Promise<InternshipApplication[]> {
+    if (!query || query.trim() === '') {
+      return this.internshipApplicationsService.findByCompany(companyName);
+    }
+    
+    return this.internshipApplicationsService.searchApplications(query, companyName);
+  }
+
   
 
   @Get(':id')

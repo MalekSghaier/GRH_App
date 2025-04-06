@@ -23,8 +23,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
-
+import { of, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 
 @Component({
@@ -51,6 +51,8 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
 })
 export class OffresEmploiComponent implements AfterViewInit, OnInit {
   private searchTerms = new Subject<string>();
+  private appSearchTerms = new Subject<string>();
+
 
   offers: any[] = [];
   displayedColumns: string[] = ['title', 'experienceRequired', 'educationLevel', 'jobRequirements', 'actions'];  
@@ -114,12 +116,43 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
         console.error(err);
       }
     });
+
+    this.appSearchTerms.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((query: string) => {
+        const companyName = localStorage.getItem('companyName');
+        if (!companyName) return of([]);
+        
+        if (query && query.trim() !== '') {
+          return this.workApplicationsService.searchApplications(query, companyName);
+        } else {
+          return this.workApplicationsService.getApplicationsByCompany(companyName);
+        }
+      })
+    ).subscribe({
+      next: (apps) => {
+        this.applications = apps;
+      },
+      error: (err) => {
+        this.toastr.error('Erreur lors de la recherche des candidatures', 'Erreur', {
+          timeOut: 1500,
+          progressBar: true
+        });
+        console.error(err);
+      }
+    });
   }
 
   // Ajoutez cette méthode pour gérer l'input de recherche
   search(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     this.searchTerms.next(inputElement.value);
+  }
+
+  searchApplications(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.appSearchTerms.next(inputElement.value);
   }
 
 

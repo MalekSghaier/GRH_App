@@ -96,7 +96,23 @@ export class WorkApplicationsController {
     'En cours de traitement'
   );
   return { count };
+  }
+
+
+  @Get('search/:companyName')
+@UseGuards(AuthGuard('jwt'))
+async searchApplications(
+  @Param('companyName') companyName: string,
+  @Query('query') query: string
+): Promise<WorkApplication[]> {
+  if (!query || query.trim() === '') {
+    return this.workApplicationsService.findByCompany(companyName);
+  }
+  
+  return this.workApplicationsService.searchApplications(query, companyName);
 }
+
+
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<WorkApplication> {

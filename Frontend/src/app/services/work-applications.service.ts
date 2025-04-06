@@ -33,4 +33,17 @@ export class WorkApplicationsService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.put(`${this.apiUrl}/${id}/approve`, { date, time }, { headers });
   }
+
+  searchApplications(query: string, companyName: string): Observable<any[]> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Aucun token trouvé !');
+    }
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any[]>(
+      `${this.apiUrl}/search/${encodeURIComponent(companyName)}?query=${encodeURIComponent(query)}`, 
+      { headers }
+    );
+  }
 }

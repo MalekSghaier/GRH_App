@@ -39,6 +39,13 @@
 
               <!-- Onglet 2 : Mes offres publiées -->
               <mat-tab label="📂 Mes offres publiées">
+
+                <form action="#">
+                  <div class="form-input">
+                    <input type="search" placeholder="Recherche par titre ou exigences..." (input)="search($event)">
+                    <button type="button" class="search-btn"><i class='bx bx-search'></i></button>
+                  </div>
+                </form>
                 <div class="table-container">
                   <table mat-table [dataSource]="offers" matSort class="mat-elevation-z8">
                     <!-- Colonne Titre -->
@@ -99,6 +106,16 @@
                     {{ pendingCount }}
                   </span>
                 </ng-template>
+                  <!-- Ajoutez ce formulaire de recherche -->
+                <form action="#">
+                  <div class="form-input">
+                    <input type="search" placeholder="Rechercher par poste, nom, email ou téléphone..." 
+                           (input)="searchApplications($event)">
+                    <button type="button" class="search-btn"><i class='bx bx-search'></i></button>
+                  </div>
+                </form>
+
+                
                 
                 <div class="table-container">
                   <table mat-table [dataSource]="applications" class="mat-elevation-z8">

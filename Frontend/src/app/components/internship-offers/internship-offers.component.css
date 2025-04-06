@@ -171,6 +171,38 @@
   .mat-row:hover {
     background: #f1f1f1 !important; /* Ajoute un effet au survol */
   }
+
+  /* Style pour la barre de recherche */
+.form-input {
+	display: flex;
+	align-items: center;
+	height: 36px;
+	background: var(--light) ;
+	border-radius: 36px;
+	overflow: hidden;
+  }
+  
+  .form-input input {
+	flex-grow: 1;
+  text-align: right;
+
+	padding: 0 16px;
+	height: 100%;
+	border: none;
+	background: var(--light);
+	outline: none;
+	color: var(--dark);
+  }
+  
+  .form-input button {
+	background-color: #007bff;
+	color: white;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: 0.3s;
+  }
   
   
   

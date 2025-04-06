@@ -57,5 +57,19 @@ export class WorkApplicationsService {
     }
     return { message: 'Suppression effectuée avec succès', data: workApplication };
   }
+
+  async searchApplications(query: string, companyName: string): Promise<WorkApplicationDocument[]> {
+    const regex = new RegExp(query, 'i'); // 'i' pour insensible à la casse
+    
+    return this.workApplicationModel.find({
+      company: companyName,
+      $or: [
+        { position: { $regex: regex } },
+        { fullName: { $regex: regex } },
+        { email: { $regex: regex } },
+        { phone: { $regex: regex } }
+      ]
+    }).exec();
+  }
   
 }

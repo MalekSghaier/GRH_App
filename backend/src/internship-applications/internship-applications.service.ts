@@ -71,4 +71,18 @@ export class InternshipApplicationsService {
       data: internshipApplication 
     };
   }
+
+  async searchApplications(query: string, companyName: string): Promise<InternshipApplicationDocument[]> {
+    const regex = new RegExp(query, 'i'); // 'i' pour insensible à la casse
+    
+    return this.internshipApplicationModel.find({
+      company: companyName,
+      $or: [
+        { position: { $regex: regex } },
+        { fullName: { $regex: regex } },
+        { email: { $regex: regex } },
+        { phone: { $regex: regex } }
+      ]
+    }).exec();
+  }
 }
