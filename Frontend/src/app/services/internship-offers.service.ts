@@ -42,6 +42,16 @@ export class InternshipOffersService {
     return this.http.get<InternshipOffer[]>(`${this.apiUrl}/my-offers`, { headers });
   }
 
+  countMyInternshipOffers(): Observable<number> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Aucun token trouvé !');
+    }
+    
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<number>(`${this.apiUrl}/my-offers/count`, { headers });
+  }
+
   getInternshipOfferById(id: string): Observable<InternshipOffer> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);

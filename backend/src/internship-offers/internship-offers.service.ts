@@ -60,6 +60,12 @@ export class InternshipOffersService {
     return this.internshipOfferModel.findByIdAndDelete(id).exec();
   }
 
+  async countByCompany(companyId: string): Promise<number> {
+    return this.internshipOfferModel
+      .countDocuments({ createdBy: new Types.ObjectId(companyId) })
+      .exec();
+  }
+
   async searchOffers(query: string, companyId?: Types.ObjectId): Promise<InternshipOfferDocument[]> {
     const regex = new RegExp(query, 'i'); // 'i' pour insensible à la casse
     

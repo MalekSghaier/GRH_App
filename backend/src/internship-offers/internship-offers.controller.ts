@@ -55,20 +55,24 @@ import { InternshipOffer } from 'src/schemas/internship-offer.schema';
     }
 
     @Get('search')
-@UseGuards(AuthGuard('jwt'))
-async searchOffers(
-  @Request() req: { user: UserPayload },
-  @Query('query') query: string
-): Promise<InternshipOffer[]> {
-  if (!query || query.trim() === '') {
-    return this.internshipOffersService.findByCompany(req.user.id);
-  }
-  
-  return this.internshipOffersService.searchOffers(
+    @UseGuards(AuthGuard('jwt'))
+    async searchOffers(
+     @Request() req: { user: UserPayload },
+     @Query('query') query: string
+     ): Promise<InternshipOffer[]> {
+     if (!query || query.trim() === '') {
+       return this.internshipOffersService.findByCompany(req.user.id);
+     }
+       return this.internshipOffersService.searchOffers(
     query, 
     new Types.ObjectId(req.user.id)
   );
-}
+  }
+  @Get('my-offers/count')
+  @UseGuards(AuthGuard('jwt'))
+  async countMyOffers(@Request() req: { user: UserPayload }) {
+    return this.internshipOffersService.countByCompany(req.user.id);
+  }
   
     @Get(':id')
     @UseGuards(AuthGuard('jwt'))

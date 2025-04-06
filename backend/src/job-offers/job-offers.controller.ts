@@ -55,20 +55,26 @@ import { JobOfferDocument } from 'src/schemas/job-offer.schema';
     }
 
     @Get('search')
-@UseGuards(AuthGuard('jwt'))
-async searchJobOffers(
-  @Request() req: { user: UserPayload },
-  @Query('query') query: string
-): Promise<JobOfferDocument[]> {
-  if (!query || query.trim() === '') {
-    return this.jobOffersService.findByCompany(req.user.id);
-  }
-  
-  return this.jobOffersService.searchJobOffers(
-    query, 
-    new Types.ObjectId(req.user.id)
-  );
-}
+    @UseGuards(AuthGuard('jwt'))
+    async searchJobOffers(
+      @Request() req: { user: UserPayload },
+      @Query('query') query: string
+    ): Promise<JobOfferDocument[]> {
+      if (!query || query.trim() === '') {
+        return this.jobOffersService.findByCompany(req.user.id);
+      }
+      
+      return this.jobOffersService.searchJobOffers(
+        query, 
+        new Types.ObjectId(req.user.id)
+      );
+    }
+
+    @Get('my-offers/count')
+    @UseGuards(AuthGuard('jwt'))
+    async countMyOffers(@Request() req: { user: UserPayload }) {
+      return this.jobOffersService.countByCompany(req.user.id);
+    }
   
     @Get(':id')
     @UseGuards(AuthGuard('jwt'))

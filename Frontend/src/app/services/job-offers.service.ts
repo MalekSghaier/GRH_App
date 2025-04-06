@@ -54,6 +54,16 @@ export class JobOffersService {
     return this.http.get<JobOffer[]>(`${this.apiUrl}/my-offers`, { headers });
   }
 
+  countMyJobOffers(): Observable<number> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Aucun token trouvé !');
+    }
+    
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<number>(`${this.apiUrl}/my-offers/count`, { headers });
+  }
+
   getJobOfferById(id: string): Observable<JobOffer> {
     const token = localStorage.getItem('token');
     if (!token) {

@@ -64,6 +64,12 @@ export class JobOffersService {
     return this.jobOfferModel.findByIdAndDelete(id).exec();
   }
 
+  async countByCompany(companyId: string): Promise<number> {
+    return this.jobOfferModel
+      .countDocuments({ createdBy: new Types.ObjectId(companyId) })
+      .exec();
+  }
+
   async searchJobOffers(query: string, companyId?: Types.ObjectId): Promise<JobOfferDocument[]> {
     const regex = new RegExp(query, 'i'); // 'i' pour insensible à la casse
     

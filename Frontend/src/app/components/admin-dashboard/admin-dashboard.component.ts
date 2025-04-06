@@ -2,6 +2,9 @@ import { Component, AfterViewInit ,ViewEncapsulation,OnInit  } from '@angular/co
 import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component';
 import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.component';
 import { UserService } from '../../services/user.service';
+import { CongesService } from '../../services/conges.service';
+import { JobOffersService } from '../../services/job-offers.service';
+import { InternshipOffersService } from '../../services/internship-offers.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -16,8 +19,20 @@ export class AdminDashboardComponent implements AfterViewInit,OnInit {
 
   employeeCount: number = 0;
   internCount: number = 0;
+  pendingCongesCount: number = 0; 
+  jobOffersCount: number = 0;
+  internshipOffersCount: number = 0; // Ajoutez cette propriété
 
-  constructor(private userService: UserService) {}
+
+
+
+  constructor(
+    private userService: UserService,
+    private congesService: CongesService ,
+    private jobOffersService: JobOffersService,
+    private internshipOffersService: InternshipOffersService // Ajoutez cette injection
+
+  ) {}
 
 
 
@@ -38,6 +53,23 @@ export class AdminDashboardComponent implements AfterViewInit,OnInit {
     this.userService.countInterns().subscribe({
       next: (count) => this.internCount = count,
       error: (err) => console.error('Erreur lors du chargement des stagiaires', err)
+    });
+
+    this.congesService.getPendingCongesCountForCompany().subscribe({
+      next: (response) => this.pendingCongesCount = response.count,
+      error: (err) => console.error('Erreur lors du chargement des congés en attente', err)
+    });
+
+    // Chargement du nombre d'offres d'emploi
+    this.jobOffersService.countMyJobOffers().subscribe({
+      next: (count) => this.jobOffersCount = count,
+      error: (err) => console.error('Erreur lors du chargement des offres d\'emploi', err)
+    });
+
+    // Chargement du nombre d'offres de stage
+    this.internshipOffersService.countMyInternshipOffers().subscribe({
+      next: (count) => this.internshipOffersCount = count,
+      error: (err) => console.error('Erreur lors du chargement des offres de stage', err)
     });
   }
 

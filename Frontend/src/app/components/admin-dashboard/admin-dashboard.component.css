@@ -131,7 +131,7 @@ body {
 }
 
 #content main .box-info li {
-	padding: 24px;
+	padding: 20px;
 	background: var(--light);
 	border-radius: 20px;
 	display: flex;
