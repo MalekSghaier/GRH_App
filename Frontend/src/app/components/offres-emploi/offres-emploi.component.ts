@@ -16,7 +16,6 @@ import { ToastrService } from 'ngx-toastr';
 import { EditJobOfferComponent } from '../edit-job-offer/edit-job-offer.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { WorkApplicationsService } from '../../services/work-applications.service';
-// Dans votre composant principal ou module
 import { InterviewFormComponent } from '../interview-form/interview-form.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';

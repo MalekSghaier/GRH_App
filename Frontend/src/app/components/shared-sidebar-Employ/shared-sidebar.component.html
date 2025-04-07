@@ -1,0 +1,49 @@
+<section id="sidebar">
+    <a class="brand">
+      <i class='bx bxs-smile bx-lg'></i>
+      <span class="text">Espace Perso</span>
+    </a>
+    <ul class="side-menu top">
+      <li routerLinkActive="active">
+        <a routerLink="/employee-dashboard">
+          <i class='bx bxs-dashboard bx-sm'></i>
+          <span class="text">Tableau de bord</span>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="/DocumentReqEmploy">
+          <i class='bx bxs-file-doc bx-sm'></i>
+          <span class="text">Documents</span>
+
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="#">
+          <i class='bx bxs-calendar bx-sm'></i>
+          <span class="text">Congés</span>
+
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a routerLink="#">
+          <i class='bx bxs-time bx-sm'></i>
+          <span class="text">Pointage</span>
+
+        </a>
+      </li>
+    </ul>
+    <ul class="side-menu bottom">
+      <li routerLinkActive="active">
+        <a routerLink="/parametre">
+          <i class='bx bxs-cog bx-sm bx-spin-hover'></i>
+          <span class="text">Paramètres</span>
+        </a>
+      </li>
+      <li>
+        <a (click)="logout()" class="logout">
+          <i class='bx bx-power-off bx-sm bx-burst-hover'></i>
+          <span class="text">Déconnexion</span>
+        </a>
+      </li>
+    </ul>
+  </section>

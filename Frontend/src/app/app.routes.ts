@@ -26,6 +26,7 @@ import { InternshipOffersComponent } from './components/internship-offers/intern
 
 
 import { AuthGuard } from './guards/auth.guards';
+import { DocumentRequestEmployeComponent } from './components/document-request-employe/document-request-employe.component';
 
 export const routes: Routes = [
 
@@ -130,7 +131,11 @@ export const routes: Routes = [
     { 
         path: 'offres-stage', 
         component: InternshipOffersComponent,
-      },
+    },
+    {
+        path: 'DocumentReqEmploy', 
+        component : DocumentRequestEmployeComponent
+    }
 
 
 
