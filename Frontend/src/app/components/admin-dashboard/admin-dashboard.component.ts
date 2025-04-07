@@ -61,6 +61,8 @@ export class AdminDashboardComponent implements AfterViewInit,OnInit {
 
   ngOnInit(): void {
     this.loadCounts();
+    this.loadMonthlyCongesStats();
+
   }
   ngAfterViewInit(): void {
     this.initializeSidebar();
@@ -249,21 +251,68 @@ export class AdminDashboardComponent implements AfterViewInit,OnInit {
     }]
   };
   
-  public offersChartData: ChartConfiguration<'pie'>['data'] = {
-    labels: ['Offres emploi', 'Offres stage'],
-    datasets: [{
-      data: [0, 0],
-      backgroundColor: [
-        'var(--purple)',
-        'var(--blue)'
-      ],
-      borderColor: [
-        'var(--light-purple)',
-        'var(--light-blue)'
-      ],
-      borderWidth: 2
-    }]
-  };
+public lineChartData: ChartConfiguration<'line'>['data'] = {
+  labels: [],
+  datasets: [
+    {
+      data: [],
+      label: 'Demandes de congés',
+      backgroundColor: '#D4F4DD',
+      borderColor: '#3BB54A',
+      pointBackgroundColor: '#3BB54A',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: '#D4F4DD',
+      fill: 'origin',
+      tension: 0.4
+    }
+  ]
+};
+
+public lineChartOptions: ChartConfiguration<'line'>['options'] = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: {
+        precision: 0
+      }
+    }
+  },
+  plugins: {
+    legend: {
+      display: true,
+      position: 'top'
+    },
+    tooltip: {
+      callbacks: {
+        label: (context) => {
+          return `${context.dataset.label}: ${context.raw}`;
+        }
+      }
+    }
+  }
+};
+
+public lineChartLegend = true;
+
+// Dans la méthode ngOnInit ou loadCounts, ajoutez :
+private loadMonthlyCongesStats(): void {
+  this.congesService.getMonthlyCongesStats().subscribe({
+    next: (stats) => {
+      this.lineChartData = {
+        ...this.lineChartData,
+        labels: stats.map(item => item.month),
+        datasets: [{
+          ...this.lineChartData.datasets[0],
+          data: stats.map(item => item.count)
+        }]
+      };
+    },
+    error: (err) => console.error('Erreur lors du chargement des stats mensuelles', err)
+  });
+}
 
 public pieChartLabels = ['Employés', 'Stagiaires'];
 public pieChartLegend = true;

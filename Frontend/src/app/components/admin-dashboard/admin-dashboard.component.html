@@ -51,6 +51,8 @@
 						<p>Stagiaires</p>
 					</span>
 				</li>
+				<!-- 
+
 				<li>
 					<i class='bx bx-swim'></i>					
 					<span class="text">
@@ -58,6 +60,7 @@
 						<p>Congés demandés</p>
 					</span>
 				</li>
+				Ceci est un commentaire -->
 
 				<li>
 					<i class='bx bxs-briefcase'></i>					
@@ -111,21 +114,21 @@
 						  </canvas>
 						</div>
 					  </div>
-			  
-					<!-- Chart 3: Offres publiées -->
-					<div class="chart-card">
-					  <div class="chart-header">
-						<i class='bx bxs-briefcase'></i>
-						<h3>Répartition des Offres</h3>
-					  </div>
-					  <div class="chart-wrapper">
-						<canvas baseChart
-						  [data]="offersChartData"
-						  [options]="pieChartOptions"
-						  [type]="'pie'">
-						</canvas>
-					  </div>
-					</div>
+
+					<!-- Dans admin-dashboard.component.html -->
+                    <div class="chart-card">
+                    	<div class="chart-header">
+                    	  <i class='bx bx-trending-up'></i>
+                    	  <h3>Évolution mensuelle des congés</h3>
+                    	</div>
+                    	<div class="chart-wrapper">
+                    	  <canvas baseChart
+                    		[data]="lineChartData"
+                    		[options]="lineChartOptions"
+                    		[type]="'line'">
+                    	  </canvas>
+                    	</div>
+                      </div>
 				  </div>
 				</div>
 			  </div>

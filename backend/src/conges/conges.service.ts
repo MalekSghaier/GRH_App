@@ -139,4 +139,58 @@ export class CongesService {
   
     return { data, total };
   }
+
+
+  async getMonthlyCongesStats(companyName: string): Promise<{month: string, count: number, year: number}[]> {
+    // 1. Trouver les utilisateurs de la compagnie
+    const users = await this.userService.findByCompany(companyName);
+    const userIds = users.map(user => user._id);
+  
+    // 2. Requête d'agrégation pour compter les congés par mois
+    const result = await this.congeModel.aggregate<{
+      month: string;
+      count: number;
+      year: number;
+    }>([
+      {
+        $match: {
+          userId: { $in: userIds }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$requestDate" },
+            month: { $month: "$requestDate" }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          month: {
+            $let: {
+              vars: {
+                monthsInString: ["", "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
+              },
+              in: {
+                $arrayElemAt: ["$$monthsInString", "$_id.month"]
+              }
+            }
+          },
+          count: 1,
+          year: "$_id.year"
+        }
+      }
+    ]).exec();
+  
+    return result;
+  }
 }

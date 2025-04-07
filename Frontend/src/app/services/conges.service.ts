@@ -60,4 +60,15 @@ export class CongesService {
     return this.http.put(`${this.apiUrl}/${id}`, { status }, { headers });
   }
 
+  // src/app/services/conges.service.ts
+
+getMonthlyCongesStats(): Observable<{month: string, count: number}[]> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.get<{month: string, count: number}[]>(
+    `${this.apiUrl}/company/monthly-stats`, 
+    { headers }
+  );
+}
+
 }
