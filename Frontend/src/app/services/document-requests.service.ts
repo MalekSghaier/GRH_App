@@ -74,5 +74,12 @@ export class DocumentRequestsService {
     return this.http.get<{ count: number }>(`${this.apiUrl}/pending/count`, { headers });
   }
 
+  getDocumentStats(): Observable<{ pending: number; approved: number; rejected: number }> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<{ pending: number; approved: number; rejected: number }>(
+      `${this.apiUrl}/company/stats`,
+      { headers }
+    );
+  }
 
 }

@@ -104,4 +104,35 @@ async countPendingByCompany(company: string): Promise<number> {
   }).exec();
 }
 
+async getDocumentStatsByCompany(company: string): Promise<{
+  pending: number;
+  approved: number;
+  rejected: number;
+}> {
+  // Trouver les utilisateurs de la compagnie
+  const users = await this.userModel.find({
+    company,
+    role: { $in: ['employé', 'stagiaire'] }
+  }).select('_id').lean();
+
+  const userIds = users.map(user => user._id);
+
+  const [pending, approved, rejected] = await Promise.all([
+    this.documentRequestModel.countDocuments({ 
+      userId: { $in: userIds },
+      status: RequestStatus.PENDING
+    }),
+    this.documentRequestModel.countDocuments({ 
+      userId: { $in: userIds },
+      status: RequestStatus.APPROVED
+    }),
+    this.documentRequestModel.countDocuments({ 
+      userId: { $in: userIds },
+      status: RequestStatus.REJECTED
+    })
+  ]);
+
+  return { pending, approved, rejected };
+}
+
 }

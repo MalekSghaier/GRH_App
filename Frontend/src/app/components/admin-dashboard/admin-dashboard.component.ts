@@ -5,17 +5,39 @@ import { UserService } from '../../services/user.service';
 import { CongesService } from '../../services/conges.service';
 import { JobOffersService } from '../../services/job-offers.service';
 import { InternshipOffersService } from '../../services/internship-offers.service';
+import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { NgChartsModule } from 'ng2-charts';
+import  {DocumentRequestsService} from '../../services/document-requests.service'
+
+
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [SharedNavbarComponent,SharedSidebarComponent],
+  imports: [SharedNavbarComponent,SharedSidebarComponent,NgChartsModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css',
   encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
 
 })
 export class AdminDashboardComponent implements AfterViewInit,OnInit {
+
+  private colors = {
+    blue: '#3C91E6',
+    lightBlue: '#CFE8FF',
+    yellow: '#FFCE26',
+    lightYellow: '#FFF2C6',
+    orange: '#FD7238',
+    orangeombre: '#f38e62',
+    lightOrange: '#FFE0D3',
+    green: '#3BB54A',
+    lightGreen: '#D4F4DD',
+    red: '#DB504A',
+    purple: '#9B59B6',
+    lightPurple: '#EAD1F5',
+    light: '#F9F9F9'
+
+  };
 
   employeeCount: number = 0;
   internCount: number = 0;
@@ -30,7 +52,8 @@ export class AdminDashboardComponent implements AfterViewInit,OnInit {
     private userService: UserService,
     private congesService: CongesService ,
     private jobOffersService: JobOffersService,
-    private internshipOffersService: InternshipOffersService // Ajoutez cette injection
+    private internshipOffersService: InternshipOffersService ,// Ajoutez cette injection
+    private documentRequestsService :DocumentRequestsService
 
   ) {}
 
@@ -44,14 +67,21 @@ export class AdminDashboardComponent implements AfterViewInit,OnInit {
  
   }
 
+
   private loadCounts(): void {
     this.userService.countEmployees().subscribe({
-      next: (count) => this.employeeCount = count,
+      next: (count) => {
+        this.employeeCount = count;
+        this.updatePieChart();
+      },
       error: (err) => console.error('Erreur lors du chargement des employés', err)
     });
 
     this.userService.countInterns().subscribe({
-      next: (count) => this.internCount = count,
+      next: (count) => {
+        this.internCount = count;
+        this.updatePieChart();
+      },
       error: (err) => console.error('Erreur lors du chargement des stagiaires', err)
     });
 
@@ -71,7 +101,175 @@ export class AdminDashboardComponent implements AfterViewInit,OnInit {
       next: (count) => this.internshipOffersCount = count,
       error: (err) => console.error('Erreur lors du chargement des offres de stage', err)
     });
+
+    this.documentRequestsService.getDocumentStats().subscribe({
+      next: (stats) => {
+        this.barChartData = {
+          ...this.barChartData,
+          datasets: [{
+            ...this.barChartData.datasets[0],
+            data: [stats.pending, stats.approved, stats.rejected]
+          }]
+        };
+      },
+      error: (err) => console.error('Erreur lors du chargement des stats documents', err)
+    });
   }
+
+  private updatePieChart(): void {
+    this.pieChartData = {
+      ...this.pieChartData,
+      datasets: [{
+        ...this.pieChartData.datasets[0],
+        data: [this.employeeCount, this.internCount]
+      }]
+    };
+  }
+  public pieChartOptions: ChartOptions<'pie'> = {
+    responsive: true,
+    maintainAspectRatio: false, // Important pour le contrôle de la taille
+    plugins: {
+      legend: {
+        position: 'right',
+        labels: {
+          boxWidth: 12,
+          padding: 16,
+          usePointStyle: true,
+          pointStyle: 'circle'
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            const label = context.label || '';
+            const value = context.raw as number || 0;
+            const total = (context.dataset.data as number[]).reduce((a: number, b: number) => a + b, 0);
+            const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+            return `${label}: ${value} (${percentage}%)`;
+          }
+        }
+      }
+    },
+    cutout: '60%' // Contrôle le rayon du trou central (pour un donut chart)
+  };
+  
+  public pieChartData: ChartConfiguration<'pie'>['data'] = {
+    labels: ['Employés', 'Stagiaires'],
+    datasets: [{
+      data: [0, 0],
+      backgroundColor: [
+        this.colors.blue,
+        this.colors.lightBlue,
+      ],
+      borderColor: [
+        this.colors.blue,
+        this.colors.lightBlue,
+      ],    hoverBackgroundColor: [ 
+        this.colors.blue,
+        this.colors.lightBlue,
+      ],
+      hoverBorderColor: [ 
+        this.colors.blue,
+        this.colors.lightBlue
+      ],
+      borderWidth: 2
+    }]
+  };
+
+  public barChartData: ChartConfiguration<'bar'>['data'] = {
+    labels: ['En attente', 'Approuvées', 'Rejetées'],
+    datasets: [{
+      data: [0, 0, 0],
+      backgroundColor: [
+        '#FD7238',
+        '#FF7F50',
+        '#fc9f65'
+      ],
+      borderColor: [
+        '#FD7238',
+        '#FF7F50',
+        '#fc9f65'
+      ],
+      hoverBackgroundColor: [
+        '#FD7238',
+        '#FF7F50',
+        '#fc9f65'
+      ],
+      hoverBorderColor: [ 
+        '#FD7238',
+        '#FF7F50',
+        '#fc9f65'
+      ],
+      borderWidth: 1
+    }]
+  };
+  
+  public barChartOptions: ChartConfiguration<'bar'>['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          precision: 0
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            return `${context.label}: ${context.raw}`;
+          }
+        }
+      }
+    }
+  };
+  
+  public barChartType: ChartConfiguration<'bar'>['type'] = 'bar';
+  
+  public congesChartData: ChartConfiguration<'pie'>['data'] = {
+    labels: ['En attente', 'Approuvés', 'Rejetés'],
+    datasets: [{
+      data: [0, 0, 0],
+      backgroundColor: [
+        this.colors.orange,
+        this.colors.green,
+        this.colors.red,
+      ],
+      borderColor: [
+        'var(--light-orange)',
+        'var(--light-green)',
+        'var(--light)'
+      ],
+      borderWidth: 2
+    }]
+  };
+  
+  public offersChartData: ChartConfiguration<'pie'>['data'] = {
+    labels: ['Offres emploi', 'Offres stage'],
+    datasets: [{
+      data: [0, 0],
+      backgroundColor: [
+        'var(--purple)',
+        'var(--blue)'
+      ],
+      borderColor: [
+        'var(--light-purple)',
+        'var(--light-blue)'
+      ],
+      borderWidth: 2
+    }]
+  };
+
+public pieChartLabels = ['Employés', 'Stagiaires'];
+public pieChartLegend = true;
+public pieChartPlugins = [];
+
+
 
   private initializeSidebar(): void {
     const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');

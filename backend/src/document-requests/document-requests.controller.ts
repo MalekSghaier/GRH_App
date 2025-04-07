@@ -84,6 +84,16 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
   
       return this.documentRequestsService.findRequestsByUser(user.id);
     }
+
+    @Get('company/stats')
+    @UseGuards(AuthGuard('jwt'))
+    async getDocumentStats(@Req() req: Request & { user?: UserPayload }) {
+     if (!req.user?.companyName) {
+      throw new UnauthorizedException('Company name not found in token');
+    }
+  
+     return this.documentRequestsService.getDocumentStatsByCompany(req.user.companyName);
+    }
   
     @Get(':id')
     @UseGuards(AuthGuard('jwt')) // Protéger la route avec JWT

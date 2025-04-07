@@ -79,14 +79,56 @@
 
 			</ul>
 
-
 			<div class="table-data">
 				<div class="order">
-
-
+				  <div class="charts-grid">
+					<!-- Chart 1: Employés vs Stagiaires -->
+					<div class="chart-card">
+					  <div class="chart-header">
+						<i class='bx bxs-group'></i>
+						<h3>Employés vs Stagiaires</h3>
+					  </div>
+					  <div class="chart-wrapper">
+						<canvas baseChart
+						  [data]="pieChartData"
+						  [options]="pieChartOptions"
+						  [type]="'pie'">
+						</canvas>
+					  </div>
+					</div>
+			  
+					<!-- Chart 2: documents demandés -->
+					<div class="chart-card">
+						<div class="chart-header">
+						  <i class='bx bxs-file-doc'></i>
+						  <h3>Demande de documents</h3>
+						</div>
+						<div class="chart-wrapper">
+						  <canvas baseChart
+							[data]="barChartData"
+							[options]="barChartOptions"
+							[type]="barChartType">
+						  </canvas>
+						</div>
+					  </div>
+			  
+					<!-- Chart 3: Offres publiées -->
+					<div class="chart-card">
+					  <div class="chart-header">
+						<i class='bx bxs-briefcase'></i>
+						<h3>Répartition des Offres</h3>
+					  </div>
+					  <div class="chart-wrapper">
+						<canvas baseChart
+						  [data]="offersChartData"
+						  [options]="pieChartOptions"
+						  [type]="'pie'">
+						</canvas>
+					  </div>
+					</div>
+				  </div>
 				</div>
-
-			</div>
+			  </div>
 		</main>
 		<!-- MAIN -->
 	</section>

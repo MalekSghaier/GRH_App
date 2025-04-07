@@ -28,6 +28,7 @@ li {
 	--yellow: #FFCE26;
 	--light-yellow: #FFF2C6;
 	--orange: #FD7238;
+	--orangeombre: #fc9f65;
 	--light-orange: #FFE0D3;
 	--green : #3BB54A;
 	--light-green :#D4F4DD; 
@@ -119,9 +120,74 @@ body {
 	grid-gap: 10px;
 	font-weight: 500;
 }
+/* Supprimez ou commentez l'ancien style .chart-container */
 
-
-
+.charts-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 24px;
+	margin-top: 24px;
+  }
+  
+  .chart-card {
+	background: var(--light);
+	border-radius: 20px;
+	padding: 20px;
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+	transition: transform 0.3s ease;
+  }
+  
+  .chart-card:hover {
+	transform: translateY(-5px);
+  }
+  
+  .chart-header {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 16px;
+  }
+  
+  .chart-header i {
+	font-size: 24px;
+	color: var(--blue);
+	background: var(--light-blue);
+	width: 40px;
+	height: 40px;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+  }
+  
+  .chart-header h3 {
+	font-size: 18px;
+	font-weight: 600;
+	color: var(--dark);
+	margin: 0;
+  }
+  
+  .chart-wrapper {
+	position: relative;
+	height: 250px; /* Ajustez cette valeur pour changer la taille */
+	width: 100%;
+  }
+  
+  /* Couleurs spécifiques pour chaque chart */
+  .chart-card:nth-child(1) .chart-header i {
+	background: var(--light-blue);
+	color: var(--blue);
+  }
+  
+  .chart-card:nth-child(2) .chart-header i {
+	background: var(--light-orange);
+	color: var(--orange);
+  }
+  
+  .chart-card:nth-child(3) .chart-header i {
+	background: var(--light-green);
+	color: var(--green);
+  }
 
 #content main .box-info {
 	display: grid;
@@ -131,7 +197,7 @@ body {
 }
 
 #content main .box-info li {
-	padding: 20px;
+	padding: 18px;
 	background: var(--light);
 	border-radius: 20px;
 	display: flex;
@@ -345,6 +411,10 @@ body {
 	#content nav .nav-link {
 		display: none;
 	}
+
+	.charts-grid {
+		grid-template-columns: 1fr;
+	  }
 }
 
 
@@ -397,4 +467,8 @@ body {
 	#content main .table-data .todo .todo-list {
 		min-width: 420px;
 	}
+
+	.charts-grid {
+		grid-template-columns: 1fr;
+	  }
 }
