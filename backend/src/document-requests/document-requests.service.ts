@@ -7,7 +7,7 @@ import { User, UserDocument } from '../schemas/user.schema';
 
 
 @Injectable()
-export class DocumentRequestsService {
+export class DocumentRequestsService {    
   constructor(  
     @InjectModel(DocumentRequest.name) private documentRequestModel: Model<DocumentRequestDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument> ,
