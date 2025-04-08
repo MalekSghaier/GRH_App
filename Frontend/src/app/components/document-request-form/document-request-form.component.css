@@ -1,0 +1,15 @@
+/* document-request-form.component.css */
+.request-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 0;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .mat-dialog-actions {
+    padding: 10px 0 0 0;
+  }

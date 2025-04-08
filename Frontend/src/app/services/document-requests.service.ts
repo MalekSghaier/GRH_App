@@ -94,4 +94,35 @@ export class DocumentRequestsService {
     );
   }
 
+  createRequest(requestData: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.post(`${this.apiUrl}`, requestData, { headers });
+  }
+
+  findRequestsByUser(): Observable<DocumentRequest[]> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<DocumentRequest[]>(`${this.apiUrl}/mes-demandes`, { headers });
+  }
+
+  deleteJobOffer(id: string): Observable<void> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Aucun token trouvé !');
+      return new Observable();
+    }
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
+  }
+  deleteRequest(id: string): Observable<void> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Aucun token trouvé !');
+      return new Observable();
+    }
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
+  }
+
 }

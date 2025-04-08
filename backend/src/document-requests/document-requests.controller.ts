@@ -1,4 +1,4 @@
-import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRequestException, Put, NotFoundException, Query, UploadedFile, UseInterceptors} from '@nestjs/common';
+import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRequestException, Put, NotFoundException, Query, UploadedFile, UseInterceptors, Delete} from '@nestjs/common';
   import { AuthGuard } from '@nestjs/passport';
   import { EmployeeInternGuard } from '../auth/employee-intern.guard';
   import { DocumentRequestsService } from './document-requests.service';
@@ -21,7 +21,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
   interface CreateDocumentRequestDto {
     fullName: string;
     jobPosition: string;
-    contractType: 'CDI' | 'CDD' | 'Stage';
+    contractType: 'CDI' | 'CDD' ;
     professionalEmail: string;
     documentType: DocumentType;
   }
@@ -51,7 +51,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
       }
   
       // Vérification du type de contrat
-      if (!['CDI', 'CDD', 'Stage'].includes(contractType)) {
+      if (!['CDI', 'CDD'].includes(contractType)) {
         throw new BadRequestException('Type de contrat invalide');
       }
   
@@ -110,9 +110,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
       return updatedRequest;
     }
-
-
-
     @Get('mes-demandes')
     @UseGuards(AuthGuard('jwt'), EmployeeInternGuard)
     async getMyRequests(@Req() req: Request) {
@@ -124,7 +121,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
   
       return this.documentRequestsService.findRequestsByUser(user.id);
     }
-
     @Get('company/stats')
     @UseGuards(AuthGuard('jwt'))
     async getDocumentStats(@Req() req: Request & { user?: UserPayload }) {
@@ -210,5 +206,11 @@ import { FileInterceptor } from '@nestjs/platform-express';
         RequestStatus.APPROVED
       );
     }
+
+      @Delete(':id')
+      async delete(@Param('id') id: string): Promise<{ message: string }> {
+        await this.documentRequestsService.delete(id);
+        return { message: "Demande de document supprimée avec succès" };
+      }
   }
   

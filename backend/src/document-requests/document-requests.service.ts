@@ -104,6 +104,14 @@ async countPendingByCompany(company: string): Promise<number> {
   }).exec();
 }
 
+async delete(id: string): Promise<{ message: string }> {
+  const deletedRequest = await this.documentRequestModel.findByIdAndDelete(id).exec();
+  if (!deletedRequest) {
+    throw new NotFoundException(`Demande avec ID ${id} non trouvée`);
+  }
+  return { message: 'Demande de document supprimée avec succès' };
+}
+
 async getDocumentStatsByCompany(company: string): Promise<{
   pending: number;
   approved: number;

@@ -7,7 +7,6 @@ export type DocumentRequestDocument = DocumentRequest & Document;
 export enum DocumentType {
   EMPLOYMENT_CONTRACT = 'Contrat de travail',
   WORK_CERTIFICATE = 'Attestation de travail',
-  INTERNSHIP_CERTIFICATE = 'Attestation de stage',
   PAYSLIPS = 'Bulletins de paie',
   FINAL_BALANCE = 'Solde de tout compte',
   ATTENDANCE_CERTIFICATE = 'Attestation de présence',
@@ -31,7 +30,7 @@ export class DocumentRequest {
   @Prop({ required: true })
   jobPosition: string;
 
-  @Prop({ required: true, enum: ['CDI', 'CDD', 'Stage'] })
+  @Prop({ required: true, enum: ['CDI', 'CDD'] })
   contractType: string;
 
   @Prop({ required: true })

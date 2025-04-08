@@ -1,0 +1,49 @@
+<!-- document-request-form.component.html -->
+<h2 mat-dialog-title>Nouvelle demande de document</h2>
+<mat-dialog-content>
+  <form [formGroup]="requestForm" class="request-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nom complet</mat-label>
+      <input matInput formControlName="fullName" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Poste occupé</mat-label>
+      <input matInput formControlName="jobPosition" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Type de contrat</mat-label>
+      <mat-select formControlName="contractType" required>
+        <mat-option *ngFor="let type of contractTypes" [value]="type">
+          {{type}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email professionnel</mat-label>
+      <input matInput formControlName="professionalEmail" type="email" required>
+      <mat-error *ngIf="requestForm.get('professionalEmail')?.hasError('email')">
+        Email invalide
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Type de document</mat-label>
+      <mat-select formControlName="documentType" required>
+        <mat-option *ngFor="let type of documentTypes" [value]="type">
+          {{type}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Annuler</button>
+  <button mat-raised-button color="primary" 
+          (click)="onSubmit()" 
+          [disabled]="!requestForm.valid">
+    Envoyer
+  </button>
+</mat-dialog-actions>

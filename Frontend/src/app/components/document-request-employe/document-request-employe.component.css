@@ -211,7 +211,13 @@
     width: 18px;
   }
   
-  .no-data-row {
+  td.mat-column-documentType,
+  td.mat-column-createdAt,
+  td.mat-column-status,
+  td.mat-column-actions {
+    display: table-cell !important;
+  } 
+   .no-data-row {
     padding: 20px;
     text-align: center;
     color: #666;
