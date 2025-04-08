@@ -110,10 +110,12 @@ export class UsersComponent implements AfterViewInit, OnInit {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
-  generateQRCode(userId: string): void {
+  generateQRCode(userId: string, userName: string): void {
     this.userService.generateQrCode(userId).subscribe({
-      next: () => {
-        this.toastr.success('QR Code généré avec succès', 'Succès', {
+      next: (response) => {
+        const filename = `QRCode_${userName}_${new Date().toISOString().slice(0, 10)}.png`;
+        this.userService.downloadQRCode(response.qrCode, filename);
+        this.toastr.success('QR Code téléchargé avec succès', 'Succès', {
           timeOut: 1500,
           progressBar: true
         });

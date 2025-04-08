@@ -16,7 +16,6 @@ export interface IUser extends Document {
   password: string;
   role: UserRole;
   company?: string; // Société d'accueil (optionnelle)
-  qrcode?: string; // QR Code (optionnel)
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -35,7 +34,6 @@ export const UserSchema = new Schema<IUser>({
     default: UserRole.VISITOR,
   },
   company: { type: String }, // Société d'accueil (optionnelle)
-  qrcode: { type: String }, // QR Code (optionnel)
 }, { collection: 'users' });
 
 UserSchema.pre<IUser>('save', async function (next: (err?: CallbackError) => void) {

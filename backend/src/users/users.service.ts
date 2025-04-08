@@ -13,6 +13,7 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
+
   async generateQrCode(userId: string): Promise<string> {
     const user = await this.findById(userId);
     if (!user) throw new NotFoundException(`Utilisateur avec ID ${userId} non trouvé`);
@@ -21,7 +22,6 @@ export class UsersService {
     if (!(user._id instanceof ObjectId)) {
       throw new InternalServerErrorException('ID utilisateur invalide');
     }
-  
     const userJson = {
       id: user._id.toString(), // Conversion directe
       name: user.name,
@@ -40,16 +40,6 @@ export class UsersService {
   }
 
 
-  async generateAndUpdateQrCode(userId: string): Promise<UserDocument> {
-    const user = await this.findById(userId);
-    if (!user) {
-      throw new NotFoundException(`Utilisateur avec ID ${userId} non trouvé`);
-    }
-  
-    const qrCode = await this.generateQrCode(userId);
-    user.qrcode = qrCode;
-    return await user.save();
-  }
 
   async countUsersByRole(role: string): Promise<number> {
     return this.userModel.countDocuments({ role }).exec();

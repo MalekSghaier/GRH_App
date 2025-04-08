@@ -64,6 +64,13 @@ export class UsersController {
   return this.usersService.countInternsByCompany(user.companyName);
   }
 
+  @Get(':id/qrcode')
+  @UseGuards(AuthGuard('jwt'))
+  async getQrCodeForUser(@Param('id') id: string): Promise<{ qrCode: string }> {
+    const qrCode = await this.usersService.generateQrCode(id);
+    return { qrCode };
+  }
+
 
   @Put('my-info')
   @UseGuards(AuthGuard('jwt')) // Protection avec JWT
@@ -93,11 +100,7 @@ export class UsersController {
     return isMatch;
   }
 
-  @Put(':id/generate-qrcode')
-  @UseGuards(AuthGuard('jwt'))
-  async generateQrCodeForUser(@Param('id') id: string): Promise<UserDocument> {
-  return this.usersService.generateAndUpdateQrCode(id);
-  }
+
 
 
   @Put('change-password')
