@@ -72,6 +72,38 @@ body {
     margin-top: 20px; /* Espacement au-dessus */
 }
 
+/* styles.css ou styles.scss */
+.no-scroll-dialog .mat-dialog-container {
+	overflow: hidden !important;
+	padding: 24px !important;
+	display: flex !important;
+	flex-direction: column !important;
+  }
+  
+  .no-scroll-dialog .mat-dialog-content {
+	flex: 1 1 auto;
+	overflow: hidden !important;
+  }
+
+
+  /* styles.css ou styles.scss */
+.custom-dialog .mat-dialog-container {
+	padding: 2px !important;
+	overflow: hidden !important;
+  }
+  
+  .custom-dialog .mat-form-field-appearance-outline .mat-form-field-outline {
+	color: rgba(0, 0, 0, 0.12);
+  }
+  
+  .custom-dialog .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+	color: #3f51b5;
+  }
+  
+  .custom-dialog .mat-form-field-label {
+	color: rgba(0, 0, 0, 0.6);
+  }
+
 .button-container {
     display: flex;
     justify-content: center; /* Centrer horizontalement */

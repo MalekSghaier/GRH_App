@@ -82,4 +82,16 @@ export class DocumentRequestsService {
     );
   }
 
+  approveAndSendDocument(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+  
+    return this.http.post(
+      `${this.apiUrl}/approve-with-document`, 
+      formData, 
+      { headers }
+    );
+  }
+
 }

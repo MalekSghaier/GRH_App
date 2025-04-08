@@ -1,0 +1,29 @@
+<h2 mat-dialog-title style="text-align: center; width: 100%; display: block;">Approuver la demande de document</h2>
+<mat-dialog-content>
+  <form [formGroup]="approvalForm" class="approval-form">
+    <mat-form-field appearance="outline" class="full-width message-field">
+      <mat-label>Message</mat-label>
+      <textarea matInput formControlName="message" rows="4" required></textarea>
+      <mat-error *ngIf="approvalForm.get('message')?.hasError('required')">
+        Le message est requis
+      </mat-error>
+    </mat-form-field>
+
+    <div class="file-upload">
+      <input type="file" (change)="onFileSelected($event)" #fileInput style="display: none;">
+      <button mat-raised-button type="button" (click)="fileInput.click()">
+        <i class='bx bx-upload'></i> Sélectionner le document
+      </button>
+      <span class="file-name" *ngIf="selectedFile">{{ selectedFile.name }}</span>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Annuler</button>
+  <button mat-raised-button color="primary" 
+          (click)="onSubmit()" 
+          [disabled]="!approvalForm.valid || !selectedFile || isLoading">
+    <span *ngIf="!isLoading">Envoyer</span>
+    <span *ngIf="isLoading">Envoi en cours...</span>
+  </button>
+</mat-dialog-actions>

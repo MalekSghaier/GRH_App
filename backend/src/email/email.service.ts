@@ -48,5 +48,30 @@ async sendInterviewEmail(
     throw new Error('Failed to send email');
   }
 }
+
+async sendEmailWithAttachment(data: {
+  to: string;
+  subject: string;
+  body: string;
+  attachmentPath: string;
+}): Promise<void> {
+  try {
+    const mailOptions = {
+      from: '"Service RH" <maleksg0@gmail.com>',
+      to: data.to,
+      subject: data.subject,
+      text: data.body,
+      attachments: [{
+        filename: data.attachmentPath.split('/').pop() || 'document.pdf',
+        path: data.attachmentPath
+      }]
+    };
+
+    await this.transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error('Error sending email with attachment:', error);
+    throw new Error('Echec d\'envoi d\'email avec pièce jointe');
+  }
+}
   
 }

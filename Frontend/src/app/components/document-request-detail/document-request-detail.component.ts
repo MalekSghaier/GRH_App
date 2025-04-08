@@ -9,6 +9,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GmailHelperService } from '../../services/gmail-helper.service';
 import { ToastrModule } from 'ngx-toastr'; 
+import { MatDialog } from '@angular/material/dialog';
+import { DocumentApprovalFormComponent } from '../document-approval-form/document-approval-form.component';
 
 
 
@@ -39,6 +41,8 @@ export class DocumentRequestDetailComponent implements AfterViewInit, OnInit {
     private gmailHelper: GmailHelperService, 
     private router: Router,
     private toastr: ToastrService,
+    private dialog: MatDialog
+
 
   ) {}
 
@@ -105,45 +109,25 @@ export class DocumentRequestDetailComponent implements AfterViewInit, OnInit {
     approveRequest(): void {
       if (!this.documentRequest?._id) return;
     
-      // 1. Afficher un toast de confirmation
-      this.toastr.success( 'Demande approuvée','Préparation de l\'email en cours...', {
-        timeOut: 1500, // Durée d'affichage du toast (2 secondes)
-        progressBar: true
+      const dialogRef = this.dialog.open(DocumentApprovalFormComponent, {
+        width: '400px',
+        height: 'auto', // ou une hauteur fixe comme '600px'
+        maxHeight: 'none', // Désactive la hauteur maximale
+        panelClass: 'custom-dialog', // Classe CSS personnalisée (optionnelle)
+                data: {
+          requestId: this.documentRequest._id,
+          requestData: this.documentRequest
+        }
       });
     
-      // 2. Approuver la demande via l'API après un léger délai
-      setTimeout(() => {
-        this.documentRequestsService.approveRequest(this.documentRequest._id).subscribe({
-          next: (updatedRequest) => {
-            this.documentRequest.status = updatedRequest.status;
-            
-            // 3. Préparer les données pour Gmail
-            const emailData = {
-              to: this.documentRequest.professionalEmail,
-              subject: `Demande document approuvé : ${this.documentRequest.documentType}`,
-              body: `Bonjour ${this.documentRequest.fullName},\n\n` +
-                    `Votre demande de ${this.documentRequest.documentType} a été approuvée.\n\n` +
-                    `Cordialement,\nService RH`
-            };
-    
-            // 4. Ouvrir Gmail après un autre léger délai
-            setTimeout(() => {
-              this.gmailHelper.openGmailDraft(emailData);
-              // Redirection après 3 secondes (ajustable)
-              setTimeout(() => {
-                this.router.navigate(['/document-requests']);
-              }, 1500);
-            }, 500);
-          },
-          error: (err) => {
-            this.toastr.error('Échec de l\'approbation','Erreur', {
-              timeOut: 1500,
-              progressBar: true
-            });
-            console.error(err);
-          }
-        });
-      }, 2000); // Délai avant l'approbation (2 secondes)
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.toastr.success('Demande approuvée et document envoyé', 'Succès');
+          setTimeout(() => {
+            this.router.navigate(['/document-requests']);
+          }, 1500);
+        }
+      });
     }
 
 

@@ -1,0 +1,65 @@
+/* document-approval-form.component.css */
+.approval-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 16px;
+  }
+  
+  .mat-dialog-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+  .mat-dialog-title {
+    text-align: center;
+    width: 100%;
+    display: block;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  /* Style spécifique pour le champ de message */
+  .message-field {
+    margin-top: 16px;
+  }
+  
+  .message-field .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+  
+  /* Style pour le textarea */
+  textarea.mat-input-element {
+    min-height: 100px;
+    max-height: 150px;
+    resize: vertical;
+  }
+  
+  .file-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    margin: 8px 0;
+  }
+  
+  .file-name {
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+    word-break: break-all;
+  }
+  
+  .mat-dialog-actions {
+    padding: 16px 0 0 0 !important;
+    margin: 0 !important;
+    justify-content: flex-end;
+  }
+  
+  /* Correction spécifique pour le label */
+  .mat-form-field-appearance-outline .mat-form-field-label {
+    top: 1.34375em;
+    margin-top: -0.25em;
+  }

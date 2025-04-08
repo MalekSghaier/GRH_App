@@ -1,10 +1,12 @@
-import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRequestException, Put, NotFoundException, Query} from '@nestjs/common';
+import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRequestException, Put, NotFoundException, Query, UploadedFile, UseInterceptors} from '@nestjs/common';
   import { AuthGuard } from '@nestjs/passport';
   import { EmployeeInternGuard } from '../auth/employee-intern.guard';
   import { DocumentRequestsService } from './document-requests.service';
   import { Request } from 'express';
   import { DocumentType, RequestStatus } from '../schemas/document-request.schema';
   import { UserPayload } from 'src/schemas/user-payload';
+  import { EmailService } from 'src/email/email.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 
   
@@ -26,7 +28,9 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
   
   @Controller('document-requests')
   export class DocumentRequestsController {
-    constructor(private readonly documentRequestsService: DocumentRequestsService,
+    constructor(
+      private readonly documentRequestsService: DocumentRequestsService,
+      private emailService : EmailService,
 
     ) {}
   
@@ -72,6 +76,42 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
         userId: user.id,
       });
     }
+
+
+    @Post('approve-with-document')
+    @UseGuards(AuthGuard('jwt'))
+    @UseInterceptors(FileInterceptor('document'))
+    async approveWithDocument(
+      @UploadedFile() file: Express.Multer.File,
+      @Body() body: { requestId: string, message: string }
+    ) {
+      if (!file) {
+        throw new BadRequestException('Aucun fichier fourni');
+      }
+    
+      const request = await this.documentRequestsService.findRequestById(body.requestId);
+      if (!request) {
+        throw new NotFoundException('Demande non trouvée');
+      }
+
+      // Mettre à jour le statut
+      const updatedRequest = await this.documentRequestsService.updateRequestStatus(
+        body.requestId, 
+        RequestStatus.APPROVED
+      );
+
+      // Envoyer l'email avec le document
+      await this.emailService.sendEmailWithAttachment({
+        to: request.professionalEmail,
+        subject: `Votre document: ${request.documentType}`,
+        body: body.message,
+        attachmentPath: file.path
+      });
+
+      return updatedRequest;
+    }
+
+
 
     @Get('mes-demandes')
     @UseGuards(AuthGuard('jwt'), EmployeeInternGuard)
