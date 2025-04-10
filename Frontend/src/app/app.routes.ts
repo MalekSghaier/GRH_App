@@ -23,10 +23,9 @@ import { EditCompanyProfileComponent } from './components/edit-company-profile/e
 import { ChangePasswordProfileComponent } from './components/change-password-profile/change-password-profile.component';
 import { OffresEmploiComponent } from './components/offres-emploi/offres-emploi.component';
 import { InternshipOffersComponent } from './components/internship-offers/internship-offers.component';
-
-
 import { AuthGuard } from './guards/auth.guards';
 import { DocumentRequestEmployeComponent } from './components/document-request-employe/document-request-employe.component';
+import { CongesEmployeComponent } from './components/conges-employe/conges-employe.component';
 
 export const routes: Routes = [
 
@@ -135,7 +134,11 @@ export const routes: Routes = [
     {
         path: 'DocumentReqEmploy', 
         component : DocumentRequestEmployeComponent
-    }
+    },
+    {
+        path:'congesEmploy',
+        component:CongesEmployeComponent
+    },
 
 
 

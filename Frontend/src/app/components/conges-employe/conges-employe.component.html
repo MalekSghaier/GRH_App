@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <title>AdminHub</title>
+</head>
+<body>
+  <app-shared-sidebar></app-shared-sidebar>
+  <section id="content">
+    <app-shared-navbar></app-shared-navbar>
+
+    <!-- MAIN -->
+    <main>
+      <div class="head-title">
+        <div class="left">
+          <h1>Demandes de Congés</h1>
+          <ul class="breadcrumb">
+            <li><a href="employee-dashboard">Tableau de bord</a></li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li><a class="active" href="#">Demandes de Congés</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="table-data">
+        <div class="order">
+          <div class="container">
+
+
+            <mat-tab-group>
+                <!-- Onglet 1 : Ajouter un congé -->
+                <mat-tab label="📌 Demander un congé">
+                  <div class="tab-content">
+                    <h2>Nouvelle demande de congé</h2>
+                    <button class="btn-primary" (click)="openAddCongesDialog()">+ Demander</button>
+                  </div>
+                </mat-tab>
+              
+                <!-- Onglet 2 : Mes congés -->
+                <mat-tab label="📂 Mes demandes de congé">
+                  <form action="#">
+                    <div class="form-input">
+                      <input type="search" placeholder="Rechercher par période ou statut...">
+                      <button type="button" class="search-btn"><i class='bx bx-search'></i></button>
+                    </div>
+                  </form>
+                  
+                  <div class="table-container">
+                    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+                      <!-- Colonne Date de début -->
+                      <ng-container matColumnDef="startDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de début</th>
+                        <td mat-cell *matCellDef="let conge">{{ conge.startDate | date:'dd/MM/yyyy' }}</td>
+                      </ng-container>
+              
+                      <!-- Colonne Date de fin -->
+                      <ng-container matColumnDef="endDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de fin</th>
+                        <td mat-cell *matCellDef="let conge">{{ conge.endDate | date:'dd/MM/yyyy' }}</td>
+                      </ng-container>
+              
+                      <!-- Colonne Motif -->
+                      <ng-container matColumnDef="reason">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Motif</th>
+                        <td mat-cell *matCellDef="let conge">{{ conge.reason }}</td>
+                      </ng-container>
+              
+                      <!-- Colonne Statut -->
+                      <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
+                        <td mat-cell *matCellDef="let conge">
+                          <span [class]="getStatusClass(conge.status)">
+                            {{ conge.status === 'pending' ? 'En attente' : 
+                               conge.status === 'approved' ? 'Approuvé' : 'Rejeté' }}
+                          </span>
+                        </td>
+                      </ng-container>
+              
+                      <!-- Colonne Actions -->
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let conge">
+                          <button mat-icon-button color="warn" 
+                                  matTooltip="Supprimer" 
+                                  (click)="deleteConge(conge._id)"
+                                  >
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+              
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+              
+                    <mat-paginator [pageSizeOptions]="[4, 8, 16]" showFirstLastButtons></mat-paginator>
+              
+                    <ng-container *ngIf="dataSource.data.length === 0">
+                      <div class="no-data-row">
+                        {{ noDataMessage }}
+                      </div>
+                    </ng-container>
+                  </div>
+                </mat-tab>
+              </mat-tab-group>
+
+           </div>
+        
+
+
+        </div>
+      </div>
+    </main>
+    <!-- MAIN -->
+  </section>
+  <!-- CONTENT -->
+</body>
+</html>

@@ -2,9 +2,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { CongesRequest } from '../models/conges-request.model';
 
 interface PaginatedCongesResponse {
-  data: any[];
+
+  data: CongesRequest[];
   total: number;
 }
 
@@ -15,6 +17,11 @@ export class CongesService {
   private apiUrl = 'http://localhost:3000/conges';
 
   constructor(private http: HttpClient) {}
+  create(requestData: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);    
+    return this.http.post(`${this.apiUrl}`, requestData, { headers });
+  }
 
   // Récupérer tous les congés
   getAllConges(): Observable<any[]> {
@@ -69,6 +76,25 @@ getMonthlyCongesStats(): Observable<{month: string, count: number}[]> {
     `${this.apiUrl}/company/monthly-stats`, 
     { headers }
   );
+}
+
+  findRequestsByUser(): Observable<CongesRequest[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<CongesRequest[]>(`${this.apiUrl}/my-conges`, { headers });
+  }
+
+
+
+delete(id: string): Observable<void> {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.error('Aucun token trouvé !');
+    return new Observable();
+  }
+
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
 }
 
 }

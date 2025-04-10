@@ -32,8 +32,6 @@ import { ToastrService } from 'ngx-toastr';
     CommonModule,
     MatTabsModule,
     RouterModule,
-    SharedSidebarComponent,
-    SharedNavbarComponent,
     MatCardModule,
     MatButtonModule,
     MatTableModule,

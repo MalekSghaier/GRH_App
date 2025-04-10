@@ -140,7 +140,6 @@ export class CongesService {
     return { data, total };
   }
 
-
   async getMonthlyCongesStats(companyName: string): Promise<{month: string, count: number, year: number}[]> {
     // 1. Trouver les utilisateurs de la compagnie
     const users = await this.userService.findByCompany(companyName);

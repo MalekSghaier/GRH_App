@@ -1,0 +1,42 @@
+<h2 mat-dialog-title>Nouvelle demande de congé</h2>
+<mat-dialog-content>
+  <form [formGroup]="congeForm" class="conge-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Date de début</mat-label>
+      <input matInput 
+             [matDatepicker]="startPicker" 
+             formControlName="startDate" 
+             required
+             [value]="congeForm.get('startDate')?.value | date: 'dd/MM/yyyy'">
+      <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+      <mat-datepicker #startPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Date de fin</mat-label>
+      <input matInput 
+             [matDatepicker]="endPicker" 
+             formControlName="endDate" 
+             required
+             [value]="congeForm.get('endDate')?.value | date: 'dd/MM/yyyy'">
+      <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+      <mat-datepicker #endPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Motif</mat-label>
+      <textarea matInput formControlName="reason" rows="4" required></textarea>
+      <mat-error *ngIf="congeForm.get('reason')?.hasError('minlength')">
+        Le motif doit contenir au moins 10 caractères
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Annuler</button>
+  <button mat-raised-button color="primary" 
+          (click)="onSubmit()" 
+          [disabled]="!congeForm.valid">
+    Envoyer
+  </button>
+</mat-dialog-actions>
