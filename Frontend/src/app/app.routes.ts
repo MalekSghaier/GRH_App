@@ -26,6 +26,7 @@ import { InternshipOffersComponent } from './components/internship-offers/intern
 import { AuthGuard } from './guards/auth.guards';
 import { DocumentRequestEmployeComponent } from './components/document-request-employe/document-request-employe.component';
 import { CongesEmployeComponent } from './components/conges-employe/conges-employe.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 
 export const routes: Routes = [
 
@@ -139,6 +140,10 @@ export const routes: Routes = [
         path:'congesEmploy',
         component:CongesEmployeComponent
     },
+    {
+        path:'landing-page',
+        component:LandingPageComponent
+    }
 
 
 
