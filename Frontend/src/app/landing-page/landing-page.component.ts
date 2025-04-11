@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -10,6 +10,11 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./landing-page.component.css']
 })
 export class LandingPageComponent implements OnInit {
+  isScrolled = false;
+  @HostListener('window:scroll')
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 10;
+  }
   adjectives = [
     "Moderne et Intelligente",
     "Innovante et performante",
@@ -72,6 +77,21 @@ export class LandingPageComponent implements OnInit {
         }, 120);
       }
     }, 120);
+  }
+
+  scrollTo(sectionId: string) {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      // Calcule la position en prenant en compte le header fixe
+      const headerHeight = document.querySelector('header')?.clientHeight || 0;
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementPosition - headerHeight;
+  
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
   }
 
   ngOnDestroy() {

@@ -1,14 +1,16 @@
 
-<header>
+<header [class.scrolled]="isScrolled">
   <div class="container">
     <nav>
       <a href="#" class="logo">Flesk <span>GRH</span> .</a>
       <ul class="nav-links">
-          <li><a routerLink="/landing-page">Accueil</a></li>
-          <li><a routerLink="/features">À propos</a></li>
-          <li><a routerLink="/features">Fonctionnalités</a></li>
-          <li><a routerLink="/contact">Contact</a></li>
-          <li><a class="btn-login" routerLink="/login">Connexion</a></li>
+          <li><a (click)="scrollTo('hero')">Accueil</a></li>
+          <li><a (click)="scrollTo('about')">À propos</a></li>
+          <li><a (click)="scrollTo('features')">Fonctionnalités</a></li>
+          <li><a (click)="scrollTo('stages')">Offres de stage</a></li>
+          <li><a (click)="scrollTo('emplois')">Offres d'emploi</a></li>
+          <li><a (click)="scrollTo('contact')">Contact</a></li>
+          <li><a class="btn-login" href="login">Connexion</a></li>
       </ul>
     </nav>
   </div>
@@ -28,5 +30,39 @@
         <a class="btn btn-outline">Watch Video</a>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- Ajoutez ces nouvelles sections -->
+<section id="about" class="section">
+  <div class="container">
+    <h2>À propos de Flesk GRH</h2>
+    <!-- Votre contenu "À propos" ici -->
+  </div>
+</section>
+
+<section id="features" class="section">
+  <div class="container">
+    <h2>Nos Fonctionnalités</h2>
+    <!-- Votre contenu "Fonctionnalités" ici -->
+  </div>
+</section>
+<section id="stages" class="section">
+  <div class="container">
+    <h2>Nos stages</h2>
+    <!-- Votre contenu "Fonctionnalités" ici -->
+  </div>
+</section>
+<section id="emplois" class="section">
+  <div class="container">
+    <h2>Nos emplois</h2>
+    <!-- Votre contenu "Fonctionnalités" ici -->
+  </div>
+</section>
+
+<section id="contact" class="section">
+  <div class="container">
+    <h2>Contactez-nous</h2>
+    <!-- Votre formulaire de contact ici -->
   </div>
 </section>
