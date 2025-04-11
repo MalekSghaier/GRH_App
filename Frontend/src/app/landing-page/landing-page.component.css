@@ -198,6 +198,33 @@ body {
         background-color: #fff;
         color: #3071b1;
     }
+
+    /* Ajoutez ceci à votre fichier CSS */
+    .rotating-text {
+        display: inline-block;
+        min-width: 280px;
+        text-align: left;
+        color: #3C91E6;
+        font-weight: 600;
+        position: relative;
+    }
+.rotating-text::after {
+    content: '|';
+    animation: blink 1s infinite;
+    opacity: 1;
+    margin-left: 2px;
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+  
+  /* Animation optionnelle pour un effet plus fluide */
+  .rotating-text {
+    transition: opacity 0.3s ease;
+  }
+
+  
     
     /* Responsive */
     @media (max-width: 768px) {
