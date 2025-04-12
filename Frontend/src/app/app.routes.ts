@@ -27,6 +27,11 @@ import { AuthGuard } from './guards/auth.guards';
 import { DocumentRequestEmployeComponent } from './components/document-request-employe/document-request-employe.component';
 import { CongesEmployeComponent } from './components/conges-employe/conges-employe.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { ApplicationFormComponent } from './components/application-form/application-form.component';
+import { OfferDetailsComponent } from './components/offer-details/offer-details.component';
+import { AllInternshipsComponent } from './all-internships/all-internships.component';
+
+
 
 export const routes: Routes = [
 
@@ -143,6 +148,18 @@ export const routes: Routes = [
     {
         path:'landing-page',
         component:LandingPageComponent
+    },
+    {
+        path: 'apply/:id',
+        component: ApplicationFormComponent
+    },
+    {
+        path: 'offers/:id',
+        component: OfferDetailsComponent
+    },
+    {
+        path: 'all-internships',
+        component: AllInternshipsComponent
     }
 
 

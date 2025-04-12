@@ -13,6 +13,8 @@ import { TruncatePipe } from '../pipes/truncate.pipe';
   styleUrls: ['./landing-page.component.css']
 })
 export class LandingPageComponent implements OnInit {
+  displayedOffers: any[] = [];
+  showAllOffers = false;
   isScrolled = false;
   internshipOffers: any[] = [];
   isLoading = true;
@@ -48,6 +50,7 @@ export class LandingPageComponent implements OnInit {
     this.internshipOfferService.getAllOffers().subscribe({
       next: (offers) => {
         this.internshipOffers = offers;
+        this.displayedOffers = this.showAllOffers ? offers : offers.slice(0, 3);
         this.isLoading = false;
       },
       error: (err) => {
@@ -55,6 +58,13 @@ export class LandingPageComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  toggleShowAllOffers() {
+    this.showAllOffers = !this.showAllOffers;
+    this.displayedOffers = this.showAllOffers 
+      ? this.internshipOffers 
+      : this.internshipOffers.slice(0, 3);
   }
 
   startAnimation() {

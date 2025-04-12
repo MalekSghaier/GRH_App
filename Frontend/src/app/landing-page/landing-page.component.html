@@ -144,7 +144,9 @@
 <!-- Dans votre section stages -->
 <section id="stages" class="section">
   <div class="container">
-    <h2>Nos offres de stage</h2>
+    <div class="section-header">
+      <h2>Nos <span>offres de stage</span></h2>
+    </div>
     
     <div *ngIf="isLoading" class="loading-spinner">
       Chargement des offres...
@@ -155,7 +157,7 @@
     </div>
 
     <div class="offers-grid">
-      <div *ngFor="let offer of internshipOffers" class="offer-card">
+      <div *ngFor="let offer of internshipOffers.slice(0, 3)" class="offer-card">
         <div class="offer-header">
           <h3>{{ offer.title }}</h3>
           <span class="company">{{ offer.company }}</span>
@@ -163,8 +165,8 @@
         </div>
         
         <div class="offer-details">
-          <p><strong>Durée:</strong> {{ offer.duration }} mois</p>
-          <p><strong>Niveau requis:</strong> {{ offer.educationLevel }}</p>
+          <p><strong>Durée: </strong> {{ offer.duration }} mois</p>
+          <p><strong>Niveau requis: </strong> {{ offer.educationLevel }}</p>
         </div>
         
         <div class="offer-description">
@@ -177,14 +179,23 @@
         </div>
       </div>
     </div>
+    
+    <!-- Bouton "Plus d'offres" -->
+    <div *ngIf="!isLoading && internshipOffers.length > 3" class="more-offers">
+      <a routerLink="/all-internships" class="btn-more">
+        Plus d'offres...
+      </a>
+    </div>
   </div>
 </section>
 
 <section id="emplois" class="section">
   <div class="container">
-    <h2>Nos emplois</h2>
-    <!-- Votre contenu "Fonctionnalités" ici -->
-  </div>
+    <div class="section-header">
+    <h2>Nos <span>offres d'emploi</span> </h2>
+   </div> 
+
+   </div>
 </section>
 
 <section id="contact" class="section">

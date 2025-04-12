@@ -31,8 +31,9 @@ export class InternshipOffersService {
   }
 
   getAllOffers(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+    return this.http.get<any[]>(`${this.apiUrl}`);
   }
+  
   getInternshipOffers(): Observable<InternshipOffer[]> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -81,5 +82,9 @@ export class InternshipOffersService {
   
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<InternshipOffer[]>(`${this.apiUrl}/search?query=${encodeURIComponent(query)}`, { headers });
+  }
+
+  getOfferDetails(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 }

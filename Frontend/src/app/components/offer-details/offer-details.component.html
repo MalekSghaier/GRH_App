@@ -1,0 +1,44 @@
+<div class="header">
+  <div class="section-header">
+    <h1>  <span> </span></h1>
+  </div>
+  <a routerLink="/landing-page" class="back-link">← Retour à l'accueil</a>
+</div>
+<div class="offer-details-container" *ngIf="offer">
+    <h2>{{ offer.title }}</h2>
+    
+    <div class="details-grid">
+      <div class="detail-item">
+        <span class="detail-label">Compagnie :</span>
+        <span class="detail-value">{{ offer.company }}</span>
+      </div>
+      
+      <div class="detail-item">
+        <span class="detail-label">Localisation :</span>
+        <span class="detail-value">{{ offer.location }}, France</span>
+      </div>
+      
+      <div class="detail-item">
+        <span class="detail-label">Durée :</span>
+        <span class="detail-value">{{ offer.duration }} mois</span>
+      </div>
+      
+      <div class="detail-item">
+        <span class="detail-label">Niveau requis :</span>
+        <span class="detail-value">{{ offer.educationLevel }}</span>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h3>Description du poste</h3>
+      <p>{{ offer.description }}</p>
+    </div>
+    
+    <div class="section">
+      <h3>Exigences</h3>
+      <p>{{ offer.requirements }}</p>
+    </div>
+    <div class="container-btn-apply">
+    <a [routerLink]="['/apply', offer._id]" class="btn-apply">Postuler maintenant</a>
+    </div>
+  </div>

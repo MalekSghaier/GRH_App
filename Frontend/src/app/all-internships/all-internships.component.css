@@ -1,0 +1,88 @@
+.all-internships-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    position: relative; /* Pour positionner le lien de retour */
+    margin-bottom: 2rem;
+  }
+
+  .section-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative; /* Pour positionner le lien de retour */
+}
+
+.section-header h1 {
+    font-size: 2.5rem;
+    color: #2f2f2f;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.section-header h1 span {
+    color: #3C91E6;
+}
+  
+  .back-link {
+    color: #3C91E6;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .offers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+  
+  /* Reprenez les styles de offer-card depuis votre landing page */
+  .offer-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .offer-card:hover {
+    transform: translateY(-5px);
+  }
+  .offer-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .btn-apply {
+    background: #3C91E6;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  
+  .btn-details {
+    border: 1px solid #3C91E6;
+    color: #3C91E6;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .company, .location {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  /* Ajoutez d'autres styles si nécessaire */
