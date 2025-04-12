@@ -141,12 +141,45 @@
   </div>
 </section>
 
+<!-- Dans votre section stages -->
 <section id="stages" class="section">
   <div class="container">
-    <h2>Nos stages</h2>
-    <!-- Votre contenu "Fonctionnalités" ici -->
+    <h2>Nos offres de stage</h2>
+    
+    <div *ngIf="isLoading" class="loading-spinner">
+      Chargement des offres...
+    </div>
+
+    <div *ngIf="!isLoading && internshipOffers.length === 0" class="no-offers">
+      Aucune offre de stage disponible pour le moment.
+    </div>
+
+    <div class="offers-grid">
+      <div *ngFor="let offer of internshipOffers" class="offer-card">
+        <div class="offer-header">
+          <h3>{{ offer.title }}</h3>
+          <span class="company">{{ offer.company }}</span>
+          <span class="location">{{ offer.location }}</span>
+        </div>
+        
+        <div class="offer-details">
+          <p><strong>Durée:</strong> {{ offer.duration }} mois</p>
+          <p><strong>Niveau requis:</strong> {{ offer.educationLevel }}</p>
+        </div>
+        
+        <div class="offer-description">
+          <p>{{ offer.description | truncate:150 }}</p>
+        </div>
+        
+        <div class="offer-actions">
+          <a [routerLink]="['/apply', offer._id]" class="btn-apply">Postuler</a>
+          <a [routerLink]="['/offers', offer._id]" class="btn-details">Voir détails</a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
+
 <section id="emplois" class="section">
   <div class="container">
     <h2>Nos emplois</h2>

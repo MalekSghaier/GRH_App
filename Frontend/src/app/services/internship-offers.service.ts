@@ -30,6 +30,9 @@ export class InternshipOffersService {
     return this.http.post<InternshipOffer>(this.apiUrl, offerData, { headers });
   }
 
+  getAllOffers(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
+  }
   getInternshipOffers(): Observable<InternshipOffer[]> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);

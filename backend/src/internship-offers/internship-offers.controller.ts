@@ -43,7 +43,6 @@ import { InternshipOffer } from 'src/schemas/internship-offer.schema';
     }
   
     @Get()
-    @UseGuards(AuthGuard('jwt'))
     findAll() {
       return this.internshipOffersService.findAll();
     }
@@ -55,7 +54,6 @@ import { InternshipOffer } from 'src/schemas/internship-offer.schema';
     }
 
     @Get('search')
-    @UseGuards(AuthGuard('jwt'))
     async searchOffers(
      @Request() req: { user: UserPayload },
      @Query('query') query: string
@@ -75,7 +73,6 @@ import { InternshipOffer } from 'src/schemas/internship-offer.schema';
   }
   
     @Get(':id')
-    @UseGuards(AuthGuard('jwt'))
     findOne(@Param('id') id: string) {
       if (!Types.ObjectId.isValid(id)) {
         throw new BadRequestException('Invalid ObjectId');

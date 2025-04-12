@@ -1,16 +1,21 @@
 import { Component, OnInit ,HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { InternshipOffersService } from '../services/internship-offers.service';
+import { TruncatePipe } from '../pipes/truncate.pipe';
+
 
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,TruncatePipe],
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.css']
 })
 export class LandingPageComponent implements OnInit {
   isScrolled = false;
+  internshipOffers: any[] = [];
+  isLoading = true;
   @HostListener('window:scroll')
   onWindowScroll() {
     this.isScrolled = window.scrollY > 10;
@@ -25,16 +30,31 @@ export class LandingPageComponent implements OnInit {
     "Réfléchie et novatrice",
     "Ambitieuse et technologique"
   ];
-  
+  constructor(private internshipOfferService: InternshipOffersService) {}
+
   displayText = this.adjectives[0]; // Initialisé directement avec le premier texte
   currentIndex = 0;
   isTyping = false;
   animationInterval: any;
 
   ngOnInit() {
+    this.loadInternshipOffers();
     setTimeout(() => {
       this.startAnimation();
     }, 2000);
+  }
+
+  loadInternshipOffers() {
+    this.internshipOfferService.getAllOffers().subscribe({
+      next: (offers) => {
+        this.internshipOffers = offers;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading offers:', err);
+        this.isLoading = false;
+      }
+    });
   }
 
   startAnimation() {
