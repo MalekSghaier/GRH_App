@@ -2,7 +2,7 @@
 <header [class.scrolled]="isScrolled">
   <div class="container">
     <nav>
-      <a href="#" class="logo">Flesk <span>GRH</span> .</a>
+      <a routerLink="/landing-page" class="logo">Flesk <span>GRH</span> .</a>
       <ul class="nav-links">
           <li><a (click)="scrollTo('hero')">Accueil</a></li>
           <li><a (click)="scrollTo('about')">À propos</a></li>
@@ -21,32 +21,126 @@
     <div class="hero-content">
       <div class="experience-badge">LA MEILLEURE EXPÉRIENCE RH</div>
       <h1>Gestion RH <span class="rotating-text">{{ displayText }}</span></h1>
-      <!-- Suppression du fallback adjectives[0] -->
       <p class="value-proposition">Gagnez du temps et réduisez les erreurs 
         avec notre solution qui automatise le pointage, la gestion des absences et la documentation légale, 
         boostant votre productivité RH tout en garantissant la conformité.</p>
       <div class="hero-buttons">
-        <a class="btn">Get Started</a>
-        <a class="btn btn-outline">Watch Video</a>
+        <a class="btn btn-outline" routerLink="/login">Démarrer</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Ajoutez ces nouvelles sections -->
 <section id="about" class="section">
   <div class="container">
-    <h2>À propos de Flesk GRH</h2>
-    <!-- Votre contenu "À propos" ici -->
+    <div class="about-container">
+      <!-- Colonne Texte -->
+      <div class="about-text">
+        <h2>À propos de <span class="highlight">Flesk GRH</span></h2>
+        <p class="lead">
+          FLESK GRH est une solution innovante de gestion des ressources humaines conçue pour 
+          simplifier le suivi des présences, la gestion administrative et l'organisation interne des entreprises.        </p>
+          <p>
+            Nous combinons les technologies modernes comme la <strong>reconnaissance faciale</strong>, 
+             et le <strong>QR code</strong>, pour automatiser le pointage 
+            et renforcer la fiabilité des données RH. Notre objectif est d’accompagner les entreprises 
+            dans leur transition numérique en leur fournissant un outil complet, sécurisé et facile à utiliser.
+          </p>
+
+        <div class="tech-icons">
+          <div class="tech-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="Reconnaissance faciale" width="40">
+            <span>Reconnaissance Faciale</span>
+          </div>
+          <div class="tech-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/4090/4090458.png" alt="QR Code" width="40">
+            <span>Pointage digital</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Colonne Image -->
+      <div class="about-image">
+        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
+             alt="Équipe RH" class="main-img">
+        <div class="img-grid">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80&sat=-30" 
+          alt="Système biométrique professionnel"
+          class="dark-interface"
+          loading="lazy" >
+          <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+               alt="Application mobile">
+        </div>
+      </div>
+
+    </div>
   </div>
 </section>
 
-<section id="features" class="section">
+<!-- Features Section -->
+<section class="features" id="features">
   <div class="container">
-    <h2>Nos Fonctionnalités</h2>
-    <!-- Votre contenu "Fonctionnalités" ici -->
+      <div class="section-header">
+          <h2>Nos <span>Fonctionnalités</span></h2>
+          <p>Découvrez comment Flesk GRH révolutionne la gestion des ressources humaines</p>
+      </div>
+
+      <div class="features-grid">
+          <!-- Carte 1 : Pointage Intelligent -->
+          <div class="feature-card">
+              <div class="feature-icon">
+                <i class='bx bx-qr-scan'></i>
+              </div>
+              <h3>Pointage Intelligent</h3>
+              <ul>
+                  <li>Reconnaissance faciale sécurisée</li>
+                  <li>Scan de QR code unique</li>
+                  <li>Synchronisation multi-appareils</li>
+                </ul>
+          </div>
+
+          <!-- Carte 2 : Gestion RH -->
+          <div class="feature-card">
+              <div class="feature-icon">
+                <i class='bx bxs-group' ></i>
+              </div>
+              <h3>Gestion RH Complète</h3>
+              <ul>
+                  <li>Suivi des présences/absences</li>
+                  <li>Calcul automatique des heures</li>
+                  <li>Gestion des congés et demandes</li>
+              </ul>
+          </div>
+
+          <!-- Carte 3 : Automatisation -->
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class='bx bxs-file-doc' ></i>
+              </div>
+            <h3>Gestion Documents</h3>
+            <ul>
+                <li>Attestations de travail/stage</li>
+                <li>Fiches de paie, etc ...</li>
+                <li>Archivage sécurisé des documents</li>
+            </ul>
+        </div>
+
+          <!-- Carte 4 : Rapports -->
+          <div class="feature-card">
+              <div class="feature-icon">
+                <i class='bx bxs-pie-chart-alt-2'></i>               
+              </div>
+              <h3>Analyses Avancées</h3>
+              <ul>
+                  <li>Tableaux de bord personnalisés</li>
+                  <li>Export Excel/PDF</li>
+                  <li>Satisfaction employé</li>
+              </ul>
+          </div>
+      </div>
   </div>
 </section>
+
 <section id="stages" class="section">
   <div class="container">
     <h2>Nos stages</h2>
