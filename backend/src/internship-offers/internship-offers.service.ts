@@ -83,4 +83,36 @@ export class InternshipOffersService {
   
     return this.internshipOfferModel.find(searchConditions).exec();
   }
+
+  async publicSearchOffers(
+    query: string,
+    location?: string,
+    duration?: number,
+    educationLevel?: string
+  ): Promise<InternshipOfferDocument[]> {
+    const regex = new RegExp(query, 'i');
+    
+    const searchConditions: any = {
+      $or: [
+        { title: { $regex: regex } },
+        { description: { $regex: regex } },
+        { requirements: { $regex: regex } },
+        { company: { $regex: regex } }
+      ]
+    };
+  
+    if (location) {
+      searchConditions.location = { $regex: new RegExp(location, 'i') };
+    }
+  
+    if (duration) {
+      searchConditions.duration = { $lte: duration };
+    }
+  
+    if (educationLevel) {
+      searchConditions.educationLevel = educationLevel;
+    }
+  
+    return this.internshipOfferModel.find(searchConditions).exec();
+  }
 }

@@ -66,6 +66,28 @@ import { InternshipOffer } from 'src/schemas/internship-offer.schema';
     new Types.ObjectId(req.user.id)
   );
   }
+
+  @Get('public/search')
+async publicSearchOffers(
+  @Query('query') query: string,
+  @Query('location') location?: string,
+  @Query('duration') duration?: number,
+  @Query('educationLevel') educationLevel?: string
+): Promise<InternshipOffer[]> {
+  if (!query || query.trim() === '') {
+    return this.internshipOffersService.findAll();
+  }
+  return this.internshipOffersService.publicSearchOffers(
+    query, 
+    location,
+    duration,
+    educationLevel
+  );
+}
+@Get('public/all')
+async getAllPublicOffers(): Promise<InternshipOffer[]> {
+  return this.internshipOffersService.findAll();
+}
   @Get('my-offers/count')
   @UseGuards(AuthGuard('jwt'))
   async countMyOffers(@Request() req: { user: UserPayload }) {

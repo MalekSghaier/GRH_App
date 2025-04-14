@@ -1,41 +1,62 @@
 <div class="all-internships-container">
-  <div id="top"></div> <!-- Ajoutez cette ligne -->
-    <div class="header">
-      <div class="section-header">
-        <h1>Toutes nos <span>offres de stage</span></h1>
+  <div id="top"></div>
+  
+  <div class="header">
+    <div class="section-header">
+      <h1>Toutes nos <span>offres de stage</span></h1>
+    </div>
+    <a routerLink="/landing-page" class="back-link">← Retour à l'accueil</a>
+  </div>
+
+  <!-- Barre de recherche -->
+  <div class="search-container">
+    <div class="search-bar">
+      <input 
+        type="text" 
+        [(ngModel)]="searchText" 
+        (input)="onSearchInput()" 
+        placeholder="Rechercher un poste, entreprise ou lieu..."
+        aria-label="Rechercher des offres de stage"
+      >
+      <button class="advanced-search-btn" (click)="openAdvancedSearch()">
+        <i class="fas fa-sliders-h"></i> Recherche avancée
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Chargement des offres...</p>
+  </div>
+
+  <div *ngIf="!isLoading && filteredOffers.length === 0" class="no-offers">
+    <i class="fas fa-search"></i>
+    <h3>Aucune offre ne correspond à votre recherche</h3>
+    <p>Essayez avec d'autres termes ou consultez toutes nos offres disponibles.</p>
+    <button (click)="searchText = ''; loadAllInternshipOffers()">Afficher toutes les offres</button>
+  </div>
+
+  <div class="offers-grid">
+    <div *ngFor="let offer of filteredOffers" class="offer-card">
+      <div class="offer-header">
+        <h3>{{ offer.title }}</h3>
+        <span class="company">{{ offer.company }}</span>
+        <span class="location">{{ offer.location }}</span>
       </div>
-      <a routerLink="/landing-page" class="back-link">← Retour à l'accueil</a>
-    </div>
-  
-    <div *ngIf="isLoading" class="loading-spinner">
-      Chargement des offres...
-    </div>
-  
-    <div *ngIf="!isLoading && internshipOffers.length === 0" class="no-offers">
-      Aucune offre de stage disponible pour le moment.
-    </div>
-  
-    <div class="offers-grid">
-      <div *ngFor="let offer of internshipOffers" class="offer-card">
-        <div class="offer-header">
-          <h3>{{ offer.title }}</h3>
-          <span class="company">{{ offer.company }}</span>
-          <span class="location">{{ offer.location }}</span>
-        </div>
-        
-        <div class="offer-details">
-          <p><strong>Durée: </strong> {{ offer.duration }} mois</p>
-          <p><strong>Niveau requis: </strong> {{ offer.educationLevel }}</p>
-        </div>
-        
-        <div class="offer-description">
-          <p>{{ offer.description | truncate:150 }}</p>
-        </div>
-        
-        <div class="offer-actions">
-          <a [routerLink]="['/apply', offer._id]" class="btn-apply">Postuler</a>
-          <a [routerLink]="['/offers', offer._id]" class="btn-details">Voir détails</a>
-        </div>
+      
+      <div class="offer-details">
+        <p><strong>Durée: </strong> {{ offer.duration }} mois</p>
+        <p><strong>Niveau requis: </strong> {{ offer.educationLevel }}</p>
+      </div>
+      
+      <div class="offer-description">
+        <p>{{ offer.description | truncate:150 }}</p>
+      </div>
+      
+      <div class="offer-actions">
+        <a [routerLink]="['/apply', offer._id]" class="btn-apply">Postuler</a>
+        <a [routerLink]="['/offers', offer._id]" class="btn-details">Voir détails</a>
       </div>
     </div>
   </div>
+</div>

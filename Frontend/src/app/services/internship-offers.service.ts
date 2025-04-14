@@ -1,6 +1,6 @@
 // src/app/services/internship-offers.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface InternshipOffer {
@@ -87,4 +87,28 @@ export class InternshipOffersService {
   getOfferDetails(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
+
+  // Ajouter ces méthodes dans internship-offers.service.ts
+
+searchPublicOffers(
+  query: string,
+  location?: string,
+  duration?: number,
+  educationLevel?: string
+): Observable<InternshipOffer[]> {
+  let params = new HttpParams().set('query', query);
+  
+  if (location) params = params.append('location', location);
+  if (duration) params = params.append('duration', duration.toString());
+  if (educationLevel) params = params.append('educationLevel', educationLevel);
+  
+  return this.http.get<InternshipOffer[]>(
+    `${this.apiUrl}/public/search`,
+    { params }
+  );
+}
+
+getAllPublicOffers(): Observable<InternshipOffer[]> {
+  return this.http.get<InternshipOffer[]>(`${this.apiUrl}/public/all`);
+}
 }
