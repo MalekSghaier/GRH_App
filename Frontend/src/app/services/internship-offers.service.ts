@@ -96,6 +96,13 @@ export class InternshipOffersService {
     educationLevel?: string,
     requirements?: string
   ): Observable<InternshipOffer[]> {
+    console.log('Sending search with params:', {
+      query: query,
+      duration: duration,
+      educationLevel: educationLevel,
+      requirements: requirements
+    });
+  
     let params = new HttpParams().set('query', query || '');
     
     if (duration) params = params.append('duration', duration.toString());

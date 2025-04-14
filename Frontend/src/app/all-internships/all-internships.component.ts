@@ -78,6 +78,8 @@ export class AllInternshipsComponent implements OnInit, OnDestroy {
   }
 
   onSearchInput(): void {
+    // Ajoutez un log pour vérifier ce qui est envoyé
+    console.log('Search text:', this.searchText);
     this.searchTerms.next(this.searchText);
   }
 
@@ -97,25 +99,10 @@ export class AllInternshipsComponent implements OnInit, OnDestroy {
   private performSearch(text: string, advancedParams: any) {
     this.isLoading = true;
     
-    // Vérifier si tous les critères sont vides
-    const isSearchEmpty = (!text || text.trim() === '') && 
-                         (!advancedParams.duration && 
-                          !advancedParams.educationLevel && 
-                          !advancedParams.requirements);
-  
-    if (isSearchEmpty) {
-      this.internshipOfferService.getAllPublicOffers().subscribe({
-        next: (offers) => {
-          this.filteredOffers = offers;
-          this.isLoading = false;
-        },
-        error: (err) => {
-          console.error('Error loading all offers:', err);
-          this.isLoading = false;
-        }
-      });
-      return;
-    }
+    console.log('Performing search with:', {
+      text: text,
+      advancedParams: advancedParams
+    });
   
     this.internshipOfferService.searchPublicOffers(
       text || '', 
@@ -124,6 +111,7 @@ export class AllInternshipsComponent implements OnInit, OnDestroy {
       advancedParams.requirements
     ).subscribe({
       next: (offers) => {
+        console.log('Offers found:', offers);
         this.filteredOffers = offers;
         this.isLoading = false;
       },
