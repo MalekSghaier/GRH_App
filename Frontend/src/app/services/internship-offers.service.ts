@@ -90,23 +90,23 @@ export class InternshipOffersService {
 
   // Ajouter ces méthodes dans internship-offers.service.ts
 
-searchPublicOffers(
-  query: string,
-  location?: string,
-  duration?: number,
-  educationLevel?: string
-): Observable<InternshipOffer[]> {
-  let params = new HttpParams().set('query', query);
-  
-  if (location) params = params.append('location', location);
-  if (duration) params = params.append('duration', duration.toString());
-  if (educationLevel) params = params.append('educationLevel', educationLevel);
-  
-  return this.http.get<InternshipOffer[]>(
-    `${this.apiUrl}/public/search`,
-    { params }
-  );
-}
+  searchPublicOffers(
+    query: string,
+    duration?: number,
+    educationLevel?: string,
+    requirements?: string
+  ): Observable<InternshipOffer[]> {
+    let params = new HttpParams().set('query', query || '');
+    
+    if (duration) params = params.append('duration', duration.toString());
+    if (educationLevel) params = params.append('educationLevel', educationLevel);
+    if (requirements) params = params.append('requirements', requirements);
+    
+    return this.http.get<InternshipOffer[]>(
+      `${this.apiUrl}/public/search`,
+      { params }
+    );
+  }
 
 getAllPublicOffers(): Observable<InternshipOffer[]> {
   return this.http.get<InternshipOffer[]>(`${this.apiUrl}/public/all`);

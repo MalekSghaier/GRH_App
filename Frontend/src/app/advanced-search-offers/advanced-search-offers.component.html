@@ -1,0 +1,54 @@
+<div class="advanced-search-container">
+    <form class="advanced-search-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="duration">Durée (mois)</label>
+          <input 
+            type="number" 
+            id="duration" 
+            [(ngModel)]="searchParams.duration" 
+            name="duration"
+            min="1"
+            max="12"
+            (input)="onFieldChange()"
+            class="form-control"
+          >
+        </div>
+  
+        <div class="form-group">
+          <label for="educationLevel">Niveau d'études</label>
+          <select 
+            id="educationLevel" 
+            [(ngModel)]="searchParams.educationLevel" 
+            name="educationLevel"
+            (change)="onFieldChange()"
+            class="form-control"
+          >
+            <option value="">Tous niveaux</option>
+            <option *ngFor="let level of educationLevels" [value]="level">{{ level }}</option>
+          </select>
+        </div>
+
+        <div class="form-group full-width">
+            <label for="requirements">Exigences (mots-clés)</label>
+            <input 
+              type="text" 
+              id="requirements" 
+              [(ngModel)]="searchParams.requirements" 
+              name="requirements"
+              (input)="onFieldChange()"
+              class="form-control"
+              placeholder="Compétences, technologies,.."
+            >
+          </div>
+      </div>
+  
+
+  
+      <div class="form-actions">
+        <button type="button" class="btn-reset" (click)="resetForm()">
+          <i class="fas fa-undo"></i> Réinitialiser
+        </button>
+      </div>
+    </form>
+  </div>

@@ -39,8 +39,10 @@ export class InternshipOfferFormComponent {
     'Bac',
     'Bac+2',
     'Bac+3',
-    'Bac+5',
-    'Doctorat'
+    'Licence',
+    'Master',
+    'Ingénieur',
+    'Doctorat',
   ];
 
   constructor(

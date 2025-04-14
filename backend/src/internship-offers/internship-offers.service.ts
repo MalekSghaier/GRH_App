@@ -84,35 +84,42 @@ export class InternshipOffersService {
     return this.internshipOfferModel.find(searchConditions).exec();
   }
 
-  async publicSearchOffers(
-    query: string,
-    location?: string,
-    duration?: number,
-    educationLevel?: string
-  ): Promise<InternshipOfferDocument[]> {
+async publicSearchOffers(
+  query: string,
+  duration?: number,
+  educationLevel?: string,
+  requirements?: string
+): Promise<InternshipOfferDocument[]> {
+  const searchConditions: any = {};
+  
+  // Recherche texte sur plusieurs champs
+  if (query) {
     const regex = new RegExp(query, 'i');
-    
-    const searchConditions: any = {
-      $or: [
-        { title: { $regex: regex } },
-        { description: { $regex: regex } },
-        { requirements: { $regex: regex } },
-        { company: { $regex: regex } }
-      ]
-    };
-  
-    if (location) {
-      searchConditions.location = { $regex: new RegExp(location, 'i') };
-    }
-  
-    if (duration) {
-      searchConditions.duration = { $lte: duration };
-    }
-  
-    if (educationLevel) {
-      searchConditions.educationLevel = educationLevel;
-    }
-  
-    return this.internshipOfferModel.find(searchConditions).exec();
+    searchConditions.$or = [
+      { title: { $regex: regex } },
+      { description: { $regex: regex } },
+      { requirements: { $regex: regex } }
+    ];
   }
+
+  // Filtres avancés
+  if (duration) {
+    searchConditions.duration = { $eq: duration };
+  }
+
+  if (educationLevel) {
+    searchConditions.educationLevel = educationLevel;
+  }
+
+  if (requirements) {
+    searchConditions.requirements = { $regex: new RegExp(requirements, 'i') };
+  }
+
+  // Si aucun critère n'est spécifié, retourner toutes les offres
+  if (Object.keys(searchConditions).length === 0) {
+    return this.internshipOfferModel.find().exec();
+  }
+
+  return this.internshipOfferModel.find(searchConditions).exec();
+}
 }

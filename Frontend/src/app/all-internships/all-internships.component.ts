@@ -7,7 +7,7 @@ import { InternshipOffersService } from '../services/internship-offers.service';
 import { TruncatePipe } from '../pipes/truncate.pipe';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { SearchFilterPipe } from '../search-filter.pipe';
+import { AdvancedSearchOffersComponent } from '../advanced-search-offers/advanced-search-offers.component';
 
 @Component({
   selector: 'app-all-internships',
@@ -15,9 +15,9 @@ import { SearchFilterPipe } from '../search-filter.pipe';
   imports: [
     CommonModule, 
     RouterModule, 
-    TruncatePipe,
     FormsModule,
-    SearchFilterPipe
+    TruncatePipe,
+    AdvancedSearchOffersComponent
   ],
   templateUrl: './all-internships.component.html',
   styleUrls: ['./all-internships.component.css']
@@ -27,8 +27,11 @@ export class AllInternshipsComponent implements OnInit, OnDestroy {
   filteredOffers: any[] = [];
   isLoading = true;
   searchText = '';
+  showAdvancedSearch = false;
+  
   private searchTerms = new Subject<string>();
   private destroy$ = new Subject<void>();
+  private advancedSearchParams: any = {};
 
   constructor(
     private internshipOfferService: InternshipOffersService,
@@ -44,20 +47,13 @@ export class AllInternshipsComponent implements OnInit, OnDestroy {
       window.scrollTo(0, 0);
     });
 
-    // Configuration de la recherche en temps réel avec délai
+    // Configuration de la recherche texte
     this.searchTerms.pipe(
       takeUntil(this.destroy$),
-      debounceTime(200),
-      distinctUntilChanged(),
-      switchMap((term: string) => {
-        if (term.length >= 3) {
-          return this.internshipOfferService.searchPublicOffers(term);
-        } else {
-          return this.internshipOfferService.getAllPublicOffers();
-        }
-      })
-    ).subscribe(offers => {
-      this.filteredOffers = offers;
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(term => {
+      this.performSearch(term, this.advancedSearchParams);
     });
   }
 
@@ -81,13 +77,61 @@ export class AllInternshipsComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Déclenché à chaque frappe au clavier
   onSearchInput(): void {
     this.searchTerms.next(this.searchText);
   }
 
-  openAdvancedSearch() {
-    // Implémenter l'ouverture d'un modal ou redirection
-    console.log('Advanced search clicked');
+  toggleAdvancedSearch() {
+    this.showAdvancedSearch = !this.showAdvancedSearch;
+    if (!this.showAdvancedSearch) {
+      this.advancedSearchParams = {};
+      this.performSearch(this.searchText, {});
+    }
   }
+
+  onAdvancedSearch(params: any) {
+    this.advancedSearchParams = params;
+    this.performSearch(this.searchText, params);
+  }
+
+  private performSearch(text: string, advancedParams: any) {
+    this.isLoading = true;
+    
+    // Vérifier si tous les critères sont vides
+    const isSearchEmpty = (!text || text.trim() === '') && 
+                         (!advancedParams.duration && 
+                          !advancedParams.educationLevel && 
+                          !advancedParams.requirements);
+  
+    if (isSearchEmpty) {
+      this.internshipOfferService.getAllPublicOffers().subscribe({
+        next: (offers) => {
+          this.filteredOffers = offers;
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error loading all offers:', err);
+          this.isLoading = false;
+        }
+      });
+      return;
+    }
+  
+    this.internshipOfferService.searchPublicOffers(
+      text || '', 
+      advancedParams.duration,
+      advancedParams.educationLevel,
+      advancedParams.requirements
+    ).subscribe({
+      next: (offers) => {
+        this.filteredOffers = offers;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Search error:', err);
+        this.isLoading = false;
+      }
+    });
+  }
+  
 }

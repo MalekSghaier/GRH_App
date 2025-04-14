@@ -18,10 +18,17 @@
         placeholder="Rechercher un poste, entreprise ou lieu..."
         aria-label="Rechercher des offres de stage"
       >
-      <button class="advanced-search-btn" (click)="openAdvancedSearch()">
-        <i class="fas fa-sliders-h"></i> Recherche avancée
+      <button 
+        class="advanced-search-btn" 
+        (click)="toggleAdvancedSearch()"
+        [class.active]="showAdvancedSearch"
+      >
+      <i class="fas fa-sliders-h"></i>
+      {{ showAdvancedSearch ? 'Masquer' : 'Recherche avancée' }}
       </button>
     </div>
+
+    <app-advanced-search-offers *ngIf="showAdvancedSearch"(searchCriteria)="onAdvancedSearch($event)"></app-advanced-search-offers>
   </div>
 
   <div *ngIf="isLoading" class="loading-spinner">

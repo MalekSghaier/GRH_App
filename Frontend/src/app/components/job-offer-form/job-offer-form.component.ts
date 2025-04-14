@@ -40,8 +40,10 @@ export class JobOfferFormComponent implements OnInit {
     'Bac',
     'Bac+2',
     'Bac+3',
-    'Bac+5',
-    'Doctorat'
+    'Licence',
+    'Master',
+    'Ingénieur',
+    'Doctorat',
   ];
 
   constructor(

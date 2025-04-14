@@ -68,22 +68,19 @@ import { InternshipOffer } from 'src/schemas/internship-offer.schema';
   }
 
   @Get('public/search')
-async publicSearchOffers(
-  @Query('query') query: string,
-  @Query('location') location?: string,
-  @Query('duration') duration?: number,
-  @Query('educationLevel') educationLevel?: string
-): Promise<InternshipOffer[]> {
-  if (!query || query.trim() === '') {
-    return this.internshipOffersService.findAll();
+  async publicSearchOffers(
+    @Query('query') query: string,
+    @Query('duration') duration?: number,
+    @Query('educationLevel') educationLevel?: string,
+    @Query('requirements') requirements?: string
+  ): Promise<InternshipOffer[]> {
+    return this.internshipOffersService.publicSearchOffers(
+      query || '',
+      duration,
+      educationLevel,
+      requirements
+    );
   }
-  return this.internshipOffersService.publicSearchOffers(
-    query, 
-    location,
-    duration,
-    educationLevel
-  );
-}
 @Get('public/all')
 async getAllPublicOffers(): Promise<InternshipOffer[]> {
   return this.internshipOffersService.findAll();
