@@ -1,54 +1,105 @@
 <div class="advanced-search-container">
-    <form class="advanced-search-form">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="duration">Durée (mois)</label>
-          <input 
-            type="number" 
-            id="duration" 
-            [(ngModel)]="searchParams.duration" 
-            name="duration"
-            min="1"
-            max="12"
-            (input)="onFieldChange()"
-            class="form-control"
-          >
-        </div>
+    <div class="search-options">
+      <button 
+        class="search-option-btn" 
+        [class.active]="activeOption === 'duration'"
+        (click)="toggleOption('duration')"
+      >
+        <i class="fas fa-calendar-alt"></i> Durée de stage
+      </button>
+      
+      <button 
+        class="search-option-btn" 
+        [class.active]="activeOption === 'education'"
+        (click)="toggleOption('education')"
+      >
+        <i class="fas fa-graduation-cap"></i> Niveau d'étude
+      </button>
+      
+      <button 
+        class="search-option-btn" 
+        [class.active]="activeOption === 'requirements'"
+        (click)="toggleOption('requirements')"
+      >
+        <i class="fas fa-tasks"></i> Exigences
+      </button>
+    </div>
   
-        <div class="form-group">
-          <label for="educationLevel">Niveau d'études</label>
-          <select 
-            id="educationLevel" 
-            [(ngModel)]="searchParams.educationLevel" 
-            name="educationLevel"
-            (change)="onFieldChange()"
-            class="form-control"
-          >
-            <option value="">Tous niveaux</option>
-            <option *ngFor="let level of educationLevels" [value]="level">{{ level }}</option>
-          </select>
-        </div>
-
-        <div class="form-group full-width">
-            <label for="requirements">Exigences (mots-clés)</label>
-            <input 
-              type="text" 
-              id="requirements" 
-              [(ngModel)]="searchParams.requirements" 
-              name="requirements"
-              (input)="onFieldChange()"
-              class="form-control"
-              placeholder="Compétences, technologies,.."
-            >
-          </div>
-      </div>
-  
-
-  
-      <div class="form-actions">
-        <button type="button" class="btn-reset" (click)="resetForm()">
-          <i class="fas fa-undo"></i> Réinitialiser
+    <!-- Champ Durée -->
+    <div class="search-field" *ngIf="activeOption === 'duration'">
+      <label for="duration">Durée (mois)</label>
+      <div class="input-with-clear">
+        <input
+          type="number"
+          id="duration"
+          [(ngModel)]="searchParams.duration"
+          name="duration"
+          min="1"
+          max="12"
+          (input)="onFieldChange()"
+          placeholder="Ex: 4"
+          [disabled]="searchParams.duration !== null"
+        >
+        <button 
+          *ngIf="searchParams.duration !== null"
+          class="clear-btn"
+          (click)="clearField('duration')"
+        >
+          <i class="fas fa-times"></i>
         </button>
       </div>
-    </form>
+    </div>
+  
+    <!-- Champ Niveau d'étude -->
+    <div class="search-field" *ngIf="activeOption === 'education'">
+      <label for="educationLevel">Niveau d'études</label>
+      <div class="input-with-clear">
+        <select
+          id="educationLevel"
+          [(ngModel)]="searchParams.educationLevel"
+          name="educationLevel"
+          (change)="onFieldChange()"
+          [disabled]="searchParams.educationLevel !== ''"
+        >
+          <option value="">Sélectionnez un niveau</option>
+          <option *ngFor="let level of educationLevels" [value]="level">{{ level }}</option>
+        </select>
+        <button 
+          *ngIf="searchParams.educationLevel !== ''"
+          class="clear-btn"
+          (click)="clearField('educationLevel')"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+  
+    <!-- Champ Exigences -->
+    <div class="search-field" *ngIf="activeOption === 'requirements'">
+      <label for="requirements">Exigences (mots-clés)</label>
+      <div class="input-with-clear">
+        <input
+          type="text"
+          id="requirements"
+          [(ngModel)]="searchParams.requirements"
+          name="requirements"
+          (input)="onFieldChange()"
+          placeholder="Compétences, technologies..."
+          [disabled]="searchParams.requirements !== ''"
+        >
+        <button 
+          *ngIf="searchParams.requirements !== ''"
+          class="clear-btn"
+          (click)="clearField('requirements')"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+  
+    <div class="form-actions" *ngIf="activeOption">
+      <button type="button" class="btn-reset" (click)="resetForm()">
+        <i class="fas fa-undo"></i> Réinitialiser
+      </button>
+    </div>
   </div>

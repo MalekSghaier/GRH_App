@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -13,6 +13,9 @@ import { Subject } from 'rxjs';
 })
 export class AdvancedSearchOffersComponent implements OnInit {
   @Output() searchCriteria = new EventEmitter<any>();
+  private destroy$ = new Subject<void>();
+  
+  activeOption: 'duration' | 'education' | 'requirements' | null = null;
   
   searchParams = {
     duration: null as number | null,
@@ -25,7 +28,6 @@ export class AdvancedSearchOffersComponent implements OnInit {
     'Bac+2',
     'Bac+3',
     'Licence',
-    'Ingénieur',
     'Master',
     'Doctorat'
   ];
@@ -34,11 +36,32 @@ export class AdvancedSearchOffersComponent implements OnInit {
 
   ngOnInit() {
     this.searchTerms.pipe(
-      debounceTime(500),
+      takeUntil(this.destroy$),
+      debounceTime(300),
       distinctUntilChanged()
     ).subscribe(() => {
       this.emitSearch();
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  toggleOption(option: 'duration' | 'education' | 'requirements') {
+    this.activeOption = this.activeOption === option ? null : option;
+  }
+
+  clearField(field: 'duration' | 'educationLevel' | 'requirements') {
+    if (field === 'duration') {
+      this.searchParams.duration = null;
+    } else if (field === 'educationLevel') {
+      this.searchParams.educationLevel = '';
+    } else {
+      this.searchParams.requirements = '';
+    }
+    this.onFieldChange();
   }
 
   onFieldChange() {
@@ -51,10 +74,10 @@ export class AdvancedSearchOffersComponent implements OnInit {
     if (this.searchParams.duration !== null && this.searchParams.duration !== undefined) {
       cleanedParams.duration = this.searchParams.duration;
     }
-    if (this.searchParams.educationLevel.trim()) {
+    if (this.searchParams.educationLevel?.trim()) {
       cleanedParams.educationLevel = this.searchParams.educationLevel.trim();
     }
-    if (this.searchParams.requirements.trim()) {
+    if (this.searchParams.requirements?.trim()) {
       cleanedParams.requirements = this.searchParams.requirements.trim();
     }
 
@@ -67,6 +90,8 @@ export class AdvancedSearchOffersComponent implements OnInit {
       educationLevel: '',
       requirements: ''
     };
-    this.emitSearch();
+    this.searchTerms.next();
+    window.location.reload()
+    
   }
 }
