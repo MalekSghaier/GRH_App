@@ -119,8 +119,8 @@
 .advanced-search-btn {
   padding: 12px 20px;
   background-color: #f5f5f5;
-  color: #333;
-  border: none;
+  color: #3C91E6;
+  border: 2px solid #3C91E6; /* <- ICI le contour bleu */
   border-radius: 30px;
   cursor: pointer;
   font-weight: 500;
@@ -131,7 +131,7 @@
 }
 
 .advanced-search-btn:hover {
-  background-color: #e0e0e0;
+  background-color: #ebeaea;
 }
 
 .loading-spinner {

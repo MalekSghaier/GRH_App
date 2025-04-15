@@ -106,7 +106,7 @@
 }
 
 .btn-reset {
-  background: #f56565;
+  background: #4a9ef1;
   color: white;
   border: none;
   border-radius: 8px;
@@ -120,7 +120,7 @@
 }
 
 .btn-reset:hover {
-  background: #e53e3e;
+  background: rgb(111, 183, 231);
 }
 
 .btn-reset i {

@@ -91,7 +91,8 @@ export class AdvancedSearchOffersComponent implements OnInit {
       requirements: ''
     };
     this.searchTerms.next();
-    window.location.reload()
     
   }
+
+  
 }
