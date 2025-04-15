@@ -29,6 +29,7 @@ export class AdvancedSearchOffersComponent implements OnInit {
     'Bac+3',
     'Licence',
     'Master',
+    'Ingénieur',
     'Doctorat'
   ];
 
@@ -91,6 +92,7 @@ export class AdvancedSearchOffersComponent implements OnInit {
       requirements: ''
     };
     this.searchTerms.next();
+    window.location.reload()
     
   }
 
