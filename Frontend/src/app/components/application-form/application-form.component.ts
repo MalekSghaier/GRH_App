@@ -89,16 +89,33 @@ export class ApplicationFormComponent {
     this.applicationsService.createApplication(formData).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.snackBar.open('Votre candidature a été soumise avec succès!', 'Fermer', {
-          duration: 5000
+        this.toastr.success('Votre candidature a été soumise avec succès!', 'Succès', {
+          timeOut: 1500,
+          progressBar: true
         });
         this.dialogRef.close(true);
       },
       error: (error) => {
         this.isLoading = false;
-        this.snackBar.open('Une erreur est survenue. Veuillez réessayer.', 'Fermer', {
-          duration: 5000
-        });
+        if (error.error?.message) {
+          // Afficher le message spécifique retourné par le backend
+          if (Array.isArray(error.error.message)) {
+            error.error.message.forEach((msg: string) =>             this.toastr.error(error.error.message, 'Erreur', {
+              timeOut: 1500,
+              progressBar: true
+            }));
+          } else {
+            this.toastr.error(error.error.message, 'Erreur', {
+              timeOut: 1500,
+              progressBar: true
+            });
+          }
+        } else {
+          this.toastr.error('Une erreur est survenue. Veuillez réessayer.', 'Erreur', {
+            timeOut: 1500,
+            progressBar: true
+          });
+        }
         console.error('Error submitting application:', error);
       }
     });
