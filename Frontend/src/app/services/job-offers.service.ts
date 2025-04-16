@@ -40,6 +40,10 @@ export class JobOffersService {
     return this.http.post<JobOffer>(this.apiUrl, offerData, { headers });
   }
 
+  getAllOffers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}`);
+  }
+
   getJobOffers(): Observable<JobOffer[]> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);

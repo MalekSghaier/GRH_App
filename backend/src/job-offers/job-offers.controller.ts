@@ -43,7 +43,6 @@ import { JobOfferDocument } from 'src/schemas/job-offer.schema';
     }
   
     @Get()
-    @UseGuards(AuthGuard('jwt'))
     findAll() {
       return this.jobOffersService.findAll();
     }

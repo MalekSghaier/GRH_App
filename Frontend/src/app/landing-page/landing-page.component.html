@@ -192,10 +192,51 @@
 <section id="emplois" class="section">
   <div class="container">
     <div class="section-header">
-    <h2>Nos <span>offres d'emploi</span> </h2>
-   </div> 
+      <h2>Nos <span>offres d'emploi</span></h2>
+    </div>
+    
+    <div *ngIf="isLoading" class="loading-spinner">
+      Chargement des offres...
+    </div>
 
-   </div>
+    <div *ngIf="!isLoading && internshipOffers.length === 0" class="no-offers">
+      Aucune offre de stage disponible pour le moment.
+    </div>
+
+    <div class="offers-grid">
+      <div *ngFor="let offer of workOffers.slice(0, 3)" class="offer-card">
+        <div class="offer-header">
+          <h3>{{ offer.title }}</h3>
+          <span class="company">{{ offer.company }}</span>
+          <span class="location">{{ offer.location }}</span>
+        </div>
+        
+        <div class="offer-details">
+          <p><strong>Expérience exigée: </strong> {{ offer.experienceRequired }} ans</p>
+          <p><strong>Niveau requis: </strong> {{ offer.educationLevel }}</p>
+          <p><strong>Compétances requises: </strong>{{ offer.jobRequirements | truncate:150 }}</p>
+
+        </div>
+        
+        <div class="offer-description">
+          <p>{{ offer.description | truncate:150 }}</p>
+
+        </div>
+        
+        <div class="offer-actions">
+          <button (click)="openApplicationDialog(offer)" class="btn-apply">Postuler</button>
+          <a [routerLink]="['/offers', offer._id]" class="btn-details">Voir détails</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Bouton "Plus d'offres" -->
+    <div *ngIf="!isLoading && internshipOffers.length > 3" class="more-offers">
+      <a routerLink="/all-internships" fragment="top" class="btn-more">
+        Plus d'offres...
+      </a>
+    </div>
+  </div>
 </section>
 
 <section id="contact" class="section">

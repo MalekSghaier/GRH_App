@@ -475,6 +475,7 @@ body {
     padding-bottom: 1rem;
   }
 /* Offres de stage section */
+#emplois.section,
 #stages.section {
   padding: 2px 0 70px; /* top | horizontal | bottom */
   background-color: #fff; /* Ajoutez une couleur de fond si nécessaire */

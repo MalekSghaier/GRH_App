@@ -5,6 +5,7 @@ import { InternshipOffersService } from '../services/internship-offers.service';
 import { TruncatePipe } from '../pipes/truncate.pipe';
 import { MatDialog } from '@angular/material/dialog';
 import { ApplicationFormComponent } from '../components/application-form/application-form.component';
+import { JobOffersService } from '../services/job-offers.service';
 
 
 @Component({
@@ -19,6 +20,9 @@ export class LandingPageComponent implements OnInit {
   showAllOffers = false;
   isScrolled = false;
   internshipOffers: any[] = [];
+  workOffers: any[] = [];
+  displayedworkOffers: any[] = [];
+
   isLoading = true;
   @HostListener('window:scroll')
   onWindowScroll() {
@@ -34,8 +38,10 @@ export class LandingPageComponent implements OnInit {
     "Réfléchie et novatrice",
     "Ambitieuse et technologique"
   ];
-  constructor(private internshipOfferService: InternshipOffersService,
-    private dialog: MatDialog
+  constructor(
+    private internshipOfferService: InternshipOffersService,
+    private dialog: MatDialog,
+    private jobOffersService :JobOffersService
 
   ) {}
 
@@ -46,6 +52,7 @@ export class LandingPageComponent implements OnInit {
 
   ngOnInit() {
     this.loadInternshipOffers();
+    this.loadWorkOffers();
     setTimeout(() => {
       this.startAnimation();
     }, 2000);
@@ -56,6 +63,20 @@ export class LandingPageComponent implements OnInit {
       next: (offers) => {
         this.internshipOffers = offers;
         this.displayedOffers = this.showAllOffers ? offers : offers.slice(0, 3);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading offers:', err);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  loadWorkOffers() {
+    this.jobOffersService.getAllOffers().subscribe({
+      next: (offers) => {
+        this.workOffers = offers;
+        this.displayedworkOffers = this.showAllOffers ? offers : offers.slice(0, 3);
         this.isLoading = false;
       },
       error: (err) => {
