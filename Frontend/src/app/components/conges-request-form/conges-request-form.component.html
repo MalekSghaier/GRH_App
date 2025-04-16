@@ -3,10 +3,7 @@
   <form [formGroup]="congeForm" class="conge-form">
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Date de début</mat-label>
-      <input matInput 
-             [matDatepicker]="startPicker" 
-             formControlName="startDate" 
-             required
+      <input matInput [matDatepicker]="startPicker" formControlName="startDate" required
              [value]="congeForm.get('startDate')?.value | date: 'dd/MM/yyyy'">
       <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
       <mat-datepicker #startPicker></mat-datepicker>

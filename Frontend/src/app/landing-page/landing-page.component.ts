@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { InternshipOffersService } from '../services/internship-offers.service';
 import { TruncatePipe } from '../pipes/truncate.pipe';
+import { MatDialog } from '@angular/material/dialog';
+import { ApplicationFormComponent } from '../components/application-form/application-form.component';
 
 
 @Component({
@@ -32,7 +34,10 @@ export class LandingPageComponent implements OnInit {
     "Réfléchie et novatrice",
     "Ambitieuse et technologique"
   ];
-  constructor(private internshipOfferService: InternshipOffersService) {}
+  constructor(private internshipOfferService: InternshipOffersService,
+    private dialog: MatDialog
+
+  ) {}
 
   displayText = this.adjectives[0]; // Initialisé directement avec le premier texte
   currentIndex = 0;
@@ -128,5 +133,20 @@ export class LandingPageComponent implements OnInit {
     if (this.animationInterval) {
       clearInterval(this.animationInterval);
     }
+  }
+
+  openApplicationDialog(offer: any): void {
+    const dialogRef = this.dialog.open(ApplicationFormComponent, {
+      width: '500px',
+      data: { offer: offer },
+      disableClose: true
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Optionnel: Rafraîchir les données ou afficher un message
+        console.log('Application submitted successfully');
+      }
+    });
   }
 }

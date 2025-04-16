@@ -1,0 +1,25 @@
+/* application-form.component.css */
+.form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .form-row > * {
+    flex: 1;
+  }
+  
+  .file-upload {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .file-upload label {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+  
+  mat-spinner {
+    margin: 0 auto;
+  }

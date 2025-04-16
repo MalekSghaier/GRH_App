@@ -35,7 +35,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token'); // Supprimez le token
-    this.router.navigate(['/login']); // Redirigez vers la page de connexion
+    this.router.navigate(['/landing-page']); // Redirigez vers la landing page
   }
 
 

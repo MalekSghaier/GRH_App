@@ -53,4 +53,20 @@ export class InternshipApplicationsService {
       { headers }
     );
   }
+
+  // Dans internship-applications.service.ts
+createApplication(applicationData: any): Observable<any> {
+  const formData = new FormData();
+  
+  // Ajoutez tous les champs au FormData
+  Object.keys(applicationData).forEach(key => {
+    if (key === 'cv' || key === 'coverLetter') {
+      formData.append(key, applicationData[key]);
+    } else {
+      formData.append(key, applicationData[key]);
+    }
+  });
+
+  return this.http.post(this.apiUrl, formData);
+}
 }

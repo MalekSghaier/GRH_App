@@ -9,7 +9,6 @@ import { extname } from 'path';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('internship-applications')
-@UseGuards(AuthGuard('jwt')) // Protection JWT + Vérification du rôle SuperAdmin
 export class InternshipApplicationsController {
   constructor(
     private readonly internshipApplicationsService: InternshipApplicationsService,

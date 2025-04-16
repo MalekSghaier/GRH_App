@@ -1,84 +1,116 @@
-import { Component } from '@angular/core';
+// application-form.component.ts
+import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { InternshipApplicationsService } from '../../services/internship-applications.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 
+
+// Définir le format de date personnalisé
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY'
+  },
+};
 @Component({
   selector: 'app-application-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  template: `
-    <div class="form-container">
-      <h2>Postuler à l'offre {{ offerId }}</h2>
-      <form (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label for="fullName">Nom complet</label>
-          <input type="text" id="fullName" [(ngModel)]="application.fullName" name="fullName" required>
-        </div>
-        
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" [(ngModel)]="application.email" name="email" required>
-        </div>
-        
-        <div class="form-group">
-          <label for="message">Lettre de motivation</label>
-          <textarea id="message" [(ngModel)]="application.message" name="message" required></textarea>
-        </div>
-        
-        <button type="submit" class="btn-submit">Envoyer ma candidature</button>
-      </form>
-    </div>
-  `,
-  styles: [`
-    .form-container {
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-    .btn-submit {
-      background: #6c63ff;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  `]
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatSnackBarModule,
+    
+  ],
+  templateUrl: './application-form.component.html',
+  styleUrls: ['./application-form.component.css'],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+  ]
 })
 export class ApplicationFormComponent {
-  offerId: string;
-  application = {
-    fullName: '',
-    email: '',
-    message: ''
-  };
+  applicationForm: FormGroup;
+  isLoading = false;
 
-  constructor(private route: ActivatedRoute, private router: Router) {
-    this.offerId = this.route.snapshot.paramMap.get('id') || '';
+  constructor(
+    private fb: FormBuilder,
+    private dialogRef: MatDialogRef<ApplicationFormComponent>,
+    private applicationsService: InternshipApplicationsService,
+    private snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    this.applicationForm = this.fb.group({
+      fullName: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      birthDate: ['', [Validators.required]],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{8,10}$/)]],
+      company: [data.offer.company, [Validators.required]],
+      position: [data.offer.title, [Validators.required]],
+      cv: ['', [Validators.required]],
+      coverLetter: ['', [Validators.required]]
+    });
   }
 
   onSubmit() {
-    // Ici vous ajouterez la logique d'envoi au backend
-    console.log('Candidature envoyée:', this.application);
-    alert('Votre candidature a été soumise avec succès!');
-    this.router.navigate(['/landing-page']);
+    if (this.applicationForm.invalid) {
+      return;
+    }
+
+    this.isLoading = true;
+    
+    const formData = this.applicationForm.value;
+    formData.birthDate = new Date(formData.birthDate).toISOString();
+
+    this.applicationsService.createApplication(formData).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.snackBar.open('Votre candidature a été soumise avec succès!', 'Fermer', {
+          duration: 5000
+        });
+        this.dialogRef.close(true);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.snackBar.open('Une erreur est survenue. Veuillez réessayer.', 'Fermer', {
+          duration: 5000
+        });
+        console.error('Error submitting application:', error);
+      }
+    });
+  }
+
+  onCancel() {
+    this.dialogRef.close(false);
+  }
+
+  onFileChange(event: any, field: string) {
+    const file = event.target.files[0];
+    if (file) {
+      this.applicationForm.patchValue({
+        [field]: file
+      });
+    }
   }
 }
