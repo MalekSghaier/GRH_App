@@ -30,6 +30,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ApplicationFormComponent } from './components/application-form/application-form.component';
 import { OfferDetailsComponent } from './components/offer-details/offer-details.component';
 import { AllInternshipsComponent } from './all-internships/all-internships.component';
+import { AllWorksComponent } from './all-works/all-works.component';
 
 
 
@@ -160,7 +161,12 @@ export const routes: Routes = [
     {
         path: 'all-internships',
         component: AllInternshipsComponent
-    }
+    },
+    {
+        path:'all-works',
+        component:AllWorksComponent
+    },
+    
 
 
 

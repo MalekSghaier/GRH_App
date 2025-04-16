@@ -1,0 +1,70 @@
+<div class="all-internships-container">
+    <div id="top"></div>
+    
+    <div class="header">
+      <div class="section-header">
+        <h1>Toutes nos <span>offres de stage</span></h1>
+      </div>
+      <a routerLink="/landing-page" class="back-link">← Retour à l'accueil</a>
+    </div>
+  
+    <!-- Barre de recherche -->
+    <div class="search-container">
+      <div class="search-bar">
+        <input 
+          type="text" 
+          [(ngModel)]="searchText" 
+          (input)="onSearchInput()" 
+          placeholder="Rechercher un poste, entreprise ou lieu..."
+          aria-label="Rechercher des offres de stage"
+        >
+        <button 
+        
+          class="advanced-search-btn" 
+          (click)="toggleAdvancedSearch()"
+          [class.active]="showAdvancedSearch"
+        >
+        <i class="fas fa-sliders-h"></i>
+        {{ showAdvancedSearch ? 'Masquer' : 'Recherche avancée' }}
+        </button>
+      </div>
+  
+      <app-advanced-search-offers *ngIf="showAdvancedSearch"(searchCriteria)="onAdvancedSearch($event)"></app-advanced-search-offers>
+    </div>
+  
+    <div *ngIf="isLoading" class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Chargement des offres...</p>
+    </div>
+  
+    <div *ngIf="!isLoading && filteredOffers.length === 0" class="no-offers">
+      <i class="fas fa-search"></i>
+      <h3>Aucune offre ne correspond à votre recherche</h3>
+      <p>Essayez avec d'autres termes ou consultez toutes nos offres disponibles.</p>
+      <button (click)="searchText = ''; loadAllInternshipOffers()">Afficher toutes les offres</button>
+    </div>
+  
+    <div class="offers-grid">
+      <div *ngFor="let offer of filteredOffers" class="offer-card">
+        <div class="offer-header">
+          <h3>{{ offer.title }}</h3>
+          <span class="company">{{ offer.company }}</span>
+          <span class="location">{{ offer.location }}</span>
+        </div>
+        
+        <div class="offer-details">
+          <p><strong>Durée: </strong> {{ offer.duration }} mois</p>
+          <p><strong>Niveau requis: </strong> {{ offer.educationLevel }}</p>
+        </div>
+        
+        <div class="offer-description">
+          <p>{{ offer.description | truncate:150 }}</p>
+        </div>
+        
+        <div class="offer-actions">
+          <button (click)="openApplicationDialog(offer)" class="btn-apply">Postuler</button>
+          <a [routerLink]="['/offers', offer._id]" class="btn-details">Voir détails</a>
+        </div>
+      </div>
+    </div>
+  </div>

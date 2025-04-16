@@ -108,4 +108,29 @@ export class JobOffersService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<JobOffer[]>(`${this.apiUrl}/search?query=${encodeURIComponent(query)}`, { headers });
   }
+
+    searchPublicOffers(
+      query: string,
+      duration?: number,
+      educationLevel?: string,
+      requirements?: string
+    ): Observable<JobOffer[]> {
+      console.log('Sending search with params:', {
+        query: query,
+        duration: duration,
+        educationLevel: educationLevel,
+        requirements: requirements
+      });
+    
+      let params = new HttpParams().set('query', query || '');
+      
+      if (duration) params = params.append('duration', duration.toString());
+      if (educationLevel) params = params.append('educationLevel', educationLevel);
+      if (requirements) params = params.append('requirements', requirements);
+      
+      return this.http.get<JobOffer[]>(
+        `${this.apiUrl}/public/search`,
+        { params }
+      );
+    }
 }
