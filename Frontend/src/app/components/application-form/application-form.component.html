@@ -1,5 +1,7 @@
 <!-- application-form.component.html -->
+<div class="container">
 <h2 mat-dialog-title>Postuler à l'offre: {{data.offer.title}}</h2>
+</div>
 <mat-dialog-content>
   <form [formGroup]="applicationForm" (ngSubmit)="onSubmit()">
     <div class="form-row">
@@ -63,7 +65,6 @@
         <label for="cv">CV (PDF uniquement)</label>
         <input type="file" id="cv" (change)="onFileChange($event, 'cv')" accept=".pdf" required>
         <mat-error *ngIf="applicationForm.get('cv')?.hasError('required')">
-          Un CV est obligatoire
         </mat-error>
       </div>
 
@@ -71,7 +72,6 @@
         <label for="coverLetter">Lettre de motivation (PDF uniquement)</label>
         <input type="file" id="coverLetter" (change)="onFileChange($event, 'coverLetter')" accept=".pdf" required>
         <mat-error *ngIf="applicationForm.get('coverLetter')?.hasError('required')">
-          Une lettre de motivation est obligatoire
         </mat-error>
       </div>
     </div>

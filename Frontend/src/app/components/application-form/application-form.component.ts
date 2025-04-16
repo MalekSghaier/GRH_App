@@ -12,6 +12,8 @@ import { InternshipApplicationsService } from '../../services/internship-applica
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { ToastrService } from 'ngx-toastr';
+
 
 
 // Définir le format de date personnalisé
@@ -59,6 +61,7 @@ export class ApplicationFormComponent {
     private dialogRef: MatDialogRef<ApplicationFormComponent>,
     private applicationsService: InternshipApplicationsService,
     private snackBar: MatSnackBar,
+    private toastr: ToastrService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.applicationForm = this.fb.group({

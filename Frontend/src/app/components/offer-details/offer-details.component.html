@@ -39,6 +39,6 @@
       <p>{{ offer.requirements }}</p>
     </div>
     <div class="container-btn-apply">
-    <a [routerLink]="['/apply', offer._id]" class="btn-apply">Postuler maintenant</a>
+    <a  (click)="openApplicationDialog(offer)" class="btn-apply">Postuler maintenant</a>
     </div>
   </div>

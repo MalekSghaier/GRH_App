@@ -509,6 +509,8 @@ body {
     display: flex;
     gap: 1rem;
     margin-top: 1.5rem;
+    text-align: center;
+    align-items: center;
   }
   
   .btn-apply {
@@ -518,6 +520,9 @@ body {
     border-radius: 4px;
     text-decoration: none;
     font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
   }
   
   .btn-details {

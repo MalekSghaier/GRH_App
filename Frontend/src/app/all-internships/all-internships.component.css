@@ -64,10 +64,13 @@
   .btn-apply {
     background: #3C91E6;
     color: white;
+    border-color: #3C91E6;
     padding: 0.5rem 1rem;
     border-radius: 4px;
     text-decoration: none;
     font-size: 0.9rem;
+    cursor: pointer;
+  
   }
   
   .btn-details {

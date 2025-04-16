@@ -137,7 +137,7 @@ export class LandingPageComponent implements OnInit {
 
   openApplicationDialog(offer: any): void {
     const dialogRef = this.dialog.open(ApplicationFormComponent, {
-      width: '500px',
+      width: '750px',
       data: { offer: offer },
       disableClose: true
     });

@@ -54,19 +54,35 @@ export class InternshipApplicationsService {
     );
   }
 
-  // Dans internship-applications.service.ts
+
+// Dans internship-applications.service.ts
 createApplication(applicationData: any): Observable<any> {
   const formData = new FormData();
   
-  // Ajoutez tous les champs au FormData
-  Object.keys(applicationData).forEach(key => {
-    if (key === 'cv' || key === 'coverLetter') {
-      formData.append(key, applicationData[key]);
-    } else {
-      formData.append(key, applicationData[key]);
-    }
-  });
+  // Conversion de la date en format ISO
+  const birthDate = new Date(applicationData.birthDate);
+  
+  // Ajout des champs avec vérification
+  formData.append('fullName', applicationData.fullName);
+  formData.append('email', applicationData.email.trim()); // Nettoyage de l'email
+  formData.append('birthDate', birthDate.toISOString());
+  formData.append('phone', applicationData.phone);
+  formData.append('company', applicationData.company);
+  formData.append('position', applicationData.position);
+  
+  // Fichiers
+  if (applicationData.cv) {
+    formData.append('cv', applicationData.cv, applicationData.cv.name);
+  }
+  if (applicationData.coverLetter) {
+    formData.append('coverLetter', applicationData.coverLetter, applicationData.coverLetter.name);
+  }
 
-  return this.http.post(this.apiUrl, formData);
+  return this.http.post(this.apiUrl, formData, {
+    headers: {
+      // Pas besoin de Content-Type, FormData le gère automatiquement
+    },
+    reportProgress: true // Optionnel: pour suivre la progression de l'upload
+  });
 }
 }

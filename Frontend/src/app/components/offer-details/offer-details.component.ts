@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { InternshipOffersService } from '../../services/internship-offers.service';
 import { RouterModule } from '@angular/router';
+import { ApplicationFormComponent } from '../application-form/application-form.component';
+import { MatDialog } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-offer-details',
@@ -16,7 +19,9 @@ export class OfferDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private offerService: InternshipOffersService
+    private offerService: InternshipOffersService,
+    private dialog: MatDialog
+
   ) {}
 
   ngOnInit() {
@@ -28,4 +33,19 @@ export class OfferDetailsComponent implements OnInit {
       });
     }
   }
+
+    openApplicationDialog(offer: any): void {
+      const dialogRef = this.dialog.open(ApplicationFormComponent, {
+        width: '750px',
+        data: { offer: offer },
+        disableClose: true
+      });
+    
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          // Optionnel: Rafraîchir les données ou afficher un message
+          console.log('Application submitted successfully');
+        }
+      });
+    }
 }

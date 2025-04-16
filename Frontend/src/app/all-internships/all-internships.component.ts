@@ -8,6 +8,9 @@ import { TruncatePipe } from '../pipes/truncate.pipe';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AdvancedSearchOffersComponent } from '../advanced-search-offers/advanced-search-offers.component';
+import { ApplicationFormComponent } from '../components/application-form/application-form.component';
+import { MatDialog } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-all-internships',
@@ -35,7 +38,9 @@ export class AllInternshipsComponent implements OnInit, OnDestroy {
 
   constructor(
     private internshipOfferService: InternshipOffersService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
+
   ) {}
 
   ngOnInit() {
@@ -118,6 +123,21 @@ export class AllInternshipsComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error('Search error:', err);
         this.isLoading = false;
+      }
+    });
+  }
+
+  openApplicationDialog(offer: any): void {
+    const dialogRef = this.dialog.open(ApplicationFormComponent, {
+      width: '750px',
+      data: { offer: offer },
+      disableClose: true
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Optionnel: Rafraîchir les données ou afficher un message
+        console.log('Application submitted successfully');
       }
     });
   }
