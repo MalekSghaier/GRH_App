@@ -76,7 +76,6 @@ import { JobOfferDocument } from 'src/schemas/job-offer.schema';
     }
   
     @Get(':id')
-    @UseGuards(AuthGuard('jwt'))
     findOne(@Param('id') id: string) {
       if (!Types.ObjectId.isValid(id)) {
         throw new BadRequestException('Invalid ObjectId');

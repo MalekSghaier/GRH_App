@@ -5,7 +5,7 @@
   <a routerLink="/all-internships" class="back-link">← Retour à l'accueil</a>
 </div>
 <div class="offer-details-container" *ngIf="offer">
-    <h2>{{ offer.title }}</h2>
+  <h2 class="offer-title"><span>Détails du stage:</span> {{ offer.title }}</h2>
     
     <div class="details-grid">
       <div class="detail-item">
@@ -15,7 +15,7 @@
       
       <div class="detail-item">
         <span class="detail-label">Localisation :</span>
-        <span class="detail-value">{{ offer.location }}, France</span>
+        <span class="detail-value">{{ offer.location }}</span>
       </div>
       
       <div class="detail-item">

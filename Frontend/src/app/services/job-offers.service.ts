@@ -78,6 +78,10 @@ export class JobOffersService {
     return this.http.get<JobOffer>(`${this.apiUrl}/${id}`, { headers });
   }
 
+  getOfferDetails(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  }
+
   updateJobOffer(id: string, offerData: Partial<JobOffer>): Observable<JobOffer> {
     const token = localStorage.getItem('token');
     if (!token) {

@@ -1,7 +1,7 @@
 .offer-details-container {
     max-width: 500px;
-    margin: 1rem auto;
-    padding: 1rem;
+    margin: 2rem auto;
+    padding: 2rem;
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -60,15 +60,7 @@
   position: relative; /* Pour positionner le lien de retour */
 }
 
-.offer-title {
-  color: #3C91E6;
-  text-align: center;
-  font-size: 25px;
-}
 
-.offer-title span {
-  color: #353535;
-}
 .section-header h1 span {
     color: #3C91E6;
 }
@@ -80,6 +72,15 @@
   padding-top: 40px;
 }
 
+.offer-title {
+  color: #3C91E6;
+  text-align: center;
+  font-size: 25px;
+}
+
+.offer-title span {
+  color: #353535;
+}
   .section:last-child {
     text-align: center;
   }

@@ -1,0 +1,47 @@
+<div class="header">
+    <div class="section-header">
+      <h1>  <span> </span></h1>
+    </div>
+    <a routerLink="/all-works" class="back-link">← Retour à l'accueil</a>
+  </div>
+  <div class="offer-details-container" *ngIf="offer">
+
+      <h2 class="offer-title"><span>Détails du poste:</span> {{ offer.title }}</h2>
+      <div class="details-grid">
+        <div class="detail-item">
+          <span class="detail-label">Compagnie :</span>
+          <span class="detail-value">{{ offer.company }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <span class="detail-label">Localisation :</span>
+          <span class="detail-value">{{ offer.location }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <span class="detail-label">Expérience exigée :</span>
+          <span class="detail-value">{{ offer.experienceRequired }} ans</span>
+        </div>
+        
+        <div class="detail-item">
+          <span class="detail-label">Niveau requis :</span>
+          <span class="detail-value">{{ offer.educationLevel }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Compétances requises :</span>
+            <span class="detail-value">{{ offer.jobRequirements }}</span>
+          </div>
+
+      </div>
+      
+      <div class="section">
+        <h3>Description du poste</h3>
+        <p>{{ offer.description }}</p>
+      </div>
+      
+
+      <div class="container-btn-apply">
+      <a  (click)="openApplicationDialog(offer)" class="btn-apply">Postuler maintenant</a>
+      </div>
+    </div>

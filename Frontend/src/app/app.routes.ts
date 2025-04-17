@@ -31,6 +31,7 @@ import { ApplicationFormComponent } from './components/application-form/applicat
 import { OfferDetailsComponent } from './components/offer-details/offer-details.component';
 import { AllInternshipsComponent } from './all-internships/all-internships.component';
 import { AllWorksComponent } from './all-works/all-works.component';
+import { WorkDetailsComponent } from './components/work-details/work-details.component';
 
 
 
@@ -159,6 +160,10 @@ export const routes: Routes = [
         component: OfferDetailsComponent
     },
     {
+        path: 'work/:id',
+        component: WorkDetailsComponent
+    },
+    {
         path: 'all-internships',
         component: AllInternshipsComponent
     },
@@ -166,7 +171,7 @@ export const routes: Routes = [
         path:'all-works',
         component:AllWorksComponent
     },
-    
+
 
 
 
