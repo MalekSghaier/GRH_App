@@ -43,6 +43,12 @@ export class AllWorksComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+
+      // Vérifier si on doit afficher la recherche avancée
+  if (localStorage.getItem('showAdvancedSearch') === 'true') {
+    this.showAdvancedSearch = true;
+    localStorage.removeItem('showAdvancedSearch'); // Nettoyer
+  }
     this.loadAllInternshipOffers();
     
     this.router.events.pipe(

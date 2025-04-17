@@ -14,6 +14,8 @@ import { Subject } from 'rxjs';
 export class AdvancedSearchOffersComponent implements OnInit {
   @Output() searchCriteria = new EventEmitter<any>();
   private destroy$ = new Subject<void>();
+  isJobRequirementsDisabled = false;
+  private jobRequirementsTimer: any;
   
   activeOption: 'duration' | 'education' | 'requirements' | null = null;
   
@@ -46,6 +48,9 @@ export class AdvancedSearchOffersComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    if (this.jobRequirementsTimer) {
+      clearTimeout(this.jobRequirementsTimer);
+    }
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -66,6 +71,16 @@ export class AdvancedSearchOffersComponent implements OnInit {
   }
 
   onFieldChange() {
+    this.isJobRequirementsDisabled = false;
+    // Annule le timer précédent s'il existe
+    if (this.jobRequirementsTimer) {
+      clearTimeout(this.jobRequirementsTimer);
+    }
+        // Configure un nouveau timer
+        this.jobRequirementsTimer = setTimeout(() => {
+          this.isJobRequirementsDisabled = true;
+          this.searchTerms.next();
+        }, 3000); // 3 secondes
     this.searchTerms.next();
   }
 
@@ -86,6 +101,8 @@ export class AdvancedSearchOffersComponent implements OnInit {
   }
 
   resetForm() {
+    localStorage.setItem('showAdvancedSearch', 'true');
+
     this.searchParams = {
       duration: null,
       educationLevel: '',

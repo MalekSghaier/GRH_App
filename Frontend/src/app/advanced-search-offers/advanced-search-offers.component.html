@@ -85,7 +85,7 @@
           name="requirements"
           (input)="onFieldChange()"
           placeholder="Compétences, technologies..."
-          [disabled]="searchParams.requirements !== ''"
+          [disabled]="isJobRequirementsDisabled"
         >
         <button 
           *ngIf="searchParams.requirements !== ''"

@@ -56,7 +56,7 @@ export class AdvancedSearchOffersWorkComponent implements OnInit{
     if (this.jobRequirementsTimer) {
       clearTimeout(this.jobRequirementsTimer);
     }
-    
+
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -107,13 +107,14 @@ export class AdvancedSearchOffersWorkComponent implements OnInit{
     this.searchCriteria.emit(cleanedParams);
   }
   resetForm() {
-    this.searchParams = {
-      experienceRequired: null,
-      educationLevel: '',
-      jobRequirements: ''
-    };
-    this.searchTerms.next();
-    window.location.reload();
-    
+    localStorage.setItem('showAdvancedSearch', 'true');
+  this.searchParams = {
+    experienceRequired: null,
+    educationLevel: '',
+    jobRequirements: ''
+  };
+  this.searchTerms.next();
+  window.location.reload()
+  
   }
 }
