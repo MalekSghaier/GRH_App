@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { ApplicationFormComponent } from '../application-form/application-form.component';
 import { MatDialog } from '@angular/material/dialog';
 import { JobOffersService } from '../../services/job-offers.service';
+import { ApplicationWorkFormComponent } from '../application-work-form/application-work-form.component';
 
 @Component({
   selector: 'app-work-details',
@@ -46,4 +47,19 @@ export class WorkDetailsComponent implements OnInit{
         }
       });
     }
+
+      openApplicationWorkDialog(offer: any): void {
+        const dialogRef = this.dialog.open(ApplicationWorkFormComponent, {
+          width: '750px',
+          data: { offer: offer },
+          disableClose: true
+        });
+      
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            // Optionnel: Rafraîchir les données ou afficher un message
+            console.log('Application submitted successfully');
+          }
+        });
+      }
 }

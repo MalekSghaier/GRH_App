@@ -1,0 +1,58 @@
+/* application-form.component.css */
+.form-row {
+    display: flex;
+    padding: 5px 0;
+    gap: 10px;
+    margin-bottom: 0px;
+
+  }
+
+  .mat-dialog-actions {
+    padding: 1px 0 0 0;
+  }
+  
+  .form-row > * {
+    flex: 1;
+  }
+  
+  .file-upload {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .container h2{
+    text-align: center;
+    color: rgba(0, 0, 0, 0.6);
+  }
+  
+  .file-upload label {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+  
+  mat-spinner {
+    margin: 0 auto;
+  }
+
+  ::ng-deep .toast-success {
+    font-size: 16px;
+    color: green;
+    margin-top: 1px; 
+  }
+  ::ng-deep .toast-error {
+    font-size: 16px; 
+    color: rgb(247, 95, 95);
+    margin-top: 1px; 
+  }
+.toast-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border-left: 4px solid #bee5eb;
+}
+
+.toast-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border-left: 4px solid #ffeeba;
+}

@@ -1,4 +1,3 @@
-// application-form.component.ts
 import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,15 +7,13 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { InternshipApplicationsService } from '../../services/internship-applications.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { ToastrService } from 'ngx-toastr';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { WorkApplicationsService } from '../../services/work-applications.service';
 
-
-
-// Définir le format de date personnalisé
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -28,8 +25,9 @@ export const MY_DATE_FORMATS = {
     monthYearA11yLabel: 'MMMM YYYY'
   },
 };
+
 @Component({
-  selector: 'app-application-form',
+  selector: 'app-application-work-form',
   standalone: true,
   imports: [
     CommonModule,
@@ -42,25 +40,24 @@ export const MY_DATE_FORMATS = {
     MatButtonModule,
     MatFormFieldModule,
     MatSnackBarModule,
-    
+    MatProgressSpinnerModule
   ],
-  templateUrl: './application-form.component.html',
-  styleUrls: ['./application-form.component.css'],
+  templateUrl: './application-work-form.component.html',
+  styleUrls: ['./application-work-form.component.css'],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ]
 })
-export class ApplicationFormComponent {
+export class ApplicationWorkFormComponent {
   applicationForm: FormGroup;
   isLoading = false;
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<ApplicationFormComponent>,
-    private applicationsService: InternshipApplicationsService,
-    private snackBar: MatSnackBar,
+    private dialogRef: MatDialogRef<ApplicationWorkFormComponent>,
+    private workApplicationsService: WorkApplicationsService,
     private toastr: ToastrService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -69,6 +66,7 @@ export class ApplicationFormComponent {
       email: ['', [Validators.required, Validators.email]],
       birthDate: ['', [Validators.required]],
       phone: ['', [Validators.required, Validators.pattern(/^\d{8,10}$/)]],
+      availability: ['', [Validators.required]],
       company: [data.offer.company, [Validators.required]],
       position: [data.offer.title, [Validators.required]],
       cv: ['', [Validators.required]],
@@ -80,44 +78,42 @@ export class ApplicationFormComponent {
     if (this.applicationForm.invalid) {
       return;
     }
-
+  
     this.isLoading = true;
     
-    const formData = this.applicationForm.value;
-    formData.birthDate = new Date(formData.birthDate).toISOString();
-
-    this.applicationsService.createApplication(formData).subscribe({
+    const formData = new FormData();
+    formData.append('fullName', this.applicationForm.get('fullName')?.value);
+    formData.append('email', this.applicationForm.get('email')?.value);
+    formData.append('birthDate', new Date(this.applicationForm.get('birthDate')?.value).toISOString());
+    formData.append('phone', this.applicationForm.get('phone')?.value);
+    formData.append('availability', this.applicationForm.get('availability')?.value);
+    formData.append('company', this.applicationForm.get('company')?.value);
+    formData.append('position', this.applicationForm.get('position')?.value);
+    
+    // Ajout des fichiers
+    const cvFile = this.applicationForm.get('cv')?.value;
+    const coverLetterFile = this.applicationForm.get('coverLetter')?.value;
+    
+    if (cvFile) {
+      formData.append('cv', cvFile, cvFile.name);
+    }
+    
+    if (coverLetterFile) {
+      formData.append('coverLetter', coverLetterFile, coverLetterFile.name);
+    }
+  
+    this.workApplicationsService.createWorkApplication(formData).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.toastr.success('Votre candidature a été soumise avec succès!', 'Succès', {
-          timeOut: 1500,
-          progressBar: true
-        });
+        this.toastr.success('Votre candidature a été soumise avec succès!', 'Succès');
         this.dialogRef.close(true);
       },
       error: (error) => {
         this.isLoading = false;
-        if (error.error?.message) {
-          // Afficher le message spécifique retourné par le backend
-          if (Array.isArray(error.error.message)) {
-            error.error.message.forEach((msg: string) => 
-              this.toastr.error(error.error.message, 'Erreur', {
-              timeOut: 1500,
-              progressBar: true
-            }));
-          } else {
-            this.toastr.error(error.error.message, 'Erreur', {
-              timeOut: 1500,
-              progressBar: true
-            });
-          }
-        } else {
-          this.toastr.error('Une erreur est survenue. Veuillez réessayer.', 'Erreur', {
-            timeOut: 1500,
-            progressBar: true
-          });
-        }
-        console.error('Error submitting application:', error);
+        this.toastr.error(
+          error.error?.message || 'Une erreur est survenue. Veuillez réessayer.', 
+          'Erreur'
+        );
       }
     });
   }
@@ -132,6 +128,7 @@ export class ApplicationFormComponent {
       this.applicationForm.patchValue({
         [field]: file
       });
+      this.applicationForm.get(field)?.updateValueAndValidity();
     }
   }
 }

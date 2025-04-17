@@ -10,6 +10,10 @@ export class WorkApplicationsService {
 
   constructor(private http: HttpClient) {}
 
+  createWorkApplication(formData: FormData): Observable<any> {
+    return this.http.post(this.apiUrl, formData);
+  }
+  
   getApplicationsByCompany(companyName: string): Observable<any[]> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);

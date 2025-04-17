@@ -28,6 +28,7 @@ import { DocumentRequestEmployeComponent } from './components/document-request-e
 import { CongesEmployeComponent } from './components/conges-employe/conges-employe.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ApplicationFormComponent } from './components/application-form/application-form.component';
+import { ApplicationWorkFormComponent } from './components/application-work-form/application-work-form.component';
 import { OfferDetailsComponent } from './components/offer-details/offer-details.component';
 import { AllInternshipsComponent } from './all-internships/all-internships.component';
 import { AllWorksComponent } from './all-works/all-works.component';
@@ -170,6 +171,10 @@ export const routes: Routes = [
     {
         path:'all-works',
         component:AllWorksComponent
+    },
+    {
+        path: 'apply-work/:id',
+        component: ApplicationWorkFormComponent
     },
 
 

@@ -6,6 +6,7 @@ import { TruncatePipe } from '../pipes/truncate.pipe';
 import { MatDialog } from '@angular/material/dialog';
 import { ApplicationFormComponent } from '../components/application-form/application-form.component';
 import { JobOffersService } from '../services/job-offers.service';
+import { ApplicationWorkFormComponent } from '../components/application-work-form/application-work-form.component';
 
 
 @Component({
@@ -158,6 +159,21 @@ export class LandingPageComponent implements OnInit {
 
   openApplicationDialog(offer: any): void {
     const dialogRef = this.dialog.open(ApplicationFormComponent, {
+      width: '750px',
+      data: { offer: offer },
+      disableClose: true
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Optionnel: Rafraîchir les données ou afficher un message
+        console.log('Application submitted successfully');
+      }
+    });
+  }
+
+  openApplicationWorkDialog(offer: any): void {
+    const dialogRef = this.dialog.open(ApplicationWorkFormComponent, {
       width: '750px',
       data: { offer: offer },
       disableClose: true

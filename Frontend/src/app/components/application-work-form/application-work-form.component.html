@@ -1,0 +1,100 @@
+<!-- application-work-form.component.html -->
+<div class="container">
+  <h2 mat-dialog-title>Postuler à l'offre d'emploi: {{data.offer.title}}</h2>
+</div>
+<mat-dialog-content>
+<form [formGroup]="applicationForm" (ngSubmit)="onSubmit()">
+  <div class="form-row">
+    <mat-form-field appearance="outline">
+      <mat-label>Nom complet</mat-label>
+      <input matInput formControlName="fullName" required>
+      <mat-error *ngIf="applicationForm.get('fullName')?.hasError('required')">
+        Ce champ est obligatoire
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" required>
+      <mat-error *ngIf="applicationForm.get('email')?.hasError('required')">
+        Ce champ est obligatoire
+      </mat-error>
+      <mat-error *ngIf="applicationForm.get('email')?.hasError('email')">
+        Veuillez entrer un email valide
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="outline">
+      <mat-label>Date de naissance</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="birthDate" required>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="applicationForm.get('birthDate')?.hasError('required')">
+        Ce champ est obligatoire
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Téléphone</mat-label>
+      <input matInput formControlName="phone" required>
+      <mat-error *ngIf="applicationForm.get('phone')?.hasError('required')">
+        Ce champ est obligatoire
+      </mat-error>
+      <mat-error *ngIf="applicationForm.get('phone')?.hasError('pattern')">
+        Le téléphone doit contenir 8 à 10 chiffres
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="outline">
+      <mat-label>Disponibilité</mat-label>
+      <input matInput formControlName="availability" required>
+      <mat-error *ngIf="applicationForm.get('availability')?.hasError('required')">
+        Ce champ est obligatoire
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Entreprise</mat-label>
+      <input matInput formControlName="company" readonly>
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="outline">
+      <mat-label>Poste</mat-label>
+      <input matInput formControlName="position" readonly>
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <div class="file-upload">
+      <label for="cv">CV (PDF uniquement)</label>
+      <input type="file" id="cv" (change)="onFileChange($event, 'cv')" accept=".pdf" required>
+      <mat-error *ngIf="applicationForm.get('cv')?.hasError('required')">
+        Le CV est obligatoire
+      </mat-error>
+    </div>
+
+    <div class="file-upload">
+      <label for="coverLetter">Lettre de motivation (PDF uniquement)</label>
+      <input type="file" id="coverLetter" (change)="onFileChange($event, 'coverLetter')" accept=".pdf" required>
+      <mat-error *ngIf="applicationForm.get('coverLetter')?.hasError('required')">
+        La lettre de motivation est obligatoire
+      </mat-error>
+    </div>
+  </div>
+</form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+<button mat-button (click)="onCancel()">Annuler</button>
+<button mat-raised-button color="primary" 
+        (click)="onSubmit()" 
+        [disabled]="applicationForm.invalid || isLoading">
+  <span *ngIf="!isLoading">Soumettre</span>
+  <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+</button>
+</mat-dialog-actions>
