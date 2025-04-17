@@ -1,7 +1,7 @@
 // src/app/services/internship-applications.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +54,6 @@ export class InternshipApplicationsService {
     );
   }
 
-  // Dans internship-applications.service.ts
 createApplication(applicationData: any): Observable<any> {
   const formData = new FormData();
   
@@ -67,7 +66,14 @@ createApplication(applicationData: any): Observable<any> {
     }
   });
 
-  return this.http.post(this.apiUrl, formData);
+  return this.http.post(this.apiUrl, formData).pipe(
+    catchError(error => {
+      if (error.error?.message === 'Vous avez déjà postulé à cette offre de stage') {
+        return throwError(() => new Error('Vous avez déjà postulé à cette offre de stage'));
+      }
+      return throwError(() => error);
+    })
+  );
 }
 
 

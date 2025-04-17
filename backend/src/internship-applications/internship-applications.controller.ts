@@ -37,6 +37,8 @@ export class InternshipApplicationsController {
     @Body() body: Partial<InternshipApplication>,
     @UploadedFiles() files: { cv?: Express.Multer.File[], coverLetter?: Express.Multer.File[] },
   ) {
+
+    try{
     // Validation de l'email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!body.email || !emailRegex.test(body.email)) {
@@ -74,7 +76,14 @@ export class InternshipApplicationsController {
     body.coverLetter = files.coverLetter[0].filename;
     body.status = 'En cours de traitement';
 
-    return this.internshipApplicationsService.create(body);
+    return await this.internshipApplicationsService.create(body);
+
+  }catch (error){
+    if (error.message === 'Vous avez déjà postulé à cette offre de stage') {
+      throw new BadRequestException(error.message);
+    }
+    throw error;
+  }
   }
 
   @Get()

@@ -11,11 +11,22 @@ export class InternshipApplicationsService {
     private internshipApplicationModel: Model<InternshipApplicationDocument>,
   ) {}
 
-  async create(data: Partial<InternshipApplication>): Promise<InternshipApplication> {
-    const internshipApplication = new this.internshipApplicationModel(data);
-    return internshipApplication.save();
+  // src/internship-applications/internship-applications.service.ts
+async create(data: Partial<InternshipApplication>): Promise<InternshipApplication> {
+  // Vérifier si une candidature existe déjà avec le même email et la même entreprise/position
+  const existingApplication = await this.internshipApplicationModel.findOne({
+    email: data.email,
+    company: data.company,
+    position: data.position
+  }).exec();
+
+  if (existingApplication) {
+    throw new Error('Vous avez déjà postulé à cette offre de stage');
   }
 
+  const internshipApplication = new this.internshipApplicationModel(data);
+  return internshipApplication.save();
+}
   async findAll(): Promise<InternshipApplication[]> {
     return this.internshipApplicationModel.find().exec();
   }

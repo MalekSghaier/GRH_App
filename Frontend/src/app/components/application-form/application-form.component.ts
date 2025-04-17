@@ -97,7 +97,15 @@ export class ApplicationFormComponent {
       },
       error: (error) => {
         this.isLoading = false;
-        if (error.error?.message) {
+        if (error.message === 'Vous avez déjà postulé à cette offre de stage') {
+          this.toastr.warning('Vous avez déjà postulé à cette offre de stage', 'Désolé', {
+            timeOut: 1500,
+            progressBar: true
+          });
+          this.onCancel();
+
+        }
+        else  if (error.error?.message) {
           // Afficher le message spécifique retourné par le backend
           if (Array.isArray(error.error.message)) {
             error.error.message.forEach((msg: string) => 
