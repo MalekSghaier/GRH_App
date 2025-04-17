@@ -6,20 +6,20 @@ import { Subject, debounceTime, distinctUntilChanged, switchMap, takeUntil } fro
 import { TruncatePipe } from '../pipes/truncate.pipe';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { AdvancedSearchOffersComponent } from '../advanced-search-offers/advanced-search-offers.component';
-import { ApplicationFormComponent } from '../components/application-form/application-form.component';
+import { ApplicationWorkFormComponent } from '../components/application-work-form/application-work-form.component';
 import { MatDialog } from '@angular/material/dialog';
 import { JobOffersService } from '../services/job-offers.service';
+import { AdvancedSearchOffersWorkComponent } from "../advanced-search-offers-work/advanced-search-offers-work.component";
 
 @Component({
   selector: 'app-all-works',
   imports: [
-    CommonModule, 
-    RouterModule, 
+    CommonModule,
+    RouterModule,
     FormsModule,
     TruncatePipe,
-    AdvancedSearchOffersComponent
-  ],
+    AdvancedSearchOffersWorkComponent
+],
   templateUrl: './all-works.component.html',
   styleUrl: './all-works.component.css'
 })
@@ -110,9 +110,9 @@ export class AllWorksComponent implements OnInit, OnDestroy {
   
     this.jobOffersService.searchPublicOffers(
       text || '', 
-      advancedParams.duration,
+      advancedParams.experienceRequired,
       advancedParams.educationLevel,
-      advancedParams.requirements
+      advancedParams.jobRequirements  
     ).subscribe({
       next: (offers) => {
         console.log('Offers found:', offers);
@@ -127,7 +127,7 @@ export class AllWorksComponent implements OnInit, OnDestroy {
   }
 
   openApplicationDialog(offer: any): void {
-    const dialogRef = this.dialog.open(ApplicationFormComponent, {
+    const dialogRef = this.dialog.open(ApplicationWorkFormComponent, {
       width: '750px',
       data: { offer: offer },
       disableClose: true

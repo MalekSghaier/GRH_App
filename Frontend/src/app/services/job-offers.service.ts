@@ -115,23 +115,22 @@ export class JobOffersService {
 
     searchPublicOffers(
       query: string,
-      duration?: number,
+      experienceRequired?: number,
       educationLevel?: string,
-      requirements?: string
+      jobRequirements?: string  // Changé le nom du paramètre
     ): Observable<JobOffer[]> {
       console.log('Sending search with params:', {
         query: query,
-        duration: duration,
+        experienceRequired: experienceRequired,
         educationLevel: educationLevel,
-        requirements: requirements
+        jobRequirements: jobRequirements
       });
     
       let params = new HttpParams().set('query', query || '');
       
-      if (duration) params = params.append('duration', duration.toString());
+      if (experienceRequired) params = params.append('experienceRequired', experienceRequired.toString());
       if (educationLevel) params = params.append('educationLevel', educationLevel);
-      if (requirements) params = params.append('requirements', requirements);
-      
+      if (jobRequirements) params = params.append('jobRequirements', jobRequirements);       
       return this.http.get<JobOffer[]>(
         `${this.apiUrl}/public/search`,
         { params }

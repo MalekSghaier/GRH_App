@@ -75,7 +75,6 @@
       <label for="cv">CV (PDF uniquement)</label>
       <input type="file" id="cv" (change)="onFileChange($event, 'cv')" accept=".pdf" required>
       <mat-error *ngIf="applicationForm.get('cv')?.hasError('required')">
-        Le CV est obligatoire
       </mat-error>
     </div>
 
@@ -83,7 +82,6 @@
       <label for="coverLetter">Lettre de motivation (PDF uniquement)</label>
       <input type="file" id="coverLetter" (change)="onFileChange($event, 'coverLetter')" accept=".pdf" required>
       <mat-error *ngIf="applicationForm.get('coverLetter')?.hasError('required')">
-        La lettre de motivation est obligatoire
       </mat-error>
     </div>
   </div>

@@ -74,6 +74,21 @@ import { JobOfferDocument } from 'src/schemas/job-offer.schema';
     async countMyOffers(@Request() req: { user: UserPayload }) {
       return this.jobOffersService.countByCompany(req.user.id);
     }
+    @Get('public/search')
+      async publicSearchOffers(
+        @Query('query') query: string,
+        @Query('experienceRequired') experienceRequired?: number,
+        @Query('educationLevel') educationLevel?: string,
+        @Query('jobRequirements') jobRequirements?: string 
+      ): Promise<JobOfferDocument[]> {
+        return this.jobOffersService.publicSearchOffers(
+          query || '',
+          experienceRequired,
+          educationLevel,
+          jobRequirements 
+
+        );
+    }
   
     @Get(':id')
     findOne(@Param('id') id: string) {

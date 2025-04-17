@@ -29,7 +29,7 @@
         </button>
       </div>
   
-      <app-advanced-search-offers *ngIf="showAdvancedSearch"(searchCriteria)="onAdvancedSearch($event)"></app-advanced-search-offers>
+      <app-advanced-search-offers-work *ngIf="showAdvancedSearch"(searchCriteria)="onAdvancedSearch($event)"></app-advanced-search-offers-work>
     </div>
   
     <div *ngIf="isLoading" class="loading-spinner">
@@ -53,8 +53,10 @@
         </div>
         
         <div class="offer-details">
-          <p><strong>Durée: </strong> {{ offer.duration }} mois</p>
           <p><strong>Niveau requis: </strong> {{ offer.educationLevel }}</p>
+          <p><strong>Expérience exigée: </strong> {{ offer.experienceRequired }} ans</p>
+          <p><strong>Compétances requises: </strong>{{ offer.jobRequirements | truncate:150 }}</p>
+
         </div>
         
         <div class="offer-description">

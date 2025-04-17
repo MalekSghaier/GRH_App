@@ -87,4 +87,44 @@ export class JobOffersService {
   
     return this.jobOfferModel.find(searchConditions).exec();
   }
+
+    async publicSearchOffers(
+      query: string,
+      experienceRequired?: number,
+      educationLevel?: string,
+      jobRequirements?: string 
+    ): Promise<JobOfferDocument[]> {
+      const searchConditions: any = {};
+      
+      // Recherche texte sur plusieurs champs
+      if (query && query.trim() !== '') {
+        const regex = new RegExp(query, 'i');
+        searchConditions.$or = [
+          { title: { $regex: regex } },        // Poste
+          { company: { $regex: regex } },      // Entreprise
+          { location: { $regex: regex } },     // Lieu
+          { jobRequirements: { $regex: regex } }  
+        ];
+      }
+    
+      // Filtres avancés
+      if (experienceRequired) {
+        searchConditions.experienceRequired = experienceRequired; 
+      }
+    
+      if (educationLevel) {
+        searchConditions.educationLevel = educationLevel;
+      }
+    
+      if (jobRequirements) {
+        searchConditions.jobRequirements = { $regex: new RegExp(jobRequirements, 'i') };
+      }
+    
+      // Si aucun critère n'est spécifié, retourner toutes les offres
+      if (Object.keys(searchConditions).length === 0) {
+        return this.jobOfferModel.find().exec();
+      }
+    
+      return this.jobOfferModel.find(searchConditions).exec();
+    }
 }
