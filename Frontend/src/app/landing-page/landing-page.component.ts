@@ -1,4 +1,4 @@
-import { Component, OnInit ,HostListener } from '@angular/core';
+import { Component, OnInit ,HostListener, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { InternshipOffersService } from '../services/internship-offers.service';
@@ -7,22 +7,31 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApplicationFormComponent } from '../components/application-form/application-form.component';
 import { JobOffersService } from '../services/job-offers.service';
 import { ApplicationWorkFormComponent } from '../components/application-work-form/application-work-form.component';
+import { CountUpDirective } from '../count-up.directive';
+import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
+import { ContactService } from '../services/contact.service';
+
+
+
 
 
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [CommonModule, RouterModule,TruncatePipe],
+  imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule,TruncatePipe,CountUpDirective],
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.css']
 })
 export class LandingPageComponent implements OnInit {
+  @ViewChild('contactForm') contactForm!: NgForm; // Déclarez la propriété contactForm
+
   displayedOffers: any[] = [];
   showAllOffers = false;
   isScrolled = false;
   internshipOffers: any[] = [];
   workOffers: any[] = [];
   displayedworkOffers: any[] = [];
+  currentYear = new Date().getFullYear();
 
   isLoading = true;
   @HostListener('window:scroll')
@@ -42,7 +51,9 @@ export class LandingPageComponent implements OnInit {
   constructor(
     private internshipOfferService: InternshipOffersService,
     private dialog: MatDialog,
-    private jobOffersService :JobOffersService
+    private jobOffersService :JobOffersService,
+    private contactService: ContactService
+
 
   ) {}
 
@@ -56,7 +67,7 @@ export class LandingPageComponent implements OnInit {
     this.loadWorkOffers();
     setTimeout(() => {
       this.startAnimation();
-    }, 2000);
+    }, 1500);
   }
 
   loadInternshipOffers() {
@@ -185,5 +196,39 @@ export class LandingPageComponent implements OnInit {
         console.log('Application submitted successfully');
       }
     });
+  }
+
+
+  // Pour l'animation de la carte
+  flipCard() {
+    const card = document.querySelector('.contact-card');
+    card?.classList.toggle('flipped');
+  }
+  
+  submitContactForm() {
+    if (this.contactForm.valid) {
+      const formData = {
+        name: this.contactForm.value.name,
+        email: this.contactForm.value.email,
+        message: this.contactForm.value.message
+      };
+  
+      this.contactService.sendContactForm(formData).subscribe({
+        next: () => {
+          // Message de succès
+          alert('Votre message a été envoyé au Super Adminavec succès!');
+          this.contactForm.resetForm();
+        },
+        error: (err) => {
+          console.error('Erreur lors de l\'envoi du message:', err);
+          alert('Une erreur s\'est produite. Veuillez réessayer plus tard.');
+        }
+      });
+    }
+  }
+  
+  resetForm() {
+    this.flipCard();
+    this.contactForm.resetForm();
   }
 }

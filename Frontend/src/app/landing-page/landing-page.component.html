@@ -141,6 +141,39 @@
   </div>
 </section>
 
+<!-- Stats Section -->
+<section class="stats-section" id="stats">
+  <div class="container">
+    <div class="section-header">
+      <h2>Flesk GRH <span>en chiffres</span></h2>
+      <p>Notre impact et notre croissance en quelques chiffres clés</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" [countUp]="50" [duration]="2">0</div>
+        <div class="stat-label">Collaborateurs</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-number" [countUp]="100" [duration]="2">0</div>
+        <div class="stat-label">Pointage sécurisé</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-number" [countUp]="500" [duration]="3">0</div>
+        <div class="stat-label">Heures suivies/mois</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-number" [countUp]="10" [duration]="1.5">0</div>
+        <div class="stat-label">Modules RH intégrés</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 <!-- Dans votre section stages -->
 <section id="stages" class="section">
   <div class="container">
@@ -239,9 +272,112 @@
   </div>
 </section>
 
-<section id="contact" class="section">
+<!-- Contact Section - Design Épuré Moderne -->
+<section id="contact" class="contact-section">
   <div class="container">
-    <h2>Contactez-nous</h2>
-    <!-- Votre formulaire de contact ici -->
+    <div class="section-header">
+      <h2>Contactez-<span>nous</span></h2>
+      <p class="subtitle">Nous sommes à votre écoute pour toute question ou demande</p>
+    </div>
+
+    <div class="contact-grid">
+      <!-- Colonne Formulaire -->
+      <div class="contact-form-container">
+        <div class="form-card">
+          <h3>Envoyez-nous un message</h3>
+          <form (ngSubmit)="submitContactForm()" #contactForm="ngForm">
+            <div class="form-group">
+              <input type="text" name="name" placeholder="Votre nom" required ngModel>
+              <div class="underline"></div>
+            </div>
+            <div class="form-group">
+              <input type="email" name="email" placeholder="Votre email" required ngModel>
+              <div class="underline"></div>
+            </div>
+            <div class="form-group">
+              <textarea name="message" rows="5" placeholder="Votre message" required ngModel></textarea>
+              <div class="underline"></div>
+            </div>
+            <div class="container-submit-btn">
+            <button type="submit" class="submit-btn">
+              <span>Envoyer</span>
+              <i class='bx bx-send'></i>
+            </button>
+          </div>
+          </form>
+          
+        </div>
+
+        <div class="social-section">
+          <h3>Suivez-nous</h3>
+          <div class="social-links">
+            <a href="#" class="social-circle" title="Facebook">
+              <i class='bx bxl-facebook'></i>
+            </a>
+            <a href="#" class="social-circle" title="LinkedIn">
+              <i class='bx bxl-linkedin'></i>
+            </a>
+            <a href="#" class="social-circle" title="Instagram">
+              <i class='bx bxl-instagram-alt'></i>
+            </a>
+            <a href="#" class="social-circle" title="WhatsApp">
+              <i class='bx bxl-whatsapp'></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Colonne Coordonnées & Avis -->
+      <div class="contact-info-container">
+        <!-- Coordonnées -->
+        <div class="info-card">
+          <h3>Nos coordonnées</h3>
+          <div class="contact-method">
+            <i class='bx bx-map'></i>
+            <div>
+              <h4>Adresse</h4>
+              <p>123 Avenue de la République, Tunis 1002</p>
+            </div>
+          </div>
+          <div class="contact-method">
+            <i class='bx bx-phone'></i>
+            <div>
+              <h4>Téléphone</h4>
+              <p>+216 73 555 117 </p>
+            </div>
+          </div>
+          <div class="contact-method">
+            <i class='bx bx-envelope'></i>
+            <div>
+              <h4>Email</h4>
+              <p>contact&#64;fleskgrh.com</p>
+            </div>
+          </div>
+        </div>
+        <div class="info-cardd"></div>
+
+        <!-- Avis Clients -->
+        <div class="testimonials-card">
+          <h3>Ce qu'ils disent de nous</h3>
+          <div class="testimonial">
+            <div class="quote">"</div>
+            <p>Cette application a révolutionné notre gestion RH. Simple, intuitive et puissante.</p>
+            <div class="client">
+              <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Client">
+              <div>
+                <h4>Sarah Ben Ammar</h4>
+                <p>DRH, Entreprise XYZ</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Signature -->
+    <div class="signature">
+      <p>© {{currentYear}} Flesk GRH. Conçu avec <i class='bx bx-heart'></i> par <strong>Malek SGHAIER</strong></p>
+    </div>
   </div>
 </section>

@@ -17,6 +17,7 @@ import { JobOffersModule } from './job-offers/job-offers.module';
 import { EmailService } from './email/email.service';
 import { EmailModule } from './email/email.module';
 import { InternshipOffersModule } from './internship-offers/internship-offers.module';
+import { ContactController } from './contact/contact.controller';
 
 @Module({
   imports: [
@@ -38,7 +39,7 @@ import { InternshipOffersModule } from './internship-offers/internship-offers.mo
 
 
   ],
-  controllers: [AppController],
+  controllers: [AppController, ContactController],
   providers: [AppService, EmailService],
 })
 export class AppModule {}

@@ -17,7 +17,6 @@ export class EmailService {
     });
   }
 
-// email.service.ts
 async sendInterviewEmail(
   to: string,
   fullName: string,
@@ -71,6 +70,29 @@ async sendEmailWithAttachment(data: {
   } catch (error) {
     console.error('Error sending email with attachment:', error);
     throw new Error('Echec d\'envoi d\'email avec pièce jointe');
+  }
+}
+
+// Ajoutez cette méthode à votre EmailService
+async sendPlainEmail(data: {
+  to: string;
+  subject: string;
+  text: string;
+  replyTo?: string;
+}): Promise<void> {
+  try {
+    const mailOptions = {
+      from: '"Flesk GRH Contact" <maleksg0@gmail.com>',
+      to: data.to,
+      subject: data.subject,
+      text: data.text,
+      replyTo: data.replyTo
+    };
+
+    await this.transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error('Error sending contact email:', error);
+    throw new Error('Failed to send contact email');
   }
 }
   
