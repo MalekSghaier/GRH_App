@@ -48,6 +48,40 @@ export class LandingPageComponent implements OnInit {
     "Réfléchie et novatrice",
     "Ambitieuse et technologique"
   ];
+
+  testimonials = [
+    {
+      text: "Cette application a révolutionné notre gestion RH. Simple, intuitive et puissante.",
+      name: "Sarah Ben Ammar",
+      position: "DRH, Entreprise XYZ",
+      image: "https://randomuser.me/api/portraits/women/43.jpg"
+    },
+    {
+      text: "La solution la plus complète que nous ayons utilisée. Gain de temps considérable.",
+      name: "Mohamed Trabelsi",
+      position: "Directeur Général, ABC Corp",
+      image: "https://randomuser.me/api/portraits/men/32.jpg"
+    },
+    {
+      text: "Interface utilisateur exceptionnelle et support client réactif. Très satisfait.",
+      name: "Amira Chennoufi",
+      position: "Responsable RH, Startup Innov",
+      image: "https://randomuser.me/api/portraits/women/65.jpg"
+    },
+    {
+      text: "L'automatisation des processus RH a boosté notre productivité de 40%.",
+      name: "Karim Bouaziz",
+      position: "PDG, Groupe Karim",
+      image: "https://randomuser.me/api/portraits/men/75.jpg"
+    },
+    {
+      text: "Formation rapide et prise en main immédiate. Solution parfaitement adaptée.",
+      name: "Leila Mansour",
+      position: "Responsable Formation, Mega Ltd",
+      image: "https://randomuser.me/api/portraits/women/85.jpg"
+    }
+  ];
+  
   constructor(
     private internshipOfferService: InternshipOffersService,
     private dialog: MatDialog,
@@ -61,6 +95,9 @@ export class LandingPageComponent implements OnInit {
   currentIndex = 0;
   isTyping = false;
   animationInterval: any;
+  currentTestimonialIndex = 0;
+  testimonialInterval: any;
+
 
   ngOnInit() {
     this.loadInternshipOffers();
@@ -68,6 +105,8 @@ export class LandingPageComponent implements OnInit {
     setTimeout(() => {
       this.startAnimation();
     }, 1500);
+    this.startTestimonialCarousel();
+
   }
 
   loadInternshipOffers() {
@@ -110,6 +149,12 @@ export class LandingPageComponent implements OnInit {
       this.animateToNext();
     }, 3500);
   }
+  // Ajoutez ces méthodes à votre classe
+startTestimonialCarousel() {
+  this.testimonialInterval = setInterval(() => {
+    this.nextTestimonial();
+  }, 3000);
+}
 
   animateToNext() {
     if (this.isTyping) return;
@@ -147,6 +192,19 @@ export class LandingPageComponent implements OnInit {
     }, 120);
   }
 
+  nextTestimonial() {
+    this.currentTestimonialIndex = (this.currentTestimonialIndex + 1) % this.testimonials.length;
+  }
+  
+  goToTestimonial(index: number) {
+    this.currentTestimonialIndex = index;
+    this.resetTestimonialInterval();
+  }
+  
+  resetTestimonialInterval() {
+    clearInterval(this.testimonialInterval);
+    this.startTestimonialCarousel();
+  }
   scrollTo(sectionId: string) {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -165,6 +223,10 @@ export class LandingPageComponent implements OnInit {
   ngOnDestroy() {
     if (this.animationInterval) {
       clearInterval(this.animationInterval);
+    }
+
+    if (this.testimonialInterval) {
+      clearInterval(this.testimonialInterval);
     }
   }
 
@@ -231,4 +293,6 @@ export class LandingPageComponent implements OnInit {
     this.flipCard();
     this.contactForm.resetForm();
   }
+
+  
 }

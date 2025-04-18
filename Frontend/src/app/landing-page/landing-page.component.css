@@ -985,9 +985,82 @@ body {
   color: #3C91E6;
 }
 
+/* Styles pour les avis */
+.testimonial-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.testimonial-dots span {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ddd;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.testimonial-dots span.active {
+  background-color: #3C91E6;
+  transform: scale(1.2);
+}
+
+.testimonial {
+  background: #f5f9ff;
+  padding: 25px;
+  border-radius: 12px;
+  position: relative;
+  margin-top: 10px;
+  transition: opacity 0.5s ease;
+}
+
+.quote {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  font-size: 60px;
+  color: rgba(60, 145, 230, 0.1);
+  font-family: serif;
+  line-height: 0;
+}
+
+.testimonial p {
+  color: #444;
+  font-style: italic;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.client {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.client img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.client h4 {
+  color: #2f2f2f;
+  font-size: 1rem;
+  margin-bottom: 3px;
+}
+
+.client p {
+  color: #666;
+  font-size: 0.85rem;
+  font-style: normal;
+}
+
     /* Responsive */
-
-
     @media (max-width: 992px) {
       .contact-wrapper {
         flex-direction: column;

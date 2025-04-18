@@ -356,23 +356,32 @@
         </div>
         <div class="info-cardd"></div>
 
-        <!-- Avis Clients -->
-        <div class="testimonials-card">
-          <h3>Ce qu'ils disent de nous</h3>
-          <div class="testimonial">
-            <div class="quote">"</div>
-            <p>Cette application a révolutionné notre gestion RH. Simple, intuitive et puissante.</p>
-            <div class="client">
-              <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Client">
-              <div>
-                <h4>Sarah Ben Ammar</h4>
-                <p>DRH, Entreprise XYZ</p>
-              </div>
+<!-- Avis Clients -->
+      <div class="testimonials-card">
+        <h3>Ce qu'ils disent de nous</h3>
+
+  <!-- Contenu des avis -->
+  <div class="testimonial" *ngIf="testimonials[currentTestimonialIndex]">
+    <div class="quote">"</div>
+         <p>{{ testimonials[currentTestimonialIndex].text }}</p>
+           <div class="client">
+               <img [src]="testimonials[currentTestimonialIndex].image" alt="Client">
+                <div>
+                   <h4>{{ testimonials[currentTestimonialIndex].name }}</h4>
+                    <p>{{ testimonials[currentTestimonialIndex].position }}</p>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
     </div>
+
+      <!-- Indicateurs de points -->
+  <div class="testimonial-dots">
+    <span *ngFor="let testimonial of testimonials; let i = index" 
+          [class.active]="currentTestimonialIndex === i"
+          (click)="goToTestimonial(i)"></span>
+  </div>
+      </div>
+      </div>
+  </div>
 
 
     <!-- Signature -->
