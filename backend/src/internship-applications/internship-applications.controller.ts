@@ -91,6 +91,20 @@ export class InternshipApplicationsController {
     return this.internshipApplicationsService.findAll();
   }
 
+  @Get('check-application')
+async checkExistingApplication(
+  @Query('email') email: string,
+  @Query('company') company: string,
+  @Query('position') position: string
+): Promise<{ hasApplied: boolean }> {
+  const existingApplication = await this.internshipApplicationsService.findOneByEmailAndPosition(
+    email,
+    company,
+    position
+  );
+  return { hasApplied: !!existingApplication };
+}
+
   @Get('company/:companyName')
   async findByCompany(
     @Param('companyName') companyName: string,

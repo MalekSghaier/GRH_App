@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject,OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
@@ -13,6 +13,7 @@ import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { ToastrService } from 'ngx-toastr';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { WorkApplicationsService } from '../../services/work-applications.service';
+
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -50,7 +51,7 @@ export const MY_DATE_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ]
 })
-export class ApplicationWorkFormComponent {
+export class ApplicationWorkFormComponent implements OnInit {
   applicationForm: FormGroup;
   isLoading = false;
 
@@ -74,6 +75,41 @@ export class ApplicationWorkFormComponent {
     });
   }
 
+
+  ngOnInit() {
+    // Vérifier si l'utilisateur a déjà postulé quand l'email change
+    this.applicationForm.get('email')?.valueChanges.subscribe(email => {
+      if (email && this.applicationForm.get('email')?.valid) {
+        this.checkExistingApplication();
+      }
+    });
+  }
+
+
+  checkExistingApplication() {
+    const email = this.applicationForm.get('email')?.value;
+    const company = this.applicationForm.get('company')?.value;
+    const position = this.applicationForm.get('position')?.value;
+
+    if (email && company && position) {
+      this.workApplicationsService.checkExistingApplication(email, company, position)
+        .subscribe({
+          next: (response) => {
+            if (response.hasApplied) {
+              this.toastr.warning('Vous avez déjà postulé à cette offre', 'Attention', {
+                timeOut: 1500,
+                progressBar: true
+              });
+              this.applicationForm.disable();
+              this.onCancel();
+            }
+          },
+          error: (error) => {
+            console.error('Erreur lors de la vérification:', error);
+          }
+        });
+    }
+  }
   onSubmit() {
     if (this.applicationForm.invalid) {
       return;
@@ -105,15 +141,27 @@ export class ApplicationWorkFormComponent {
     this.workApplicationsService.createWorkApplication(formData).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.toastr.success('Votre candidature a été soumise avec succès!', 'Succès');
+        this.toastr.success('Votre candidature a été soumise avec succès!', 'Succès', {
+          timeOut: 1500,
+          progressBar: true
+        });
         this.dialogRef.close(true);
       },
       error: (error) => {
         this.isLoading = false;
-        this.toastr.error(
-          error.error?.message || 'Une erreur est survenue. Veuillez réessayer.', 
-          'Erreur'
-        );
+        if (error.message === 'Vous avez déjà postulé à cette offre d\'emploi') {
+          this.toastr.warning('Vous avez déjà postulé à cette offre d\'emploi', 'Erreur', {
+            timeOut: 1500,
+            progressBar: true
+          });
+          this.dialogRef.close(true);
+
+        }else {
+          this.toastr.error(
+            error.error?.message || 'Une erreur est survenue. Veuillez réessayer.', 
+            'Erreur'
+          );
+        }
       }
     });
   }

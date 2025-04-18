@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +11,22 @@ export class WorkApplicationsService {
   constructor(private http: HttpClient) {}
 
   createWorkApplication(formData: FormData): Observable<any> {
-    return this.http.post(this.apiUrl, formData);
+    return this.http.post(this.apiUrl, formData).pipe(
+      catchError(error => {
+        if (error.error?.message === 'Vous avez déjà postulé à cette offre d\'emploi') {
+          return throwError(() => new Error('Vous avez déjà postulé à cette offre d\'emploi'));
+        }
+        return throwError(() => error);
+      })
+    );
   }
+
+  checkExistingApplication(email: string, company: string, position: string): Observable<{hasApplied: boolean}> {
+    return this.http.get<{hasApplied: boolean}>(`${this.apiUrl}/check-application`, {
+      params: { email, company, position }
+    });
+  }
+
   
   getApplicationsByCompany(companyName: string): Observable<any[]> {
     const token = localStorage.getItem('token');

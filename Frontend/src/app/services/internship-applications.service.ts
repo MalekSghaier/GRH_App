@@ -76,5 +76,11 @@ createApplication(applicationData: any): Observable<any> {
   );
 }
 
+checkExistingApplication(email: string, company: string, position: string): Observable<{hasApplied: boolean}> {
+  return this.http.get<{hasApplied: boolean}>(`${this.apiUrl}/check-application`, {
+    params: { email, company, position }
+  });
+}
+
 
 }

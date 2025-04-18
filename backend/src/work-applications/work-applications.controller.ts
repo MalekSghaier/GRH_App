@@ -37,6 +37,7 @@ export class WorkApplicationsController {
     @UploadedFiles() files: { cv?: Express.Multer.File[], coverLetter?: Express.Multer.File[] },
   ) {
 
+    try{
      // Validation de l'email
      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
      if (!body.email || !emailRegex.test(body.email)) {
@@ -75,13 +76,36 @@ export class WorkApplicationsController {
     body.status = 'En cours de traitement';
 
   
-    return this.workApplicationsService.create(body);
+    return await this.workApplicationsService.create(body);
+  }catch(error){
+    if (error.message === 'Vous avez déjà postulé à cette offre d\'emploi') {
+      throw new BadRequestException(error.message);
+    }
+    throw error;
+  }
+  
   }  
 
   @Get()
   async findAll(): Promise<WorkApplication[]> {
     return this.workApplicationsService.findAll();
   }
+
+@Get('check-application')
+async checkExistingApplication(
+  @Query('email') email: string,
+  @Query('company') company: string,
+  @Query('position') position: string
+): Promise<{ hasApplied: boolean }> {
+  const existingApplication = await this.workApplicationsService.findOneByEmailAndPosition(
+    email,
+    company,
+    position
+  );
+  return { hasApplied: !!existingApplication };
+}
+
+
 
   @Get('company/:companyName')
    async findByCompany( @Param('companyName') companyName: string, @Query('status') status?: string): Promise<WorkApplication[]> {

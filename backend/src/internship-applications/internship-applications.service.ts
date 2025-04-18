@@ -38,6 +38,10 @@ async create(data: Partial<InternshipApplication>): Promise<InternshipApplicatio
     }
     return internshipApplication;
   }
+    // Dans le service
+    async findOneByEmailAndPosition(email: string,company: string,position: string): Promise<InternshipApplication | null> {
+      return this.internshipApplicationModel.findOne({email,company,position}).exec();
+    }
 
   async findByCompany(companyName: string, status?: string): Promise<InternshipApplication[]> {
     const query: FilterQuery<InternshipApplicationDocument> = { company: companyName };

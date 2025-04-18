@@ -10,7 +10,18 @@ export class WorkApplicationsService {
     @InjectModel(WorkApplication.name) private workApplicationModel: Model<WorkApplicationDocument>,
   ) {}
 
-  async create(data: any): Promise<WorkApplication> {
+  async create(data: Partial<WorkApplication>): Promise<WorkApplication> {
+    // Vérifier si une candidature existe déjà avec le même email et la même entreprise/position
+    const existingApplication = await this.workApplicationModel.findOne({
+      email: data.email,
+      company: data.company,
+      position: data.position
+    }).exec();
+  
+    if (existingApplication) {
+      throw new Error('Vous avez déjà postulé à cette offre d\'emploi');
+    }
+  
     const workApplication = new this.workApplicationModel(data);
     return workApplication.save();
   }
@@ -33,6 +44,11 @@ export class WorkApplicationsService {
       query.status = status;
     }
     return this.workApplicationModel.find(query).exec();
+  }
+
+  // Dans le service
+  async findOneByEmailAndPosition(email: string,company: string,position: string): Promise<WorkApplication | null> {
+    return this.workApplicationModel.findOne({email,company,position}).exec();
   }
 
   async countByCompanyAndStatus(companyName: string, status: string): Promise<number> {

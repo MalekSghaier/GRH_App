@@ -1,5 +1,5 @@
 // application-form.component.ts
-import { Component, Inject } from '@angular/core';
+import { Component, Inject,OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
@@ -52,7 +52,7 @@ export const MY_DATE_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ]
 })
-export class ApplicationFormComponent {
+export class ApplicationFormComponent implements OnInit {
   applicationForm: FormGroup;
   isLoading = false;
 
@@ -76,6 +76,41 @@ export class ApplicationFormComponent {
     });
   }
 
+
+  ngOnInit() {
+    // Vérifier si l'utilisateur a déjà postulé quand l'email change
+    this.applicationForm.get('email')?.valueChanges.subscribe(email => {
+      if (email && this.applicationForm.get('email')?.valid) {
+        this.checkExistingApplication();
+      }
+    });
+  }
+
+
+  checkExistingApplication() {
+    const email = this.applicationForm.get('email')?.value;
+    const company = this.applicationForm.get('company')?.value;
+    const position = this.applicationForm.get('position')?.value;
+
+    if (email && company && position) {
+      this.applicationsService.checkExistingApplication(email, company, position)
+        .subscribe({
+          next: (response) => {
+            if (response.hasApplied) {
+              this.toastr.warning('Vous avez déjà postulé à cette offre', 'Attention', {
+                timeOut: 1500,
+                progressBar: true
+              });
+              this.applicationForm.disable();
+              this.onCancel();
+            }
+          },
+          error: (error) => {
+            console.error('Erreur lors de la vérification:', error);
+          }
+        });
+    }
+  }
   onSubmit() {
     if (this.applicationForm.invalid) {
       return;
@@ -102,7 +137,7 @@ export class ApplicationFormComponent {
             timeOut: 1500,
             progressBar: true
           });
-          this.onCancel();
+          this.dialogRef.close(true);
 
         }
         else  if (error.error?.message) {
