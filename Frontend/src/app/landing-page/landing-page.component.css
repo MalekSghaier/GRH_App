@@ -986,11 +986,18 @@ body {
 }
 
 /* Styles pour les avis */
+
+.testimonial-container {
+  position: relative;
+  height: 200px; /* Ajustez selon votre contenu */
+  overflow: hidden;
+}
 .testimonial-dots {
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-bottom: 20px;
+  margin-top: 2px;
+  
 }
 
 .testimonial-dots span {
@@ -1009,12 +1016,19 @@ body {
 }
 
 .testimonial {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
   background: #f5f9ff;
   padding: 25px;
   border-radius: 12px;
-  position: relative;
-  margin-top: 10px;
-  transition: opacity 0.5s ease;
+  box-sizing: border-box;
+}
+
+/* Animation de transition */
+.testimonial {
+  transition: all 0.5s ease;
 }
 
 .quote {

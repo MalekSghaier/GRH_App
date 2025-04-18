@@ -357,29 +357,36 @@
         <div class="info-cardd"></div>
 
 <!-- Avis Clients -->
-      <div class="testimonials-card">
-        <h3>Ce qu'ils disent de nous</h3>
+<div class="testimonials-card">
+  <h3>Ce qu'ils disent de nous</h3>
 
-  <!-- Contenu des avis -->
-  <div class="testimonial" *ngIf="testimonials[currentTestimonialIndex]">
-    <div class="quote">"</div>
-         <p>{{ testimonials[currentTestimonialIndex].text }}</p>
-           <div class="client">
-               <img [src]="testimonials[currentTestimonialIndex].image" alt="Client">
-                <div>
-                   <h4>{{ testimonials[currentTestimonialIndex].name }}</h4>
-                    <p>{{ testimonials[currentTestimonialIndex].position }}</p>
-                </div>
-            </div>
+  <!-- Conteneur des avis -->
+  <div class="testimonial-container">
+    <div class="testimonial" 
+         *ngFor="let testimonial of testimonials; let i = index"
+         [@slideAnimation]="{
+           value: getAnimationState(i),
+           params: {delay: i * 100}
+         }">
+      <div class="quote">"</div>
+      <p>{{ testimonial.text }}</p>
+      <div class="client">
+        <img [src]="testimonial.image" alt="Client">
+        <div>
+          <h4>{{ testimonial.name }}</h4>
+          <p>{{ testimonial.position }}</p>
+        </div>
+      </div>
     </div>
+  </div>
 
-      <!-- Indicateurs de points -->
+  <!-- Indicateurs de points -->
   <div class="testimonial-dots">
     <span *ngFor="let testimonial of testimonials; let i = index" 
           [class.active]="currentTestimonialIndex === i"
           (click)="goToTestimonial(i)"></span>
   </div>
-      </div>
+</div>
       </div>
   </div>
 

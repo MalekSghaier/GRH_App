@@ -10,6 +10,7 @@ import { ApplicationWorkFormComponent } from '../components/application-work-for
 import { CountUpDirective } from '../count-up.directive';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { ContactService } from '../services/contact.service';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 
 
@@ -20,7 +21,33 @@ import { ContactService } from '../services/contact.service';
   standalone: true,
   imports: [CommonModule, RouterModule,FormsModule,ReactiveFormsModule,TruncatePipe,CountUpDirective],
   templateUrl: './landing-page.component.html',
-  styleUrls: ['./landing-page.component.css']
+  styleUrls: ['./landing-page.component.css'],
+  animations: [
+    trigger('slideAnimation', [
+      state('void', style({
+        transform: 'translateX(100%)',
+        opacity: 0
+      })),
+      state('in', style({
+        transform: 'translateX(0)',
+        opacity: 1
+      })),
+      state('out', style({
+        transform: 'translateX(-100%)',
+        opacity: 0
+      })),
+      transition('void => in', [
+        animate('500ms ease-out')
+      ]),
+      transition('in => out', [
+        animate('500ms ease-in')
+      ]),
+      transition('out => void', [
+        animate('0ms')
+      ])
+    ])
+  ]
+
 })
 export class LandingPageComponent implements OnInit {
   @ViewChild('contactForm') contactForm!: NgForm; // Déclarez la propriété contactForm
@@ -109,6 +136,18 @@ export class LandingPageComponent implements OnInit {
 
   }
 
+  getAnimationState(index: number) {
+    if (index === this.currentTestimonialIndex) {
+      return 'in';
+    }
+    // Pour l'élément précédent qui doit sortir
+    if (index === (this.currentTestimonialIndex - 1 + this.testimonials.length) % this.testimonials.length) {
+      return 'out';
+    }
+    // Pour tous les autres éléments
+    return 'void';
+  }
+
   loadInternshipOffers() {
     this.internshipOfferService.getAllOffers().subscribe({
       next: (offers) => {
@@ -192,9 +231,12 @@ startTestimonialCarousel() {
     }, 120);
   }
 
-  nextTestimonial() {
+// Modifiez nextTestimonial pour forcer le changement après l'animation
+nextTestimonial() {
+  setTimeout(() => {
     this.currentTestimonialIndex = (this.currentTestimonialIndex + 1) % this.testimonials.length;
-  }
+  }, 500); // Correspond à la durée de l'animation
+}
   
   goToTestimonial(index: number) {
     this.currentTestimonialIndex = index;
