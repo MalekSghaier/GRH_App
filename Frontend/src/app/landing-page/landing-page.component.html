@@ -4,12 +4,12 @@
     <nav>
       <a routerLink="/landing-page" class="logo">Flesk <span>GRH</span> .</a>
       <ul class="nav-links">
-          <li><a (click)="scrollTo('hero')">Accueil</a></li>
-          <li><a (click)="scrollTo('about')">À propos</a></li>
-          <li><a (click)="scrollTo('features')">Fonctionnalités</a></li>
-          <li><a (click)="scrollTo('stages')">Offres de stage</a></li>
-          <li><a (click)="scrollTo('emplois')">Offres d'emploi</a></li>
-          <li><a (click)="scrollTo('contact')">Contact</a></li>
+          <li><a (click)="scrollTo('hero')" [class.active]="activeSection === 'hero'">Accueil</a></li>
+          <li><a (click)="scrollTo('about')" [class.active]="activeSection === 'about'">À propos</a></li>
+          <li><a (click)="scrollTo('features')" [class.active]="activeSection === 'features'">Fonctionnalités</a></li>
+          <li><a (click)="scrollTo('stages')" [class.active]="activeSection === 'stages'">Offres de stage</a></li>
+          <li><a (click)="scrollTo('emplois')"[class.active]="activeSection === 'emplois'">Offres d'emploi</a></li>
+          <li><a (click)="scrollTo('contact')" [class.active]="activeSection === 'contact'">Contact</a></li>
           <li><a class="btn-login" href="login">Connexion</a></li>
       </ul>
     </nav>

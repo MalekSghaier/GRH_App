@@ -51,6 +51,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 })
 export class LandingPageComponent implements OnInit {
   @ViewChild('contactForm') contactForm!: NgForm; // Déclarez la propriété contactForm
+  @HostListener('window:scroll')
 
   displayedOffers: any[] = [];
   showAllOffers = false;
@@ -61,10 +62,7 @@ export class LandingPageComponent implements OnInit {
   currentYear = new Date().getFullYear();
 
   isLoading = true;
-  @HostListener('window:scroll')
-  onWindowScroll() {
-    this.isScrolled = window.scrollY > 10;
-  }
+
   adjectives = [
     "Moderne et Intelligente",
     "Innovante et performante",
@@ -79,32 +77,32 @@ export class LandingPageComponent implements OnInit {
   testimonials = [
     {
       text: "Cette application a révolutionné notre gestion RH. Simple, intuitive et puissante.",
-      name: "Sarah Ben Ammar",
-      position: "DRH, Entreprise XYZ",
+      name: "Sophie Garnier",
+      position: "DRH, Entreprise Techsolutions",
       image: "https://randomuser.me/api/portraits/women/43.jpg"
     },
     {
       text: "La solution la plus complète que nous ayons utilisée. Gain de temps considérable.",
-      name: "Mohamed Trabelsi",
-      position: "Directeur Général, ABC Corp",
+      name: "Thomas Lefèvre",
+      position: "Directeur Général, InnovateX",
       image: "https://randomuser.me/api/portraits/men/32.jpg"
     },
     {
       text: "Interface utilisateur exceptionnelle et support client réactif. Très satisfait.",
       name: "Amira Chennoufi",
-      position: "Responsable RH, Startup Innov",
+      position: "Responsable RH, Startup GreenTech",
       image: "https://randomuser.me/api/portraits/women/65.jpg"
     },
     {
       text: "L'automatisation des processus RH a boosté notre productivité de 40%.",
       name: "Karim Bouaziz",
-      position: "PDG, Groupe Karim",
+      position: "PDG, Groupe DataSoft",
       image: "https://randomuser.me/api/portraits/men/75.jpg"
     },
     {
       text: "Formation rapide et prise en main immédiate. Solution parfaitement adaptée.",
-      name: "Leila Mansour",
-      position: "Responsable Formation, Mega Ltd",
+      name: "Lucas Petit",
+      position: "Responsable Formation, MedicaCare",
       image: "https://randomuser.me/api/portraits/women/85.jpg"
     }
   ];
@@ -124,6 +122,8 @@ export class LandingPageComponent implements OnInit {
   animationInterval: any;
   currentTestimonialIndex = 0;
   testimonialInterval: any;
+  activeSection: string = 'hero'; // Par défaut sur la section hero
+
 
 
   ngOnInit() {
@@ -146,6 +146,23 @@ export class LandingPageComponent implements OnInit {
     }
     // Pour tous les autres éléments
     return 'void';
+  }
+  @HostListener('window:scroll')
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 10;
+    
+    // Détection de la section visible
+    const sections = ['hero', 'about', 'features', 'stages', 'emplois', 'contact'];
+    for (const section of sections) {
+      const element = document.getElementById(section);
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        if (rect.top <= 100 && rect.bottom >= 100) {
+          this.activeSection = section;
+          break;
+        }
+      }
+    }
   }
 
   loadInternshipOffers() {
@@ -248,6 +265,7 @@ nextTestimonial() {
     this.startTestimonialCarousel();
   }
   scrollTo(sectionId: string) {
+    this.activeSection = sectionId; // Mettre à jour la section active
     const element = document.getElementById(sectionId);
     if (element) {
       // Calcule la position en prenant en compte le header fixe
