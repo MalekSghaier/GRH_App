@@ -27,6 +27,14 @@
         Le motif doit contenir au moins 10 caractères
       </mat-error>
     </mat-form-field>
+
+    <div class="solde-info">
+      <p>Votre solde de congés: <strong>{{ soldeConges }} jours</strong></p>
+      <p *ngIf="dureeDemandee > 0">Durée demandée: <strong>{{ dureeDemandee }} jours</strong></p>
+      <p *ngIf="dureeDemandee > soldeConges" class="solde-insuffisant">
+        ❌ Solde insuffisant
+      </p>
+    </div>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

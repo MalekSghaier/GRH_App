@@ -224,4 +224,26 @@
     color: #666;
     font-style: italic;
   }
+
+  /* conges-employe.component.css */
+.solde-display {
+  background-color: #f8f9fa;
+  padding: 8px 16px;
+  border-radius: 4px;
+  margin-top: 8px;
+  display: inline-block;
+  border: 1px solid #dee2e6;
+}
+
+.solde-info {
+  margin: 16px 0;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.solde-insuffisant {
+  color: #dc3545;
+  font-weight: bold;
+}
   

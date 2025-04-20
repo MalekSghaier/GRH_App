@@ -1,10 +1,12 @@
 //service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IConge } from '../schemas/conge.schema';
 import { UsersService } from '../users/users.service'; // Importez le service User
 import { User, UserDocument} from '../schemas/user.schema';
+import { SoldeCongesService } from '../solde-conges/solde-conges.service';
+
 
 
 
@@ -13,12 +15,86 @@ import { User, UserDocument} from '../schemas/user.schema';
 export class CongesService {
   constructor(@InjectModel('Conge') private readonly congeModel: Model<IConge>,
   @InjectModel(User.name) private readonly userModel: Model<UserDocument>, // Correction ici
-  private readonly userService: UsersService // Injectez le service User
+  private readonly userService: UsersService, // Injectez le service User
+  private soldeCongesService: SoldeCongesService
+
 ) {}
 
+  //async create(userId: string, data: Partial<IConge>): Promise<IConge> {
+  //  return this.congeModel.create({ ...data, userId });
+  //}
+
   async create(userId: string, data: Partial<IConge>): Promise<IConge> {
-    return this.congeModel.create({ ...data, userId });
+    // Vérification que les dates sont bien définies
+    if (!data.startDate || !data.endDate) {
+      throw new BadRequestException('Les dates de début et de fin sont obligatoires');
+    }
+
+    // Conversion explicite en Date et vérification
+    const startDate = new Date(data.startDate);
+    const endDate = new Date(data.endDate);
+    
+    // Vérification que les dates sont valides
+    if (isNaN(startDate.getTime()))throw new BadRequestException('Date de début invalide');
+    if (isNaN(endDate.getTime())) throw new BadRequestException('Date de fin invalide');
+
+    const dureeEnJours = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+
+    // Vérifier le solde
+    const solde = await this.soldeCongesService.getSolde(userId);
+    if (solde < dureeEnJours) {
+      throw new BadRequestException(`Solde de congés insuffisant. Solde actuel: ${solde} jours, demande: ${dureeEnJours} jours`);
+    }
+
+    // Créer le congé avec le statut par défaut 'pending' si non spécifié
+    const congeData = {
+      ...data,
+      userId,
+      status: data.status || 'pending'
+    };
+
+    const conge = await this.congeModel.create(congeData);
+
+    // Mettre à jour le solde si le congé est approuvé immédiatement
+    if (congeData.status === 'approved') {
+      await this.userModel.findByIdAndUpdate(userId, {
+        $inc: { soldeConges: -dureeEnJours }
+      });
+    }
+
+    return conge;
   }
+
+  async update(id: string, data: Partial<IConge>): Promise<IConge> {
+    const conge = await this.congeModel.findById(id);
+    if (!conge) throw new NotFoundException("Congé non trouvé");
+
+    // Si le statut change
+    if (data.status && data.status !== conge.status) {
+      const startDate = new Date(conge.startDate);
+      const endDate = new Date(conge.endDate);
+      const dureeEnJours = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+
+      if (data.status === 'approved') {
+        // Décrémenter le solde
+        await this.userModel.findByIdAndUpdate(conge.userId, {
+          $inc: { soldeConges: -dureeEnJours }
+        });
+      } else if (conge.status === 'approved' && (data.status === 'rejected' || data.status === 'pending')) {
+        // Rembourser le solde si on annule une approbation
+        await this.userModel.findByIdAndUpdate(conge.userId, {
+          $inc: { soldeConges: dureeEnJours }
+        });
+      }
+    }
+
+    const updatedConge = await this.congeModel.findByIdAndUpdate(id, data, { new: true });
+    if (!updatedConge) throw new NotFoundException("Congé non trouvé après mise à jour");
+    
+    return updatedConge;
+  }
+
+
 
   async findByUser(userId: string): Promise<IConge[]> {
     return this.congeModel.find({ userId }).exec();
@@ -36,11 +112,11 @@ export class CongesService {
      return this.congeModel.countDocuments({ status: 'pending' }).exec();
   }
 
-  async update(id: string, data: Partial<IConge>): Promise<IConge> {
-    const conge = await this.congeModel.findByIdAndUpdate(id, data, { new: true });
-    if (!conge) throw new NotFoundException("Congé non trouvé");
-    return conge;
-  }
+ // async update(id: string, data: Partial<IConge>): Promise<IConge> {
+ //   const conge = await this.congeModel.findByIdAndUpdate(id, data, { new: true });
+  ////  if (!conge) throw new NotFoundException("Congé non trouvé");
+ //   return conge;
+ // }
 
   async delete(id: string): Promise<void> {
     const result = await this.congeModel.findByIdAndDelete(id);

@@ -18,12 +18,17 @@ import { EmailService } from './email/email.service';
 import { EmailModule } from './email/email.module';
 import { InternshipOffersModule } from './internship-offers/internship-offers.module';
 import { ContactController } from './contact/contact.controller';
+import { SoldeCongesService } from './solde-conges/solde-conges.service';
+import { SoldeCongesModule } from './solde-conges/solde-conges.module';
+import { ScheduleModule } from '@nestjs/schedule';
+
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true,envFilePath: '.env', // Spécifiez explicitement le chemin
     }),  
     MongooseModule.forRoot('mongodb://localhost:27017/GRH'),
+    ScheduleModule.forRoot(),
     UsersModule,
     AuthModule,
     AdminsModule, 
@@ -36,10 +41,12 @@ import { ContactController } from './contact/contact.controller';
     JobOffersModule,
     EmailModule,
     InternshipOffersModule,
+    SoldeCongesModule,
+    
 
 
   ],
   controllers: [AppController, ContactController],
-  providers: [AppService, EmailService],
+  providers: [AppService, EmailService, SoldeCongesService],
 })
 export class AppModule {}

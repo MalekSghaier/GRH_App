@@ -12,6 +12,8 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import moment from 'moment';
+import { UserService } from '../../services/user.service';
+
 
 // Définir le format de date personnalisé
 export const MY_DATE_FORMATS = {
@@ -47,42 +49,65 @@ export const MY_DATE_FORMATS = {
 })
 export class CongesRequestFormComponent {
   congeForm: FormGroup;
+  soldeConges: number = 0;
+  dureeDemandee: number = 0;
 
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<CongesRequestFormComponent>,
     private congesService: CongesService,
+    private usersService: UserService,
     private toastr: ToastrService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.congeForm = this.fb.group({
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
-      reason: ['', [Validators.required, Validators.minLength(10)]]
+      reason: ['', [Validators.required, Validators.minLength(3)]]
+    });
+    this.loadSolde();
+  }
+
+  async loadSolde() {
+    try {
+      const userInfo = await this.usersService.getMyInfo().toPromise();
+      this.soldeConges = userInfo.soldeConges || 0;
+    } catch (error) {
+      console.error('Erreur lors du chargement du solde', error);
+    }
+  }
+
+  calculateDuree() {
+    if (this.congeForm.value.startDate && this.congeForm.value.endDate) {
+      const start = new Date(this.congeForm.value.startDate);
+      const end = new Date(this.congeForm.value.endDate);
+      const diffTime = Math.abs(end.getTime() - start.getTime());
+      this.dureeDemandee = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    }
+  }
+
+  onSubmit() {
+    if (this.congeForm.invalid) {
+      this.toastr.error('Veuillez remplir tous les champs obligatoires');
+      return;
+    }
+
+    if (this.dureeDemandee > this.soldeConges) {
+      this.toastr.error(`Solde insuffisant. Vous avez ${this.soldeConges} jours disponibles mais demandez ${this.dureeDemandee} jours.`);
+      return;
+    }
+
+    this.congesService.create(this.congeForm.value).subscribe({
+      next: () => {
+        this.toastr.success('Demande de congé envoyée avec succès');
+        this.dialogRef.close(true);
+      },
+      error: (err) => {
+        this.toastr.error(err.error.message || 'Erreur lors de la demande');
+      }
     });
   }
 
-  onSubmit(): void {
-    if (this.congeForm.valid) {
-      // Convertir les dates au format attendu par l'API si nécessaire
-      const formValue = {
-        ...this.congeForm.value,
-        startDate: moment(this.congeForm.value.startDate).format('YYYY-MM-DD'),
-        endDate: moment(this.congeForm.value.endDate).format('YYYY-MM-DD')
-      };
-      
-      this.congesService.create(formValue).subscribe({
-        next: () => {
-          this.toastr.success('Demande de congé créée avec succès', 'Succès');
-          this.dialogRef.close(true);
-        },
-        error: (err) => {
-          this.toastr.error('Erreur lors de la création de la demande', 'Erreur');
-          console.error(err);
-        }
-      });
-    }
-  }
 
   onCancel(): void {
     this.dialogRef.close(false);

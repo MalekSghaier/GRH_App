@@ -22,6 +22,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip'; 
 import { ToastrService } from 'ngx-toastr';
 import { CongesService } from '../../services/conges.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-conges-employe',
@@ -57,6 +58,8 @@ export class CongesEmployeComponent implements  AfterViewInit ,OnInit{
   displayedColumns: string[] = ['startDate', 'endDate', 'reason', 'status', 'actions'];
   dataSource = new MatTableDataSource<any>();
   noDataMessage = "Aucune demande de congé trouvée";
+  soldeConges: number = 0;
+
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -64,11 +67,25 @@ export class CongesEmployeComponent implements  AfterViewInit ,OnInit{
   constructor(
     private dialog: MatDialog,
     private congesService: CongesService,
+    private usersService: UserService,
     private  toastr: ToastrService,
   ) {}
 
   ngOnInit(): void {
     this.loadMyConges();
+    this.loadSoldeConges();
+
+  }
+
+  loadSoldeConges(): void {
+    this.usersService.getMyInfo().subscribe({
+      next: (user) => {
+        this.soldeConges = user.soldeConges || 0;
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement du solde', err);
+      }
+    });
   }
 
   openAddCongesDialog(): void {

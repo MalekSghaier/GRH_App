@@ -5,6 +5,7 @@ import { CongesService } from './conges.service';
 import { CongeSchema } from '../schemas/conge.schema';
 import { User, UserSchema } from '../schemas/user.schema'; // Importez le schéma User
 import { UsersModule } from '../users/users.module'; // Importez le UsersModule
+import { SoldeCongesModule } from 'src/solde-conges/solde-conges.module';
 
 
 @Module({
@@ -12,7 +13,8 @@ import { UsersModule } from '../users/users.module'; // Importez le UsersModule
     { name: User.name, schema: UserSchema } // Ajoutez le modèle User
 
   ]),
-  UsersModule // Importez le UsersModule
+  UsersModule ,
+  SoldeCongesModule// Importez le UsersModule
 
 ],
   controllers: [CongesController],

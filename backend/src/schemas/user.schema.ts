@@ -16,6 +16,7 @@ export interface IUser extends Document {
   password: string;
   role: UserRole;
   company?: string; // Société d'accueil (optionnelle)
+  soldeConges: number; // Ajout du solde de congés
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -34,6 +35,11 @@ export const UserSchema = new Schema<IUser>({
     default: UserRole.VISITOR,
   },
   company: { type: String }, // Société d'accueil (optionnelle)
+  soldeConges: { 
+    type: Number, 
+    default: 0,
+    min: 0 // Empêche les valeurs négatives
+  },
 }, { collection: 'users' });
 
 UserSchema.pre<IUser>('save', async function (next: (err?: CallbackError) => void) {
