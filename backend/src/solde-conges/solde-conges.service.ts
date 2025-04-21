@@ -14,7 +14,7 @@ export class SoldeCongesService {
 
   //@Cron('*/10 * * * * *') // Toutes les 10 secondes pour les tests
   @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT, {
-    timeZone: 'Europe/Paris' // Ajustez selon votre fuseau horaire
+    timeZone: 'Africa/Tunis',
   })
   async incrementerSoldesMensuels() {
     try {

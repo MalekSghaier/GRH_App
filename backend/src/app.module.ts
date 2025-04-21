@@ -18,7 +18,7 @@ import { EmailService } from './email/email.service';
 import { EmailModule } from './email/email.module';
 import { InternshipOffersModule } from './internship-offers/internship-offers.module';
 import { ContactController } from './contact/contact.controller';
-import { SoldeCongesService } from './solde-conges/solde-conges.service';
+//import { SoldeCongesService } from './solde-conges/solde-conges.service';
 import { SoldeCongesModule } from './solde-conges/solde-conges.module';
 import { ScheduleModule } from '@nestjs/schedule';
 
@@ -47,6 +47,6 @@ import { ScheduleModule } from '@nestjs/schedule';
 
   ],
   controllers: [AppController, ContactController],
-  providers: [AppService, EmailService, SoldeCongesService],
+  providers: [AppService, EmailService],
 })
 export class AppModule {}

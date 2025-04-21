@@ -15,8 +15,8 @@ export interface IUser extends Document {
   email: string;
   password: string;
   role: UserRole;
-  company?: string; // Société d'accueil (optionnelle)
-  soldeConges: number; // Ajout du solde de congés
+  company?: string; 
+  soldeConges: number; 
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
