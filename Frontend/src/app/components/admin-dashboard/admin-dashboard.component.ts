@@ -5,7 +5,7 @@ import { UserService } from '../../services/user.service';
 import { CongesService } from '../../services/conges.service';
 import { JobOffersService } from '../../services/job-offers.service';
 import { InternshipOffersService } from '../../services/internship-offers.service';
-import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { Chart, ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 import  {DocumentRequestsService} from '../../services/document-requests.service'
 
@@ -366,6 +366,24 @@ public pieChartPlugins = [];
 
 
 
-
+  printDashboard(): void {
+    // Ajouter la date d'impression dans l'attribut du body
+    document.body.setAttribute('data-print-date', new Date().toLocaleString());
+    // Forcer le redraw des graphiques
+    this.pieChartData = { ...this.pieChartData };
+    this.barChartData = { ...this.barChartData };
+    this.lineChartData = { ...this.lineChartData };
   
+    // Ajouter la classe print-mode au body
+    document.body.classList.add('print-mode');
+  
+    // Attendre un petit peu pour que les styles soient appliqués
+    setTimeout(() => {
+      window.print();
+  
+      // Nettoyer après l'impression
+      document.body.classList.remove('print-mode');
+      document.body.removeAttribute('data-print-date');
+    }, 500);
+  }
 }

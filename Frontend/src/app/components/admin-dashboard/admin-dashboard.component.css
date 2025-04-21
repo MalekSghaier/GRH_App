@@ -418,7 +418,92 @@ body {
 	  }
 }
 
+/* Style uniquement en mode print */
+@media print {
 
+	body {
+		background: white;
+		color: black;
+		font-size: 9pt;
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: left; /* ✅ Centre tout horizontalement */
+		text-align: left;
+		justify-content: left;
+	  }
+
+  
+	#sidebar,
+	app-shared-navbar,
+	.btn-download,
+	.breadcrumb {
+	  display: none !important;
+	}
+    .head-title {
+		width: 100%;
+		text-align: left;
+		margin-bottom: 10px;
+	  }
+	.head-title h1 {
+	  text-align: left;
+	  margin-bottom: 20px;
+	  margin: 0 auto;
+	  font-size: 20pt !important;
+	}
+  
+	canvas {
+	  max-height: 150px !important;
+	  width: 90% !important;
+	}
+  
+	.box-info {
+		display: flex !important;
+		flex-wrap: wrap;
+		justify-content: left !important; /* ✅ Centre les icônes horizontalement */
+		gap: 15px;
+		margin-bottom: 10px;
+		width: 100%;
+		max-width: 800px;
+	}
+  
+	.charts-grid {
+	  justify-content: left !important; /* ✅ Centre les icônes horizontalement */
+	  display: grid !important;
+	  grid-template-columns: 1fr 1fr !important;
+	  gap: 2px !important;
+	}
+  
+	.box-info li,
+	.chart-card {
+		flex: 0 0 120px;
+		text-align: left;
+		list-style: none;
+		padding: 10px;
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		break-inside: avoid;
+		page-break-inside: avoid;
+	}
+  
+	@page {
+		size: A4;
+		margin: 1mm;
+	}
+  
+	body::after {
+	  content: "Frontend - AdminHub | " attr(data-print-date);
+	  display: block;
+	  text-align: center;
+	  margin-top: 2px;
+	  font-size: 10pt;
+	  color: #666;
+	}
+  }
+  
 
 
 @media screen and (max-width: 576px) {
