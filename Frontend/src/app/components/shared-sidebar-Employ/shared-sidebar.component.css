@@ -170,9 +170,9 @@ body {
 	justify-content: center;
 }
 
-#sidebar .side-menu.bottom li:nth-last-of-type(-n+2) { /* Son iki <li>'yi seç */
-  position: absolute; /* Ebeveynine göre konumlandır */
-  bottom: 0; /* En alt */
+#sidebar .side-menu.bottom li:nth-last-of-type(-n+2) {
+  position: absolute; 
+  bottom: 0; 
   left: 0;
   right: 0;
   text-align: center;
