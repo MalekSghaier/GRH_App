@@ -33,6 +33,7 @@ import { OfferDetailsComponent } from './components/offer-details/offer-details.
 import { AllInternshipsComponent } from './all-internships/all-internships.component';
 import { AllWorksComponent } from './all-works/all-works.component';
 import { WorkDetailsComponent } from './components/work-details/work-details.component';
+import { ProfilEmployComponent } from './components/profil-employ/profil-employ.component';
 
 
 
@@ -176,6 +177,10 @@ export const routes: Routes = [
         path: 'apply-work/:id',
         component: ApplicationWorkFormComponent
     },
+    {
+        path:'profil-employ',
+        component: ProfilEmployComponent
+    }
 
 
 

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Boxicons -->
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
+
+	<!-- My CSS -->
+
+	<title>AdminHub</title>
+</head>
+<body>
+	<!-- SIDEBAR -->
+    <app-shared-sidebar></app-shared-sidebar>
+	<!-- SIDEBAR -->
+
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+<app-shared-navbar></app-shared-navbar>
+<!-- NAVBAR -->
+		<!-- MAIN -->
+		<main>
+			<div class="head-title">
+				<div class="left">
+					<h1>Paramètres</h1>
+					<ul class="breadcrumb">
+						<li>
+							<a href="#">Tableau de bord</a>
+						</li>
+						<li><i class='bx bx-chevron-right'></i></li>
+						<li>
+							<a class="active" routerLink="/profil">Paramètres</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		
+			<div class="table-data">
+				<div class="order">
+					<div class="container">
+						<div *ngIf="user">
+							<h2>Profil de {{ user.name }}</h2>
+							<div class="input-box">
+								<label>Nom :</label>
+								<div class="input-container">
+									<p>{{ user.name }}</p>
+								</div>
+							</div>
+							<div class="input-box">
+								<label>Email :</label>
+								<div class="input-container">
+									<p>{{ user.email }}</p>
+								</div>
+							</div>
+							<div class="input-box">
+								<label>Rôle :</label>
+								<div class="input-container">
+									<p>{{ user.role }}</p>
+								</div>
+							</div>
+							<div class="register">
+								<p><a href="edit-profile">Modifier données personnelles</a></p>
+							</div>
+							<div class="register">
+								<p><a href="change-password">Modifier mot de passe</a></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+		<!-- MAIN -->
+	</section>
+	<!-- CONTENT -->
+	
+<script src="script.js"></script>
+</body>
+</html>
