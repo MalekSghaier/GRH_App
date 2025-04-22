@@ -125,12 +125,17 @@
   }
 
   td.mat-column-duration{
-    width: 120px;
+    width: 60px;
 
   }
 
   td.mat-column-educationLevel{
-    width: 120px;
+    width: 80px;
+
+  }
+
+  td.mat-column-requirements{
+    width: 600px;
 
   }
 
