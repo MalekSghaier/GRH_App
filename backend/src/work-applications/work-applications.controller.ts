@@ -109,7 +109,8 @@ async checkExistingApplication(
 
   @Get('company/:companyName')
    async findByCompany( @Param('companyName') companyName: string, @Query('status') status?: string): Promise<WorkApplication[]> {
-   return this.workApplicationsService.findByCompany(companyName, status);
+   return this.workApplicationsService.findByCompany(companyName, status)
+   
   }
 
   @Get('count/:companyName')

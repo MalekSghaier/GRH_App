@@ -43,7 +43,9 @@ export class WorkApplicationsService {
     if (status) {
       query.status = status;
     }
-    return this.workApplicationModel.find(query).exec();
+    return this.workApplicationModel.find(query)
+    .sort({ createdAt: -1 }) // Tri par date décroissante
+    .exec();
   }
 
   // Dans le service

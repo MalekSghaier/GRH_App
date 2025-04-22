@@ -54,7 +54,7 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
 
 
   offers: any[] = [];
-  displayedColumns: string[] = ['title', 'experienceRequired', 'educationLevel', 'jobRequirements', 'actions'];  
+  displayedColumns: string[] = ['title', 'experienceRequired', 'educationLevel', 'jobRequirements',  'createdAt','actions'];  
   noDataMessage = "Aucune offre disponible";
   applications: any[] = [];
   appDisplayedColumns: string[] = [
@@ -65,6 +65,7 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
     'cv', 
     'coverLetter', 
     'availability', 
+    'createdAt',
     'actions'
   ];
 
@@ -166,7 +167,9 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
       next: (offers) => {
         this.offers = offers.map(offer => ({
           ...offer,
-          experienceRequired: `${offer.experienceRequired} ans` // Formatage de l'expérience
+          experienceRequired: `${offer.experienceRequired} ans`, // Formatage de l'expérience
+          createdAt: new Date(offer.createdAt) // Conversion en Date
+
         }));
       },
       error: (err) => {
@@ -178,15 +181,20 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
       }
     });
   }
-loadApplications(): void {
-  const companyName = localStorage.getItem('companyName');
-  if (!companyName) return;
-
-  this.workApplicationsService.getApplicationsByCompany(companyName).subscribe({
-    next: (apps) => this.applications = apps,
-    error: (err) => console.error('Erreur chargement applications', err)
-  });
-}
+  loadApplications(): void {
+    const companyName = localStorage.getItem('companyName');
+    if (!companyName) return;
+  
+    this.workApplicationsService.getApplicationsByCompany(companyName).subscribe({
+      next: (apps) => {
+        this.applications = apps.map(app => ({
+          ...app,
+          createdAt: new Date(app.createdAt) // Conversion en Date
+        }));
+      },
+      error: (err) => console.error('Erreur chargement applications', err)
+    });
+  }
 
 loadPendingCount(): void {
   const companyName = localStorage.getItem('companyName');

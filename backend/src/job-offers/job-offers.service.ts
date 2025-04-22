@@ -30,6 +30,7 @@ export class JobOffersService {
   async findByCompany(companyId: string): Promise<JobOfferDocument[]> {
     return this.jobOfferModel
       .find({ createdBy: new Types.ObjectId(companyId) })
+      .sort({ createdAt: -1 }) // Tri par date décroissante
       .exec();
   
   }
