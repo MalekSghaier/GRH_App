@@ -66,6 +66,7 @@ export class InternshipOffersComponent implements AfterViewInit, OnInit {
     'phone', 
     'cv', 
     'coverLetter', 
+    'createdAt',
     'actions'
   ];
 
@@ -184,7 +185,12 @@ export class InternshipOffersComponent implements AfterViewInit, OnInit {
     if (!companyName) return;
   
     this.internshipApplicationsService.getApplicationsByCompany(companyName).subscribe({
-      next: (apps) => this.applications = apps,
+      next: (apps) => {
+        this.applications = apps.map(app => ({
+          ...app,
+          createdAt: new Date(app.createdAt) // Conversion en Date
+        }));
+      },
       error: (err) => console.error('Erreur chargement applications', err)
     });
   }

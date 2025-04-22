@@ -112,7 +112,23 @@
   tr.mat-header-row {
     border-bottom: 1px solid #ddd !important;
   }
-  
+  td.mat-column-position{
+    width: 220px;
+  }
+  td.mat-column-fullName{
+    width: 140px;
+  }
+  td.mat-column-email{
+    width: 250px;
+  }
+  td.mat-column-phone{
+    width: 100px;
+
+  }
+  td.mat-column-cv{
+    width: 100px;
+
+  }
   /* Empêche le désalignement des icônes */
   td.mat-column-actions {
     text-align: center;

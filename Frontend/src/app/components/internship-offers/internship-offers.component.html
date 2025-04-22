@@ -169,6 +169,13 @@
                         <span *ngIf="!app.coverLetter">-</span>
                       </td>
                     </ng-container>
+                              <!-- Date Creation -->
+                      <ng-container matColumnDef="createdAt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de création</th>
+                        <td mat-cell *matCellDef="let offer">
+                          {{ offer.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                        </td>
+                      </ng-container>
                     <!-- Colonne Actions -->
                     <ng-container matColumnDef="actions">
                       <th mat-header-cell *matHeaderCellDef>Actions</th>

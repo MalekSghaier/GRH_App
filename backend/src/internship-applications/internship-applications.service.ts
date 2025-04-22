@@ -48,7 +48,9 @@ async create(data: Partial<InternshipApplication>): Promise<InternshipApplicatio
     if (status) {
       query.status = status;
     }
-    return this.internshipApplicationModel.find(query).exec();
+    return this.internshipApplicationModel.find(query)
+    .sort({ createdAt: -1 }) // Tri par date décroissante
+    .exec();
   }
 
   async countByCompanyAndStatus(companyName: string, status: string): Promise<number> {
