@@ -32,8 +32,9 @@ export class InternshipOffersService {
   async findByCompany(companyId: string): Promise<InternshipOfferDocument[]> {
     return this.internshipOfferModel
       .find({ createdBy: new Types.ObjectId(companyId) })
+      .sort({ createdAt: -1 }) // Tri par date décroissante
       .exec();
-  }
+   }
 
   async findById(id: string): Promise<InternshipOfferDocument | null> {
     return this.internshipOfferModel.findById(id).exec();

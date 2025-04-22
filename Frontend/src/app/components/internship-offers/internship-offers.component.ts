@@ -55,7 +55,8 @@ export class InternshipOffersComponent implements AfterViewInit, OnInit {
 
 
   offers: any[] = [];
-  displayedColumns: string[] = ['title', 'duration', 'educationLevel', 'requirements', 'actions'];  
+  displayedColumns: string[] = ['title', 'duration', 'educationLevel', 'requirements','createdAt',
+'actions'];  
   noDataMessage = "Aucune offre disponible";
   applications: any[] = [];
   appDisplayedColumns: string[] = [
@@ -155,7 +156,9 @@ export class InternshipOffersComponent implements AfterViewInit, OnInit {
       next: (offers) => {
         this.offers = offers.map(offer => ({
           ...offer,
-          duration: `${offer.duration} mois`
+          duration: `${offer.duration} mois`,
+          createdAt: new Date(offer.createdAt) // Conversion en Date
+
         }));
       },
       error: (err) => {
