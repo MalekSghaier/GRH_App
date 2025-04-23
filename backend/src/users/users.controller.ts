@@ -1,5 +1,5 @@
 //users.controller.ts
-import { Controller, Get, Post, Body, ConflictException, UseGuards ,NotFoundException ,Put, Delete,Param, InternalServerErrorException, Query, BadRequestException} from '@nestjs/common';
+import { Controller, Get, Post, Body, ConflictException, UseGuards ,NotFoundException ,Put, Delete,Param, InternalServerErrorException, Query, BadRequestException, Req} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDocument } from '../schemas/user.schema'; 
 import { AuthGuard } from '@nestjs/passport';
@@ -7,12 +7,20 @@ import { Request } from '@nestjs/common';
 import { Request as ExpressRequest } from 'express';
 import * as bcrypt from 'bcrypt';
 import { UserPayload } from 'src/schemas/user-payload';
+import { PointageService } from 'src/pointage/pointage.service';
+import { RequestWithUser } from 'express';
 
 
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor
+  (
+    private readonly usersService: UsersService,
+    private readonly pointageService: PointageService,
+
+    
+  ) { }
 
 
 
@@ -64,12 +72,23 @@ export class UsersController {
   return this.usersService.countInternsByCompany(user.companyName);
   }
 
+
   @Get(':id/qrcode')
-  @UseGuards(AuthGuard('jwt'))
-  async getQrCodeForUser(@Param('id') id: string): Promise<{ qrCode: string }> {
-    const qrCode = await this.usersService.generateQrCode(id);
-    return { qrCode };
-  }
+@UseGuards(AuthGuard('jwt'))
+async getQrCodeForUser(
+  @Param('id') id: string,
+  @Req() req: RequestWithUser // Vous devrez créer cette interface si elle n'existe pas
+): Promise<{ qrCode: string }> {
+  const qrCode = await this.usersService.generateAndSendQrCode(id, req.user.email);
+  return { qrCode };
+}
+
+  //@Get(':id/qrcode')
+  //@UseGuards(AuthGuard('jwt'))
+ // async getQrCodeForUser(@Param('id') id: string): Promise<{ qrCode: string }> {
+  //  const qrCode = await this.usersService.generateQrCode(id);
+   // return { qrCode };
+  //}
 
 
   @Put('my-info')
@@ -100,8 +119,20 @@ export class UsersController {
     return isMatch;
   }
 
+  @Post(':id/send-qrcode')
+@UseGuards(AuthGuard('jwt'))
+async sendQrCodeToEmail(
+  @Param('id') id: string,
+  @Req() req: RequestWithUser
+): Promise<{ message: string }> {
+  await this.usersService.sendQrCodeToEmail(id, req.user.email);
+  return { message: 'QR Code envoyé par email avec succès' };
+}
 
-
+  @Post(':id/pointage')
+   async pointer(@Param('id') id: string) {
+   return this.pointageService.enregistrerPointage(id);
+  }
 
   @Put('change-password')
   @UseGuards(AuthGuard('jwt'))

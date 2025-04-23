@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <title>AdminHub</title>
+</head>
+<body>
+  <app-shared-sidebar></app-shared-sidebar>
+  <section id="content">
+    <app-shared-navbar></app-shared-navbar>
+
+    <!-- MAIN -->
+    <main>
+      <div class="head-title">
+        <div class="left">
+          <h1>Pointage via QR Code</h1>
+          <ul class="breadcrumb">
+            <li><a href="employee-dashboard">Tableau de bord</a></li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li><a class="active" href="#">Pointage</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="table-data">
+        <div class="order">
+          <div class="container">
+
+            <div class="head-title">
+              <div class="left">
+                <h1>Pointage via QR Code</h1>
+                <!-- ... reste du code -->
+              </div>
+            </div>
+
+            <mat-tab-group>
+                <!-- Onglet 1 : Ajouter un congé -->
+                <mat-tab label="📌 Obtenir Code QR">
+                  <div class="tab-content">
+                    <h2>Pointage QR Code</h2>
+                    <button 
+                      mat-raised-button 
+                      color="primary" 
+                      (click)="getQrCodeAndSendEmail()"
+                      [disabled]="loading">
+                      <span *ngIf="!loading">+ Obtenir code QR</span>
+                      <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+                    </button>
+                  </div>
+                </mat-tab>
+              
+                <!-- Onglet 2 : Mes congés -->
+                <mat-tab label="📋 Effectuer Pointage">
+                  <form action="#">
+                    <div class="form-input">
+                      <input type="search" placeholder="Rechercher par période ou statut...">
+                      <button type="button" class="search-btn"><i class='bx bx-search'></i></button>
+                    </div>
+                  </form>
+                  
+                  <div class="table-container">
+
+              
+              
+                  </div>
+                </mat-tab>
+              </mat-tab-group>
+
+           </div>
+        
+
+
+        </div>
+      </div>
+    </main>
+    <!-- MAIN -->
+  </section>
+  <!-- CONTENT -->
+</body>
+</html>

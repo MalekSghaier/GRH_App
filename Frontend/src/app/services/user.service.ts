@@ -179,4 +179,15 @@ export class UserService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<number>(`${this.apiUrl}/count-interns`, { headers });
   }
+
+  // user.service.ts
+  generateQrCodeAndSendEmail(userId: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Aucun token trouvé !');
+    }
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post(`${this.apiUrl}/${userId}/send-qrcode`, {}, { headers });
+  }
 }

@@ -6,12 +6,18 @@ import { User, UserRole, UserDocument } from '../schemas/user.schema';
 import * as QRCode from 'qrcode';
 import { ObjectId } from 'mongodb'; 
 import * as bcrypt from 'bcrypt';
+import { EmailService } from '../email/email.service'; // Chemin correct vers EmailService
+import { PointageService } from 'src/pointage/pointage.service';
+
 
 
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>,
+  private pointageService: PointageService,
+  private readonly emailService: EmailService
+) {}
 
 
   async generateQrCode(userId: string): Promise<string> {
@@ -253,5 +259,34 @@ async findUsersForAdminPaginated(page: number = 1, limit: number = 5): Promise<{
       throw new BadRequestException(messages);
     }
     throw new InternalServerErrorException('Une erreur interne est survenue');
+  }
+
+  async generateAndSendQrCode(userId: string, email: string): Promise<string> {
+    const qrCode = await this.generateQrCode(userId);
+    await this.sendQrCodeToEmail(userId, email);
+    return qrCode;
+  }
+
+
+  async sendQrCodeToEmail(userId: string, email: string): Promise<void> {
+    const user = await this.findById(userId);
+    if (!user) throw new NotFoundException(`Utilisateur avec ID ${userId} non trouvé`);
+    
+    const qrCode = await this.generateQrCode(userId);
+    
+    // Convertir le DataURL en buffer pour l'attachement
+    const base64Data = qrCode.replace(/^data:image\/png;base64,/, "");
+    const buffer = Buffer.from(base64Data, 'base64');
+    
+    await this.emailService.sendEmailWithAttachmentQrCode({
+      to: email,
+      subject: 'Votre QR Code de pointage',
+      body: `Bonjour ${user.name},\n\nVoici votre QR Code personnel pour le pointage.\n\nCordialement,\nL'équipe RH`,
+      attachments: [{
+        filename: `qrcode-${userId}.png`,
+        content: buffer,
+        contentType: 'image/png'
+      }]
+    });
   }
 }

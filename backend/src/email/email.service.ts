@@ -95,5 +95,37 @@ async sendPlainEmail(data: {
     throw new Error('Failed to send contact email');
   }
 }
+
+async sendEmailWithAttachmentQrCode(data: {
+  to: string;
+  subject: string;
+  body: string;
+  attachments: Array<{
+    filename: string;
+    content: Buffer | string;
+    contentType?: string;
+    path?: string;
+  }>;
+}): Promise<void> {
+  try {
+    const mailOptions = {
+      from: '"Service RH" <maleksg0@gmail.com>',
+      to: data.to,
+      subject: data.subject,
+      text: data.body,
+      attachments: data.attachments.map(attachment => ({
+        filename: attachment.filename,
+        content: attachment.content,
+        contentType: attachment.contentType,
+        path: attachment.path
+      }))
+    };
+
+    await this.transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error('Error sending email with attachment:', error);
+    throw new Error('Echec d\'envoi d\'email avec pièce jointe');
+  }
+}
   
 }

@@ -24,6 +24,7 @@
     "@fortawesome/angular-fontawesome": "^1.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@zxing/ngx-scanner": "^19.0.0",
     "boxicons": "^2.1.4",
     "chart.js": "^3.9.1",
     "html2canvas": "^1.4.1",

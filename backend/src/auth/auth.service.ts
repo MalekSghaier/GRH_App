@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   login(user: UserDocument): { access_token: string; role: string } {
-    const payload = { email: user.email, sub: user._id, role: user.role }; // Inclure le rôle de l'utilisateur
+    const payload = { email: user.email, sub: user._id, role: user.role,companyName: user.company    }; // Inclure le rôle de l'utilisateur
     return {
       access_token: this.jwtService.sign(payload),
       role: user.role,

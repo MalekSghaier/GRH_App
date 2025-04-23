@@ -21,6 +21,7 @@ import { ContactController } from './contact/contact.controller';
 //import { SoldeCongesService } from './solde-conges/solde-conges.service';
 import { SoldeCongesModule } from './solde-conges/solde-conges.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { PointageModule } from './pointage/pointage.module';
 
 
 @Module({
@@ -42,6 +43,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     EmailModule,
     InternshipOffersModule,
     SoldeCongesModule,
+    PointageModule,
     
 
 
