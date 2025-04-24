@@ -1,7 +1,6 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import {  Component, OnInit, ViewChild } from '@angular/core';
+import {  MatSortModule } from '@angular/material/sort';
+import {  MatPaginatorModule } from '@angular/material/paginator';
 import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component';
 import { SharedSidebarComponent } from '../shared-sidebar-Employ/shared-sidebar.component';
 import { CommonModule } from '@angular/common';
@@ -15,14 +14,18 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatDialog } from '@angular/material/dialog';
-import { CongesRequestFormComponent } from '../conges-request-form/conges-request-form.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; 
 import { MatTooltipModule } from '@angular/material/tooltip'; 
 import { ToastrService } from 'ngx-toastr';
-import { CongesService } from '../../services/conges.service';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
+import { ZXingScannerComponent } from '@zxing/ngx-scanner';
+import { PointageService } from '../../services/pointage.service';
+import moment from 'moment';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { BarcodeFormat } from '@zxing/library';
+
+
 
 @Component({
   selector: 'app-pointage-employ',
@@ -45,19 +48,34 @@ import { AuthService } from '../../services/auth.service';
     MatSortModule,
     MatPaginatorModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    ZXingScannerModule
+
   ],
   templateUrl: './pointage-employ.component.html',
   styleUrl: './pointage-employ.component.css'
 })
-export class PointageEmployComponent {
+export class PointageEmployComponent implements OnInit{
+  @ViewChild('scanner', { static: false }) scanner!: ZXingScannerComponent;
+
+  loading = false;
+  scannerEnabled = false;
+  hasPermission = false;
+  selectedDevice: MediaDeviceInfo | undefined;
+  qrResult: any;
+  pointages: any[] = [];
+  formats: BarcodeFormat[] = [BarcodeFormat.QR_CODE];
+
   constructor(
     private userService: UserService,
     private toastr: ToastrService,
-    private authService: AuthService
+    private authService: AuthService,
+    private pointageService: PointageService
+
   ) {}
 
-  loading = false;
+  
+
  async getQrCodeAndSendEmail() {
   if (!this.authService.isLoggedIn()) {
     this.toastr.error('Veuillez vous connecter d\'abord');
@@ -82,4 +100,75 @@ export class PointageEmployComponent {
     this.loading = false;
   }
 }
+
+toggleScanner() {
+  this.scannerEnabled = !this.scannerEnabled;
+  if (this.scannerEnabled) {
+    this.checkScannerPermissions();
+  }
+}
+
+checkScannerPermissions() {
+  this.scanner.camerasFound.subscribe((devices: MediaDeviceInfo[]) => {
+    this.hasPermission = true;
+    this.selectedDevice = devices[0];
+  });
+  
+  this.scanner.permissionResponse.subscribe((perm: boolean) => {
+    this.hasPermission = perm;
+    if (!perm) {
+      this.toastr.warning('Vous devez autoriser l\'accès à la caméra');
+    }
+  });
+}
+
+handleQrCodeResult(resultString: string) {
+  try {
+    const qrData = JSON.parse(resultString);
+    if (qrData.id) {
+      this.enregistrerPointage(qrData.id);
+    } else {
+      this.toastr.error('QR Code invalide');
+    }
+  } catch (e) {
+    this.toastr.error('QR Code invalide');
+  }
+  this.scannerEnabled = false;
+}
+
+
+async enregistrerPointage(userId: string) {
+  this.loading = true;
+  try {
+    const response = await this.pointageService.enregistrerPointage(userId).toPromise();
+    this.toastr.success(response.message);
+    
+    // Actualiser la liste des pointages
+    await this.loadPointages();
+  } catch (error: any) {
+    this.toastr.error(error.error?.message || 'Erreur lors de l\'enregistrement');
+  } finally {
+    this.loading = false;
+  }
+}
+
+async loadPointages() {
+  if (!this.authService.isLoggedIn()) return;
+  
+  try {
+    const currentUser = this.authService.getCurrentUser();
+    const pointages = await this.pointageService.getPointagesUtilisateur(currentUser.id).toPromise();
+    this.pointages = pointages || [];
+  } catch (error) {
+    console.error('Erreur chargement pointages:', error);
+  }
+}
+
+formatDate(date: string): string {
+  return moment(date, 'YYYY-MM-DD').format('DD/MM/YYYY');
+}
+ngOnInit() {
+  this.loadPointages();
+}
+
 }

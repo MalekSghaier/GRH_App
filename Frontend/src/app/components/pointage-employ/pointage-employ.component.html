@@ -1,3 +1,4 @@
+<!-- pointage-employ.component.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,16 +28,14 @@
       <div class="table-data">
         <div class="order">
           <div class="container">
-
             <div class="head-title">
               <div class="left">
                 <h1>Pointage via QR Code</h1>
-                <!-- ... reste du code -->
               </div>
             </div>
 
             <mat-tab-group>
-                <!-- Onglet 1 : Ajouter un congé -->
+                <!-- Onglet 1 : Obtenir QR Code -->
                 <mat-tab label="📌 Obtenir Code QR">
                   <div class="tab-content">
                     <h2>Pointage QR Code</h2>
@@ -51,32 +50,58 @@
                   </div>
                 </mat-tab>
               
-                <!-- Onglet 2 : Mes congés -->
+                <!-- Onglet 2 : Scanner QR Code -->
                 <mat-tab label="📋 Effectuer Pointage">
-                  <form action="#">
-                    <div class="form-input">
-                      <input type="search" placeholder="Rechercher par période ou statut...">
-                      <button type="button" class="search-btn"><i class='bx bx-search'></i></button>
-                    </div>
-                  </form>
-                  
-                  <div class="table-container">
+                  <div class="tab-content">
+                    <button 
+                    mat-raised-button 
+                    color="primary" 
+                    (click)="toggleScanner()"
+                    [disabled]="loading">
+                    {{ scannerEnabled ? 'Arrêter le scan' : 'Scanner QR Code' }}
+                  </button>
 
-              
-              
+                    <div *ngIf="scannerEnabled" class="scanner-container">
+                      <zxing-scanner 
+                      #scanner
+                      [enable]="scannerEnabled"
+                      (scanSuccess)="handleQrCodeResult($event)"
+                      [autofocus]="true"
+                      [device]="selectedDevice"
+                      [formats]="formats">
+                      </zxing-scanner>
+                      
+                      <div *ngIf="!hasPermission" class="permission-warning">
+                        <p>Veuillez autoriser l'accès à la caméra</p>
+                      </div>
+                    </div>
+
+                    <div class="pointage-history" *ngIf="pointages.length > 0">
+                      <h3>Historique des pointages</h3>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Date</th>
+                            <th>Entrée</th>
+                            <th>Sortie</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let pointage of pointages">
+                            <td>{{ formatDate(pointage.date) }}</td>
+                            <td>{{ pointage.entree || '-' }}</td>
+                            <td>{{ pointage.sortie || '-' }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </mat-tab>
               </mat-tab-group>
-
            </div>
-        
-
-
         </div>
       </div>
     </main>
-    <!-- MAIN -->
   </section>
-  <!-- CONTENT -->
 </body>
 </html>

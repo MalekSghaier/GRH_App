@@ -1,17 +1,19 @@
+// src/schemas/pointage.schema.ts
 import { Schema, Document, model } from 'mongoose';
 
-export interface Pointage extends Document {
+export class Pointage extends Document {
   userId: string;
-  date: string; // format YYYY-MM-DD
-  entree: string; // format HH:mm:ss
-  sortie?: string; // optionnel, si pas encore de sortie
+  date: string;
+  entree: string;
+  sortie?: string;
 }
 
-const PointageSchema = new Schema<Pointage>({
+export const PointageSchema = new Schema<Pointage>({
   userId: { type: String, required: true },
-  date: { type: String, required: true }, // Ex: 2024-04-23
+  date: { type: String, required: true },
   entree: { type: String, required: true },
   sortie: { type: String }
 });
 
-export const PointageModel = model<Pointage>('Pointage', PointageSchema);
+export type PointageDocument = Pointage & Document;
+export const PointageModel = model<PointageDocument>('Pointage', PointageSchema);
