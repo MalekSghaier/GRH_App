@@ -1,5 +1,5 @@
 // pointage.controller.ts
-import { Controller, Post, UseGuards, Req } from '@nestjs/common';
+import { Controller, Post, UseGuards, Req, Get, Query } from '@nestjs/common';
 import { PointageService } from './pointage.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RequestWithUser } from 'express';
@@ -14,4 +14,14 @@ export class PointageController {
     const userId = req.user._id;
     return this.pointageService.enregistrerPointage(userId);
   }
+
+  @Get('monthly')
+  @UseGuards(AuthGuard('jwt'))
+async getMonthlyPointages( @Req() req: RequestWithUser, @Query('month') month: number, @Query('year') year: number) {
+  return this.pointageService.getPointagesByMonth(
+    req.user._id, 
+    Number(month), 
+    Number(year)
+  );
+}
 }

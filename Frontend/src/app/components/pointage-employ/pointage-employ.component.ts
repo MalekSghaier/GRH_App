@@ -25,7 +25,10 @@ import moment from 'moment';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { BarcodeFormat } from '@zxing/library';
 import { MatDialog } from '@angular/material/dialog';
-import { ScanQrDialogComponent } from '../scan-qr-dialog/scan-qr-dialog.component'; // Ajuste ton chemin si besoin
+import { ScanQrDialogComponent } from '../scan-qr-dialog/scan-qr-dialog.component'; 
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 
@@ -53,7 +56,11 @@ import { ScanQrDialogComponent } from '../scan-qr-dialog/scan-qr-dialog.componen
     MatIconModule,
     MatTooltipModule,
     ZXingScannerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './pointage-employ.component.html',
   styleUrl: './pointage-employ.component.css'
@@ -68,6 +75,26 @@ export class PointageEmployComponent implements OnInit{
   qrResult: any;
   pointages: any[] = [];
   formats: BarcodeFormat[] = [BarcodeFormat.QR_CODE];
+  months = [
+    { value: 1, name: 'Janvier' },
+    { value: 2, name: 'Février' },
+    { value: 3, name: 'Mars' },
+    { value: 4, name: 'Avril' },
+    { value: 5, name: 'Mai' },
+    { value: 6, name: 'Juin' },
+    { value: 7, name: 'Juillet' },
+    { value: 8, name: 'Aôut' },
+    { value: 9, name: 'Septembre' },
+    { value: 10, name: 'Octobre' },
+    { value: 11, name: 'Novembre' },
+    { value: 12, name: 'Décembre' }
+  ];
+  years = [2023, 2024, 2025]; 
+  selectedMonth = new Date().getMonth() + 1;
+  selectedYear = new Date().getFullYear();
+  monthControl = new FormControl(this.selectedMonth);
+  yearControl = new FormControl(this.selectedYear);
+
 
   constructor(
     private userService: UserService,
@@ -79,7 +106,29 @@ export class PointageEmployComponent implements OnInit{
 
   ) {}
 
-  
+  ngOnInit() {
+    this.loadPointages();
+    this.loadPointagesForMonth();
+    this.monthControl.valueChanges.subscribe(() => this.loadPointagesForMonth());
+    this.yearControl.valueChanges.subscribe(() => this.loadPointagesForMonth());
+  }
+
+  async loadPointagesForMonth() {
+    if (!this.authService.isLoggedIn()) return;
+    
+    try {
+      const currentUser = this.authService.getCurrentUser();
+      this.pointages = await this.pointageService
+        .getMonthlyPointages(
+          currentUser.id, 
+          this.monthControl.value!, 
+          this.yearControl.value!
+        )
+        .toPromise() || [];
+    } catch (error) {
+      console.error('Erreur chargement pointages:', error);
+    }
+  }
 
  async getQrCodeAndSendEmail() {
   if (!this.authService.isLoggedIn()) {
@@ -179,8 +228,6 @@ async loadPointages() {
 formatDate(date: string): string {
   return moment(date, 'YYYY-MM-DD').format('DD/MM/YYYY');
 }
-ngOnInit() {
-  this.loadPointages();
-}
+
 
 }

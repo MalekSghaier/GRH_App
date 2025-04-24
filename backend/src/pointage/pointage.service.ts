@@ -57,4 +57,18 @@ export class PointageService {
       .limit(30)
       .exec();
   }
+async getPointagesByMonth(userId: string, month: number, year: number) {
+  const startDate = new Date(year, month - 1, 1).toISOString();
+  const endDate = new Date(year, month, 0).toISOString();
+
+  return this.pointageModel.find({
+    userId,
+    date: {
+      $gte: moment(startDate).format('YYYY-MM-DD'),
+      $lte: moment(endDate).format('YYYY-MM-DD')
+    }
+  })
+  .sort({ date: -1 })
+  .exec();
+}
 }
