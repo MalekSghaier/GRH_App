@@ -41,11 +41,10 @@
                     <h2>Pointage QR Code</h2>
                     <button 
                     class="btn-primary"
-                      mat-raised-button 
-                      color="primary" 
                       (click)="getQrCodeAndSendEmail()"
                       [disabled]="loading">
-                      <span *ngIf="!loading">+ Obtenir code QR</span>
+                      <div *ngIf="!loading"
+                      >+ Obtenir code QR</div>
                       <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
                     </button>
                   </div>
@@ -57,8 +56,6 @@
                     <h2>Effectuer pointage via votre code QR Code spécifique</h2>
                     <button 
                     class="btn-primary"
-                    mat-raised-button 
-                    color="primary" 
                     (click)="toggleScanner()"
                     [disabled]="loading">
                     {{ scannerEnabled ? 'Arrêter le scan' : 'Scanner QR Code' }}

@@ -1,0 +1,33 @@
+<div class="dialog-container">
+    <div class="dialog-header">
+      <h2 class="dialog-title">
+        <mat-icon>qr_code_scanner</mat-icon>
+        Scanner votre QR Code
+      </h2>
+    </div>
+  
+    <div class="dialog-content">
+      <div *ngIf="!hasPermission" class="permission-warning">
+        <mat-icon>warning</mat-icon>
+        <p>Veuillez autoriser l'accès à la caméra</p>
+      </div>
+  
+      <div class="scanner-wrapper">
+        <zxing-scanner 
+          #scanner
+          [enable]="true"
+          (scanSuccess)="onScanSuccess($event)"
+          [autofocus]="true"
+          [device]="selectedDevice"
+          [formats]="formats">
+        </zxing-scanner>
+      </div>
+    </div>
+  
+    <div class="dialog-actions">
+      <button mat-raised-button class="close-btn" (click)="onClose()">
+        <mat-icon>close</mat-icon>
+        Fermer
+      </button>
+    </div>
+  </div>

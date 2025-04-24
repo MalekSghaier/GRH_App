@@ -24,6 +24,9 @@ import { PointageService } from '../../services/pointage.service';
 import moment from 'moment';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { BarcodeFormat } from '@zxing/library';
+import { MatDialog } from '@angular/material/dialog';
+import { ScanQrDialogComponent } from '../scan-qr-dialog/scan-qr-dialog.component'; // Ajuste ton chemin si besoin
+
 
 
 
@@ -49,8 +52,8 @@ import { BarcodeFormat } from '@zxing/library';
     MatPaginatorModule,
     MatIconModule,
     MatTooltipModule,
-    ZXingScannerModule
-
+    ZXingScannerModule,
+    MatDialogModule
   ],
   templateUrl: './pointage-employ.component.html',
   styleUrl: './pointage-employ.component.css'
@@ -70,7 +73,9 @@ export class PointageEmployComponent implements OnInit{
     private userService: UserService,
     private toastr: ToastrService,
     private authService: AuthService,
-    private pointageService: PointageService
+    private pointageService: PointageService,
+    private dialog: MatDialog 
+
 
   ) {}
 
@@ -101,12 +106,19 @@ export class PointageEmployComponent implements OnInit{
   }
 }
 
-toggleScanner() {
-  this.scannerEnabled = !this.scannerEnabled;
-  if (this.scannerEnabled) {
-    this.checkScannerPermissions();
-  }
+async toggleScanner() {
+  const dialogRef = this.dialog.open(ScanQrDialogComponent, {
+    width: '400px',
+    disableClose: true,
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.handleQrCodeResult(result);
+    }
+  });
 }
+
 
 checkScannerPermissions() {
   this.scanner.camerasFound.subscribe((devices: MediaDeviceInfo[]) => {
