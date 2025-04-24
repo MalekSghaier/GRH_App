@@ -251,7 +251,8 @@
 .btn-primary {
   background-color: #007bff;
   color: white;
-  padding: 10px 20px;
+  padding: 15px 20px;
+  margin-top: 15px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
