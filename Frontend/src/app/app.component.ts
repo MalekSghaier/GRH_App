@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'Flesk GRH';
+  title = 'FLESK GRH';
   constructor(private toastr: ToastrService) {}
 
 }

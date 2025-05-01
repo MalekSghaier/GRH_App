@@ -82,7 +82,7 @@ async sendPlainEmail(data: {
 }): Promise<void> {
   try {
     const mailOptions = {
-      from: '"Flesk GRH Contact" <maleksg0@gmail.com>',
+      from: '"FLESK GRH Contact" <maleksg0@gmail.com>',
       to: data.to,
       subject: data.subject,
       text: data.text,

@@ -1,4 +1,4 @@
-import {  Component, OnInit, ViewChild } from '@angular/core';
+import {  AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {  MatSortModule } from '@angular/material/sort';
 import {  MatPaginatorModule } from '@angular/material/paginator';
 import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component';
@@ -63,9 +63,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     ReactiveFormsModule
   ],
   templateUrl: './pointage-employ.component.html',
-  styleUrl: './pointage-employ.component.css'
+  styleUrl: './pointage-employ.component.css',
+  encapsulation: ViewEncapsulation.None
+  
 })
-export class PointageEmployComponent implements OnInit{
+export class PointageEmployComponent implements AfterViewInit,OnInit{
   @ViewChild('scanner', { static: false }) scanner!: ZXingScannerComponent;
 
   loading = false;
@@ -111,6 +113,53 @@ export class PointageEmployComponent implements OnInit{
     this.loadPointagesForMonth();
     this.monthControl.valueChanges.subscribe(() => this.loadPointagesForMonth());
     this.yearControl.valueChanges.subscribe(() => this.loadPointagesForMonth());
+  }
+
+  ngAfterViewInit() {
+    this.initializeSidebar();
+  }
+  private initializeSidebar(): void {
+    const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
+
+    allSideMenu.forEach(item => {
+      const li = item.parentElement;
+
+      if (li) {
+        item.addEventListener('click', function () {
+          allSideMenu.forEach(i => {
+            if (i.parentElement) {
+              i.parentElement.classList.remove('active');
+            }
+          });
+          li.classList.add('active');
+        });
+      }
+    });
+
+    const menuBar = document.querySelector('#content nav .bx.bx-menu');
+    const sidebar = document.getElementById('sidebar');
+
+    if (menuBar && sidebar) {
+      menuBar.addEventListener('click', function () {
+        sidebar.classList.toggle('hide');
+      });
+    }
+
+    window.addEventListener('load', this.adjustSidebar);
+    window.addEventListener('resize', this.adjustSidebar);
+  }
+
+  private adjustSidebar(): void {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) { 
+      if (window.innerWidth <= 576) {
+        sidebar.classList.add('hide');
+        sidebar.classList.remove('show');
+      } else {
+        sidebar.classList.remove('hide');
+        sidebar.classList.add('show');
+      }
+    }
   }
 
   async loadPointagesForMonth() {
