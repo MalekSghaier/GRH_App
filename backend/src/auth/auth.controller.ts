@@ -6,6 +6,7 @@ import { CompaniesService } from '../companies/companies.service';
 import { UserDocument } from '../schemas/user.schema';
 import { CompanyDocument } from '../schemas/company.schema';
 
+
 @Controller('auth')
 export class AuthController {
   constructor(

@@ -22,6 +22,8 @@ import { ContactController } from './contact/contact.controller';
 import { SoldeCongesModule } from './solde-conges/solde-conges.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PointageModule } from './pointage/pointage.module';
+import { PythonService } from './python/python.service';
+import { PythonModule } from './python/python.module';
 
 
 @Module({
@@ -44,12 +46,13 @@ import { PointageModule } from './pointage/pointage.module';
     InternshipOffersModule,
     SoldeCongesModule,
     PointageModule,
+    PythonModule,
 
     
 
 
   ],
   controllers: [AppController, ContactController],
-  providers: [AppService, EmailService],
+  providers: [AppService, EmailService, PythonService],
 })
 export class AppModule {}

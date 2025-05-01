@@ -88,4 +88,68 @@ export class LoginComponent {
         }
       });
   }
+
+  // pointageRF() {
+  //   this.http.get('http://localhost:3000/python/launch', { responseType: 'text' })
+  //     .subscribe({
+  //       next: (response: string) => {
+  //         console.log('Script lancé avec succès :', response);
+  //         this.toastr.success(response, 'Résultat de la détection', {
+  //           timeOut: 3000,
+  //           progressBar: true
+  //         });
+  //         alert('Résultat du script Python : ' + response);
+  //       },
+  //       error: (err) => {
+  //         console.error('Erreur lors du lancement du script :', err);
+  //         this.toastr.error('Erreur lors du lancement du script.', 'Erreur', {
+  //           timeOut: 1500,
+  //           progressBar: true
+  //         });
+  //       }
+  //     });
+  // }
+
+  pointageRF() {
+    this.toastr.info('Lancement de la reconnaissance faciale...', 'Veuillez patienter', {
+      timeOut: 3000,
+      progressBar: true
+    });
+  
+    this.http.get<any>('http://localhost:3000/python/launch')
+      .subscribe({
+        next: (response) => {
+          if (response.status === 'success') {
+            this.toastr.success(response.message, 'Reconnaissance réussie', {
+              timeOut: 5000,
+              progressBar: true
+            });
+          } else if (response.status === 'info') {
+            this.toastr.info(response.message, 'Information', {
+              timeOut: 5000,
+              progressBar: true
+            });
+          } else {
+            this.toastr.warning(response.message || 'Réponse inattendue', 'Attention', {
+              timeOut: 5000,
+              progressBar: true
+            });
+          }
+        },
+        error: (err) => {
+          console.error('Erreur HTTP:', err);
+          this.toastr.error(
+            err.error?.message || err.message || 'Erreur de communication avec le serveur',
+            'Erreur',
+            { timeOut: 5000, progressBar: true }
+          );
+        }
+      });
+  }
+  
+  
+
+
+
+  
 }
