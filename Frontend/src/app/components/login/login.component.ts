@@ -94,26 +94,7 @@ export class LoginComponent {
       });
   }
 
-  // pointageRF() {
-  //   this.http.get('http://localhost:3000/python/launch', { responseType: 'text' })
-  //     .subscribe({
-  //       next: (response: string) => {
-  //         console.log('Script lancé avec succès :', response);
-  //         this.toastr.success(response, 'Résultat de la détection', {
-  //           timeOut: 3000,
-  //           progressBar: true
-  //         });
-  //         alert('Résultat du script Python : ' + response);
-  //       },
-  //       error: (err) => {
-  //         console.error('Erreur lors du lancement du script :', err);
-  //         this.toastr.error('Erreur lors du lancement du script.', 'Erreur', {
-  //           timeOut: 1500,
-  //           progressBar: true
-  //         });
-  //       }
-  //     });
-  // }
+
 
   pointageRF() {
     this.toastr.info('Lancement de la reconnaissance faciale...', 'Veuillez patienter', {
@@ -129,8 +110,7 @@ export class LoginComponent {
               timeOut: 5000,
               progressBar: true
             });
-          } else if (response.status === 'info' && response.new_user_id) {
-            this.newUserImageId = response.new_user_id;
+          } else if (response.status === 'info') {
             this.openNewUserDialog();
           } else {
             this.toastr.warning(response.message || 'Réponse inattendue', 'Attention', {
@@ -148,7 +128,7 @@ export class LoginComponent {
           );
         }
       });
-  }
+}
   
   openNewUserDialog(): void {
     const dialogRef = this.dialog.open(NewUserDialogComponent, {
@@ -166,26 +146,41 @@ export class LoginComponent {
   }
   
   registerNewUserWithImage(userData: any): void {
-    const payload = {
-      user: {
-        name: userData.name,
-        email: userData.email,
-        role: userData.role,
-        password: userData.password
-      },
-      imageId: userData.imageId
-    };
-  
-    this.http.post('http://localhost:3000/users/with-image', payload)
+    // D'abord capturer l'image
+    this.http.get<any>('http://localhost:3000/python/capture')
       .subscribe({
-        next: (response: any) => {
-          this.toastr.success('Nouvel utilisateur enregistré avec succès', 'Succès');
+        next: (captureResponse) => {
+          if (captureResponse.status === 'success' && captureResponse.image_id) {
+            // Ensuite créer l'utilisateur avec l'image capturée
+            const payload = {
+              user: {
+                name: userData.name,
+                email: userData.email,
+                role: userData.role,
+                password: userData.password
+              },
+              imageId: captureResponse.image_id
+            };
+            
+            this.http.post('http://localhost:3000/users/with-image', payload)
+              .subscribe({
+                next: (response: any) => {
+                  this.toastr.success('Nouvel utilisateur enregistré avec succès', 'Succès');
+                },
+                error: (err) => {
+                  this.toastr.error('Erreur lors de l\'enregistrement', 'Erreur');
+                  console.error(err);
+                }
+              });
+          } else {
+            this.toastr.error('Erreur lors de la capture de l\'image', 'Erreur');
+          }
         },
         error: (err) => {
-          this.toastr.error('Erreur lors de l\'enregistrement', 'Erreur');
+          this.toastr.error('Erreur lors de la capture de l\'image', 'Erreur');
           console.error(err);
         }
       });
-  }
+}
   
 }

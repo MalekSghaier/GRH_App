@@ -33,4 +33,17 @@ export class PythonController {
       };
     }
   }
+
+  @Get('capture')
+  async captureImage(): Promise<any> {
+      try {
+          const result = await this.pythonService.captureImage();
+          return JSON.parse(result);
+      } catch (error) {
+          return {
+              status: 'error',
+              message: error instanceof Error ? error.message : 'Unknown error occurred'
+          };
+      }
+  }
 }
