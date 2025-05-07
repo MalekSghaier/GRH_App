@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { jwtDecode } from 'jwt-decode'; 
 import { CommonModule } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { NewUserDialogComponent } from '../../new-user-dialog/new-user-dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -17,12 +19,15 @@ export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string = '';
   successMessage: string = '';
+  newUserImageId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private http: HttpClient,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private dialog: MatDialog
+
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -124,11 +129,9 @@ export class LoginComponent {
               timeOut: 5000,
               progressBar: true
             });
-          } else if (response.status === 'info') {
-            this.toastr.info(response.message, 'Information', {
-              timeOut: 5000,
-              progressBar: true
-            });
+          } else if (response.status === 'info' && response.new_user_id) {
+            this.newUserImageId = response.new_user_id;
+            this.openNewUserDialog();
           } else {
             this.toastr.warning(response.message || 'Réponse inattendue', 'Attention', {
               timeOut: 5000,
@@ -147,9 +150,42 @@ export class LoginComponent {
       });
   }
   
+  openNewUserDialog(): void {
+    const dialogRef = this.dialog.open(NewUserDialogComponent, {
+      width: '500px',
+      data: { imageId: this.newUserImageId }
+    });
   
-
-
-
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.registerNewUserWithImage(result);
+      } else {
+        this.toastr.info('Enregistrement annulé', 'Information');
+      }
+    });
+  }
+  
+  registerNewUserWithImage(userData: any): void {
+    const payload = {
+      user: {
+        name: userData.name,
+        email: userData.email,
+        role: userData.role,
+        password: userData.password
+      },
+      imageId: userData.imageId
+    };
+  
+    this.http.post('http://localhost:3000/users/with-image', payload)
+      .subscribe({
+        next: (response: any) => {
+          this.toastr.success('Nouvel utilisateur enregistré avec succès', 'Succès');
+        },
+        error: (err) => {
+          this.toastr.error('Erreur lors de l\'enregistrement', 'Erreur');
+          console.error(err);
+        }
+      });
+  }
   
 }

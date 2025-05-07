@@ -2,7 +2,7 @@
 import { Injectable, ConflictException, BadRequestException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, mongo, Error as MongooseError } from 'mongoose';
-import { User, UserRole, UserDocument } from '../schemas/user.schema';
+import { User, UserRole, UserDocument, IUser } from '../schemas/user.schema';
 import * as QRCode from 'qrcode';
 import { ObjectId } from 'mongodb'; 
 import * as bcrypt from 'bcrypt';
@@ -289,4 +289,25 @@ async findUsersForAdminPaginated(page: number = 1, limit: number = 5): Promise<{
       }]
     });
   }
+
+
+
+  async associateImageToUser(userId: string, imageId: string): Promise<void> {
+    await this.userModel.findByIdAndUpdate(userId, { 
+      $set: { profileImageId: imageId } 
+    }).exec();
+  }
+  
+  async createWithImage(userData: UserDocument, imageId: string): Promise<UserDocument> {
+    // Créer l'utilisateur d'abord
+    const user = await this.create(userData);
+    if (!(user._id instanceof ObjectId)) {
+      throw new InternalServerErrorException('ID utilisateur invalide');
+    }
+    // Associer l'image ensuite
+    await this.associateImageToUser(user._id.toString(), imageId);
+    
+    return user;
+  }
+
 }

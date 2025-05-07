@@ -11,7 +11,10 @@ import { PointageService } from 'src/pointage/pointage.service';
 import { RequestWithUser } from 'express';
 
 
-
+interface CreateUserWithImageDto {
+  user: UserDocument;
+  imageId: string;
+}
 @Controller('users')
 export class UsersController {
   constructor
@@ -162,6 +165,20 @@ async sendQrCodeToEmail(
   async create(@Body() user: UserDocument): Promise<UserDocument> {
     try {
       return await this.usersService.create(user);
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw new ConflictException('Cet email est déjà utilisé.');
+      }
+      throw new InternalServerErrorException('Une erreur interne est survenue.');
+    }
+  }
+
+  @Post('with-image')
+  async createWithImage(@Body() body: { user: UserDocument; imageId: string }): Promise<UserDocument> {
+    try {
+      // Créer l'utilisateur d'abord
+      const createdUser = await this.usersService.createWithImage(body.user, body.imageId);
+      return createdUser;
     } catch (error) {
       if (error instanceof ConflictException) {
         throw new ConflictException('Cet email est déjà utilisé.');

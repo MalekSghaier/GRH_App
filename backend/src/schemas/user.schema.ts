@@ -17,6 +17,8 @@ export interface IUser extends Document {
   role: UserRole;
   company?: string; 
   soldeConges: number; 
+  profileImageId?: string;
+
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -40,6 +42,7 @@ export const UserSchema = new Schema<IUser>({
     default: 0,
     min: 0 // Empêche les valeurs négatives
   },
+  profileImageId: { type: String },
 }, { collection: 'users' });
 
 UserSchema.pre<IUser>('save', async function (next: (err?: CallbackError) => void) {
