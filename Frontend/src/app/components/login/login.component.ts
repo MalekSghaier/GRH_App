@@ -156,7 +156,7 @@ export class LoginComponent {
               user: {
                 name: userData.name,
                 email: userData.email,
-                company: userData.company, // Ajout de la compagnie
+                company: userData.company, 
                 role: userData.role,
                 password: userData.password
               },
