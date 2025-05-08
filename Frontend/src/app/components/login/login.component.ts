@@ -132,7 +132,7 @@ export class LoginComponent {
   
   openNewUserDialog(): void {
     const dialogRef = this.dialog.open(NewUserDialogComponent, {
-      width: '500px',
+      width: '550px',
       data: { imageId: this.newUserImageId }
     });
   
@@ -156,6 +156,7 @@ export class LoginComponent {
               user: {
                 name: userData.name,
                 email: userData.email,
+                company: userData.company, // Ajout de la compagnie
                 role: userData.role,
                 password: userData.password
               },

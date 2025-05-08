@@ -1,0 +1,115 @@
+/* Variables */
+:root {
+    --primary-blue: #3C91E6;
+    --primary-hover: #3367D6;
+    --error-red: #EA4335;
+    --text-dark: #202124;
+    --text-light: #5F6368;
+    --border-color: #DADCE0;
+  }
+  
+  /* Conteneur principal */
+  .compact-form-container {
+    width: 100%;
+    max-width: 500px;
+    padding: 16px;
+    overflow: hidden;
+  }
+  
+  /* Titre */
+  .compact-form-title {
+    color: var(--primary-blue);
+    font-size: 1.75rem;
+    font-weight: 500;
+    margin: 0 0 12px 0;
+    text-align: center;
+    padding-bottom: 15px;
+    color: #3C91E6;
+  }
+  
+  /* Grille compacte */
+  .compact-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  
+  .compact-form-field {
+    margin-bottom: 0;
+  }
+  
+  /* Champ pleine largeur */
+  .full-width {
+    grid-column: span 2;
+  }
+  
+  /* Style minimaliste des champs */
+  .mat-form-field-appearance-outline .mat-form-field-outline {
+    background-color: white;
+    border-radius: 4px;
+  }
+  
+  .mat-form-field-appearance-outline .mat-form-field-wrapper {
+    margin: 0;
+    padding-bottom: 0;
+  }
+  
+  .mat-form-field-appearance-outline .mat-form-field-infix {
+    padding: 0.5em 0;
+    border-top: 0;
+  }
+  
+  /* Labels et inputs */
+  .mat-form-field-label {
+    color: var(--text-light) !important;
+    top: 20px;
+  }
+  
+  .mat-input-element {
+    font-size: 0.875rem;
+    padding: 6px 0 !important;
+  }
+  
+  /* Messages d'erreur */
+  .mat-error {
+    font-size: 0.7rem;
+    line-height: 1;
+    margin-top: 2px;
+  }
+  
+  /* Actions */
+  .compact-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 8px;
+  }
+  
+  /* Boutons compacts */
+  .compact-cancel-btn, .compact-submit-btn {
+    min-width: 80px;
+    padding: 0 12px;
+    height: 32px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+  }
+  
+  .compact-submit-btn {
+    background-color: var(--primary-blue);
+  }
+  
+  .compact-submit-btn:hover:not([disabled]) {
+    background-color: var(--primary-hover);
+  }
+  
+  /* Responsive */
+  @media (max-width: 480px) {
+    .compact-form-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .full-width {
+      grid-column: span 1;
+    }
+  }

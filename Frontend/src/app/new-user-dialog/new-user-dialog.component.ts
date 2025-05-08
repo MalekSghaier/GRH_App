@@ -39,6 +39,7 @@ export class NewUserDialogComponent {
     this.userForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
+      company: ['', Validators.required], // Nouveau champ obligatoire
       role: ['employé', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       imageId: [this.data.imageId]
