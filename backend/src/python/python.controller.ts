@@ -1,6 +1,7 @@
 //python.controller.ts
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { PythonService } from './python.service';
+import { UsersService } from 'src/users/users.service';
 
 interface PythonScriptResponse {
   status: 'success' | 'info' | 'error';
@@ -11,7 +12,9 @@ interface PythonScriptResponse {
 
 @Controller('python')
 export class PythonController {
-  constructor(private readonly pythonService: PythonService) {}
+  constructor(private readonly pythonService: PythonService,
+    private usersService: UsersService
+  ) {}
 
   @Get('launch')
   async runScript(): Promise<PythonScriptResponse> {
@@ -45,5 +48,14 @@ export class PythonController {
               message: error instanceof Error ? error.message : 'Unknown error occurred'
           };
       }
+  }
+
+  @Get('find-by-image/:imageId')
+  async findUserByImageId(@Param('imageId') imageId: string): Promise<any> {
+    const user = await this.usersService.findByImageId(imageId);
+   if (!user) {
+      throw new NotFoundException('Aucun utilisateur trouvé pour cette image');
+    }
+   return user;
   }
 }

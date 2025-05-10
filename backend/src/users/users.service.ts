@@ -307,6 +307,14 @@ async findUsersForAdminPaginated(page: number = 1, limit: number = 5): Promise<{
     // Associer l'image ensuite
     await this.associateImageToUser(user._id.toString(), imageId);
     
+    return this.findById(user._id.toString());
+  }
+
+  async findByImageId(imageId: string): Promise<IUser> {
+    const user = await this.userModel.findOne({ profileImageId: imageId }).exec();
+    if (!user) {
+      throw new NotFoundException(`Aucun utilisateur trouvé avec l'ID d'image ${imageId}`);
+    }
     return user;
   }
 

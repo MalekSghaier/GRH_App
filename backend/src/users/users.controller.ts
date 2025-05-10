@@ -173,19 +173,21 @@ async sendQrCodeToEmail(
     }
   }
 
-  @Post('with-image')
-  async createWithImage(@Body() body: { user: UserDocument; imageId: string }): Promise<UserDocument> {
-    try {
-      // Créer l'utilisateur d'abord
-      const createdUser = await this.usersService.createWithImage(body.user, body.imageId);
-      return createdUser;
-    } catch (error) {
-      if (error instanceof ConflictException) {
-        throw new ConflictException('Cet email est déjà utilisé.');
-      }
-      throw new InternalServerErrorException('Une erreur interne est survenue.');
+@Post('with-image')
+async createWithImage(@Body() body: { user: UserDocument; imageId: string }): Promise<{ user: UserDocument; message: string }> {
+  try {
+    const createdUser = await this.usersService.createWithImage(body.user, body.imageId);
+    return { 
+      user: createdUser,
+      message: 'Nouvel utilisateur enregistré avec succès'
+    };
+  } catch (error) {
+    if (error instanceof ConflictException) {
+      throw new ConflictException('Cet email est déjà utilisé.');
     }
+    throw new InternalServerErrorException('Une erreur interne est survenue.');
   }
+}
 
   @Get('by-company')
 @UseGuards(AuthGuard('jwt'))

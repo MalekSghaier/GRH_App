@@ -96,38 +96,87 @@ export class LoginComponent {
 
 
 
-  pointageRF() {
-    this.toastr.info('Lancement de la reconnaissance faciale...', 'Veuillez patienter', {
-      timeOut: 3000,
-      progressBar: true
-    });
+//   pointageRF() {
+//     this.toastr.info('Lancement de la reconnaissance faciale...', 'Veuillez patienter', {
+//       timeOut: 3000,
+//       progressBar: true
+//     });
   
-    this.http.get<any>('http://localhost:3000/python/launch')
-      .subscribe({
-        next: (response) => {
-          if (response.status === 'success') {
-            this.toastr.success(response.message, 'Reconnaissance réussie', {
-              timeOut: 5000,
-              progressBar: true
+//     this.http.get<any>('http://localhost:3000/python/launch')
+//       .subscribe({
+//         next: (response) => {
+//           if (response.status === 'success') {
+//             this.toastr.success(response.message, 'Reconnaissance réussie', {
+//               timeOut: 5000,
+//               progressBar: true
+//             });
+//           } else if (response.status === 'info') {
+//             this.openNewUserDialog();
+//           } else {
+//             this.toastr.warning(response.message || 'Réponse inattendue', 'Attention', {
+//               timeOut: 5000,
+//               progressBar: true
+//             });
+//           }
+//         },
+//         error: (err) => {
+//           console.error('Erreur HTTP:', err);
+//           this.toastr.error(
+//             err.error?.message || err.message || 'Erreur de communication avec le serveur',
+//             'Erreur',
+//             { timeOut: 5000, progressBar: true }
+//           );
+//         }
+//       });
+// }
+
+pointageRF() {
+  this.toastr.info('Lancement de la reconnaissance faciale...', 'Veuillez patienter', {
+    timeOut: 3000,
+    progressBar: true
+  });
+
+  this.http.get<any>('http://localhost:3000/python/launch')
+    .subscribe({
+      next: (response) => {
+        if (response.status === 'success' && response.image_id) {
+          // Utilisez le bon endpoint python/find-by-image
+          this.http.get<any>(`http://localhost:3000/python/find-by-image/${response.image_id}`)
+            .subscribe({
+              next: (userResponse) => {
+                this.toastr.success(
+                  `Utilisateur reconnu: ${userResponse.name}`,
+                  'Reconnaissance réussie',
+                  { timeOut: 5000, progressBar: true }
+                );
+              },
+              error: (userErr) => {
+                console.error('Erreur lors de la récupération des infos utilisateur:', userErr);
+                this.toastr.warning(
+                  'Utilisateur reconnu mais informations non trouvées',
+                  'Attention',
+                  { timeOut: 5000, progressBar: true }
+                );
+              }
             });
-          } else if (response.status === 'info') {
-            this.openNewUserDialog();
-          } else {
-            this.toastr.warning(response.message || 'Réponse inattendue', 'Attention', {
-              timeOut: 5000,
-              progressBar: true
-            });
-          }
-        },
-        error: (err) => {
-          console.error('Erreur HTTP:', err);
-          this.toastr.error(
-            err.error?.message || err.message || 'Erreur de communication avec le serveur',
-            'Erreur',
-            { timeOut: 5000, progressBar: true }
-          );
+        } else if (response.status === 'info') {
+          this.openNewUserDialog();
+        } else {
+          this.toastr.warning(response.message || 'Réponse inattendue', 'Attention', {
+            timeOut: 5000,
+            progressBar: true
+          });
         }
-      });
+      },
+      error: (err) => {
+        console.error('Erreur HTTP:', err);
+        this.toastr.error(
+          err.error?.message || err.message || 'Erreur de communication avec le serveur',
+          'Erreur',
+          { timeOut: 5000, progressBar: true }
+        );
+      }
+    });
 }
   
   openNewUserDialog(): void {
@@ -145,43 +194,98 @@ export class LoginComponent {
     });
   }
   
-  registerNewUserWithImage(userData: any): void {
-    // D'abord capturer l'image
-    this.http.get<any>('http://localhost:3000/python/capture')
-      .subscribe({
-        next: (captureResponse) => {
-          if (captureResponse.status === 'success' && captureResponse.image_id) {
-            // Ensuite créer l'utilisateur avec l'image capturée
-            const payload = {
-              user: {
-                name: userData.name,
-                email: userData.email,
-                company: userData.company, 
-                role: userData.role,
-                password: userData.password
+// registerNewUserWithImage(userData: any): void {
+//   // D'abord capturer l'image
+//   this.http.get<any>('http://localhost:3000/python/capture')
+//     .subscribe({
+//       next: (captureResponse) => {
+//         if (captureResponse.status === 'success' && captureResponse.image_id) {
+//           // Ensuite créer l'utilisateur avec l'image capturée
+//           const payload = {
+//             user: {
+//               name: userData.name,
+//               email: userData.email,
+//               company: userData.company, 
+//               role: userData.role,
+//               password: userData.password
+//             },
+//             imageId: captureResponse.image_id
+//           };
+          
+//           this.http.post<{ user: any, message: string }>('http://localhost:3000/users/with-image', payload)
+//             .subscribe({
+//               next: (response) => {
+//                 this.toastr.success(
+//                   `${response.message}: ${response.user.name}`,
+//                   'Succès',
+//                   { timeOut: 5000, progressBar: true }
+//                 );
+//               },
+//               error: (err) => {
+//                 this.toastr.error(
+//                   'Erreur lors de l\'enregistrement',
+//                   'Erreur',
+//                   { timeOut: 5000, progressBar: true }
+//                 );
+//                 console.error(err);
+//               }
+//             });
+//         } else {
+//           this.toastr.error(
+//             'Erreur lors de la capture de l\'image',
+//             'Erreur',
+//             { timeOut: 5000, progressBar: true }
+//           );
+//         }
+//       },
+//       error: (err) => {
+//         this.toastr.error(
+//           'Erreur lors de la capture de l\'image',
+//           'Erreur',
+//           { timeOut: 5000, progressBar: true }
+//         );
+//         console.error(err);
+//       }
+//     });
+// }
+
+registerNewUserWithImage(userData: any): void {
+  this.http.get<any>('http://localhost:3000/python/capture')
+    .subscribe({
+      next: (captureResponse) => {
+        if (captureResponse.status === 'success' && captureResponse.image_id) {
+          const payload = {
+            user: {
+              name: userData.name,
+              email: userData.email,
+              company: userData.company, 
+              role: userData.role,
+              password: userData.password
+            },
+            imageId: captureResponse.image_id
+          };
+          
+          this.http.post<{ user: any, message: string }>('http://localhost:3000/users/with-image', payload)
+            .subscribe({
+              next: (response) => {
+                this.toastr.success(
+                  `Nouvel utilisateur enregistré: ${response.user.name}`,
+                  'Succès',
+                  { timeOut: 5000, progressBar: true }
+                );
               },
-              imageId: captureResponse.image_id
-            };
-            
-            this.http.post('http://localhost:3000/users/with-image', payload)
-              .subscribe({
-                next: (response: any) => {
-                  this.toastr.success('Nouvel utilisateur enregistré avec succès', 'Succès');
-                },
-                error: (err) => {
-                  this.toastr.error('Erreur lors de l\'enregistrement', 'Erreur');
-                  console.error(err);
-                }
-              });
-          } else {
-            this.toastr.error('Erreur lors de la capture de l\'image', 'Erreur');
-          }
-        },
-        error: (err) => {
-          this.toastr.error('Erreur lors de la capture de l\'image', 'Erreur');
-          console.error(err);
+              error: (err) => {
+                this.toastr.error(
+                  'Erreur lors de l\'enregistrement',
+                  'Erreur',
+                  { timeOut: 5000, progressBar: true }
+                );
+                console.error(err);
+              }
+            });
         }
-      });
+      }
+    });
 }
   
 }
