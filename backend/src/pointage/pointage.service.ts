@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+//pointage.service.ts
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
-import { Pointage, PointageDocument } from '../schemas/pointage.schema';
+import { Pointage, PointageDocument, PointageSource } from '../schemas/pointage.schema';
 import * as moment from 'moment';
 
 @Injectable()
@@ -13,21 +14,32 @@ export class PointageService {
   ) {}
 
   async enregistrerPointage(userId: string) {
+    const user = await this.userModel.findById(userId).exec();
+      if (!user) {
+        throw new NotFoundException('Utilisateur non trouvé');
+    }
+    
     const dateAuj = moment().format('YYYY-MM-DD');
     const heureActuelle = moment().format('HH:mm:ss');
 
-    const user = await this.userModel.findById(userId).exec();
-    if (!user) {
-      throw new Error('Utilisateur non trouvé');
+    const pointageExistants = await this.pointageModel.find({ 
+      userId, 
+      date: dateAuj 
+    }).exec();
+
+    const pointageFace = pointageExistants.find(p => p.source === PointageSource.FACE);
+    if (pointageFace) {
+      throw new Error('Vous avez déjà pointé via reconnaissance faciale aujourd\'hui');
     }
 
-    const pointage = await this.pointageModel.findOne({ userId, date: dateAuj }).exec();
+    const pointageQr = pointageExistants.find(p => p.source === PointageSource.QR);
 
-    if (!pointage) {
+    if (!pointageQr) {
       const newPointage = new this.pointageModel({ 
         userId, 
         date: dateAuj, 
-        entree: heureActuelle 
+        entree: heureActuelle,
+        source: PointageSource.QR
       });
       await newPointage.save();
       return { 
@@ -36,9 +48,9 @@ export class PointageService {
       };
     }
 
-    if (!pointage.sortie) {
-      pointage.sortie = heureActuelle;
-      await pointage.save();
+    if (!pointageQr.sortie) {
+      pointageQr.sortie = heureActuelle;
+      await pointageQr.save();
       return { 
         message: `Sortie enregistrée à ${heureActuelle}`, 
         type: 'sortie' 
@@ -46,8 +58,8 @@ export class PointageService {
     }
 
     return { 
-      message: 'Pointage déjà complet pour aujourd’hui', 
-      type: 'sortie' 
+      message: 'Pointage déjà complet pour aujourd\'hui', 
+      type: 'complet' 
     };
   }
 
@@ -71,4 +83,49 @@ async getPointagesByMonth(userId: string, month: number, year: number) {
   .sort({ date: -1 })
   .exec();
 }
+
+  async enregistrerPointageFace(userId: string) {
+    const dateAuj = moment().format('YYYY-MM-DD');
+    const heureActuelle = moment().format('HH:mm:ss');
+
+    const pointageExistants = await this.pointageModel.find({ 
+      userId, 
+      date: dateAuj 
+    }).exec();
+
+    const pointageQr = pointageExistants.find(p => p.source === PointageSource.QR);
+    if (pointageQr) {
+      throw new Error('Vous avez déjà pointé via QR code aujourd\'hui');
+    }
+
+    const pointageFace = pointageExistants.find(p => p.source === PointageSource.FACE);
+
+    if (!pointageFace) {
+      const newPointage = new this.pointageModel({ 
+        userId, 
+        date: dateAuj, 
+        entree: heureActuelle,
+        source: PointageSource.FACE
+      });
+      await newPointage.save();
+      return { 
+        message: `Entrée enregistrée à ${heureActuelle}`, 
+        type: 'entree' 
+      };
+    }
+
+    if (!pointageFace.sortie) {
+      pointageFace.sortie = heureActuelle;
+      await pointageFace.save();
+      return { 
+        message: `Sortie enregistrée à ${heureActuelle}`, 
+        type: 'sortie' 
+      };
+    }
+
+    return { 
+      message: 'Pointage déjà complet pour aujourd\'hui', 
+      type: 'complet' 
+    };
+  }
 }

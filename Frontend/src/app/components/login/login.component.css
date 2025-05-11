@@ -134,3 +134,52 @@ img{
     margin-top: 5px; 
 }
   
+
+/* Ajoutez ceci à votre fichier CSS existant */
+
+.quick-actions {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 30px;
+    z-index: 1;
+}
+
+.action-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-icon i {
+    font-size: 40px;
+    color: #3C91E6;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 50%;
+    margin-bottom: 8px;
+    box-shadow: 0 0 15px rgba(60, 145, 230, 0.7);
+    transition: all 0.3s ease;
+}
+
+.action-icon span {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.action-icon:hover i {
+    transform: scale(1.1);
+    color: #fff;
+    background: #3C91E6;
+    box-shadow: 0 0 20px #3C91E6;
+}
+
+.action-icon:hover span {
+    color: #3C91E6;
+}

@@ -7,15 +7,17 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PointageService {
+
   private apiUrl = 'http://localhost:3000/pointage';
 
   constructor(private http: HttpClient) {}
 
-  enregistrerPointage(userId: string): Observable<any> {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post(`${this.apiUrl}/scan`, { userId }, { headers });
-  }
+enregistrerPointage(userId: string): Observable<any> {
+  return this.http.post(`${this.apiUrl}/scan-qr`, { userId });
+}
+  // enregistrerPointageQr(qrCodeData: string): Observable<any> {
+  //  return this.http.post(`${this.apiUrl}/scan-qr`, { qrCodeData });
+  // }
 
   getPointagesUtilisateur(userId: string): Observable<any[]> {
     const token = localStorage.getItem('token');
@@ -30,5 +32,9 @@ export class PointageService {
       `${this.apiUrl}/monthly?month=${month}&year=${year}`, { headers }
     );
   }
+
+  enregistrerPointageFace(userId: string): Observable<any> {
+  return this.http.post(`${this.apiUrl}/scan-face`, { userId });
+}
 
 }

@@ -46,8 +46,18 @@
     
         </form>
 
-        <button class="btn"  type="PQR">Pointage QR Code</button>
-        <button class="btn" type="button" (click)="pointageRF()">Pointage Faciale</button>
+    </div>
+
+        <!-- Nouveaux éléments icônes -->
+    <div class="quick-actions">
+        <div class="action-icon" (click)="openQrScanner()">
+            <i class='bx bx-qr-scan'></i>
+            <span>QR Code</span>
+        </div>
+        <div class="action-icon" (click)="pointageRF()">
+            <i class='bx bx-face'></i>
+            <span>Reconnaissance Faciale</span>
+        </div>
     </div>
 </body>
 </html>

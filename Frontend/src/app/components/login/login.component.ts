@@ -7,6 +7,14 @@ import { jwtDecode } from 'jwt-decode';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { NewUserDialogComponent } from '../../new-user-dialog/new-user-dialog.component';
+import { PointageService } from '../../services/pointage.service';
+import { ScanQrDialogComponent } from '../scan-qr-dialog/scan-qr-dialog.component';
+
+
+interface PointageResponse {
+  message: string;
+  type?: string;
+}
 
 @Component({
   selector: 'app-login',
@@ -26,7 +34,8 @@ export class LoginComponent {
     private router: Router,
     private http: HttpClient,
     private toastr: ToastrService,
-    private dialog: MatDialog
+    private dialog: MatDialog, 
+    private pointageService: PointageService,
 
   ) {
     this.loginForm = this.fb.group({
@@ -96,40 +105,6 @@ export class LoginComponent {
 
 
 
-//   pointageRF() {
-//     this.toastr.info('Lancement de la reconnaissance faciale...', 'Veuillez patienter', {
-//       timeOut: 3000,
-//       progressBar: true
-//     });
-  
-//     this.http.get<any>('http://localhost:3000/python/launch')
-//       .subscribe({
-//         next: (response) => {
-//           if (response.status === 'success') {
-//             this.toastr.success(response.message, 'Reconnaissance réussie', {
-//               timeOut: 5000,
-//               progressBar: true
-//             });
-//           } else if (response.status === 'info') {
-//             this.openNewUserDialog();
-//           } else {
-//             this.toastr.warning(response.message || 'Réponse inattendue', 'Attention', {
-//               timeOut: 5000,
-//               progressBar: true
-//             });
-//           }
-//         },
-//         error: (err) => {
-//           console.error('Erreur HTTP:', err);
-//           this.toastr.error(
-//             err.error?.message || err.message || 'Erreur de communication avec le serveur',
-//             'Erreur',
-//             { timeOut: 5000, progressBar: true }
-//           );
-//         }
-//       });
-// }
-
 pointageRF() {
   this.toastr.info('Lancement de la reconnaissance faciale...', 'Veuillez patienter', {
     timeOut: 3000,
@@ -140,18 +115,42 @@ pointageRF() {
     .subscribe({
       next: (response) => {
         if (response.status === 'success' && response.image_id) {
-          // Utilisez le bon endpoint python/find-by-image
+          // Trouver l'utilisateur par image
           this.http.get<any>(`http://localhost:3000/python/find-by-image/${response.image_id}`)
             .subscribe({
               next: (userResponse) => {
-                this.toastr.success(
-                  `Utilisateur reconnu: ${userResponse.name}`,
-                  'Reconnaissance réussie',
-                  { timeOut: 5000, progressBar: true }
-                );
+                if (!userResponse || !userResponse._id) { // Vérification ajoutée
+                  throw new Error('User information incomplete');
+                }
+                
+                // Effectuer le pointage avec le bon format de données
+                this.http.post<any>(
+                  'http://localhost:3000/pointage/scan-face', 
+                  { userId: userResponse._id }, // Format correct des données
+                  { 
+                    headers: { 
+                      'Authorization': `Bearer ${localStorage.getItem('token')}` 
+                    } 
+                  }
+                ).subscribe({
+                  next: (pointageResponse) => {
+                    this.toastr.success(
+                      `${pointageResponse.message} pour ${userResponse.name}`,
+                      'Pointage enregistré',
+                      { timeOut: 5000, progressBar: true }
+                    );
+                  },
+                  error: (pointageErr) => {
+                    this.toastr.error(
+                      pointageErr.error?.message || 'Erreur lors du pointage',
+                      'Erreur',
+                      { timeOut: 5000, progressBar: true }
+                    );
+                  }
+                });
               },
               error: (userErr) => {
-                console.error('Erreur lors de la récupération des infos utilisateur:', userErr);
+                console.error('Erreur utilisateur:', userErr);
                 this.toastr.warning(
                   'Utilisateur reconnu mais informations non trouvées',
                   'Attention',
@@ -178,13 +177,11 @@ pointageRF() {
       }
     });
 }
-  
   openNewUserDialog(): void {
     const dialogRef = this.dialog.open(NewUserDialogComponent, {
       width: '550px',
       data: { imageId: this.newUserImageId }
     });
-  
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.registerNewUserWithImage(result);
@@ -193,61 +190,7 @@ pointageRF() {
       }
     });
   }
-  
-// registerNewUserWithImage(userData: any): void {
-//   // D'abord capturer l'image
-//   this.http.get<any>('http://localhost:3000/python/capture')
-//     .subscribe({
-//       next: (captureResponse) => {
-//         if (captureResponse.status === 'success' && captureResponse.image_id) {
-//           // Ensuite créer l'utilisateur avec l'image capturée
-//           const payload = {
-//             user: {
-//               name: userData.name,
-//               email: userData.email,
-//               company: userData.company, 
-//               role: userData.role,
-//               password: userData.password
-//             },
-//             imageId: captureResponse.image_id
-//           };
-          
-//           this.http.post<{ user: any, message: string }>('http://localhost:3000/users/with-image', payload)
-//             .subscribe({
-//               next: (response) => {
-//                 this.toastr.success(
-//                   `${response.message}: ${response.user.name}`,
-//                   'Succès',
-//                   { timeOut: 5000, progressBar: true }
-//                 );
-//               },
-//               error: (err) => {
-//                 this.toastr.error(
-//                   'Erreur lors de l\'enregistrement',
-//                   'Erreur',
-//                   { timeOut: 5000, progressBar: true }
-//                 );
-//                 console.error(err);
-//               }
-//             });
-//         } else {
-//           this.toastr.error(
-//             'Erreur lors de la capture de l\'image',
-//             'Erreur',
-//             { timeOut: 5000, progressBar: true }
-//           );
-//         }
-//       },
-//       error: (err) => {
-//         this.toastr.error(
-//           'Erreur lors de la capture de l\'image',
-//           'Erreur',
-//           { timeOut: 5000, progressBar: true }
-//         );
-//         console.error(err);
-//       }
-//     });
-// }
+
 
 registerNewUserWithImage(userData: any): void {
   this.http.get<any>('http://localhost:3000/python/capture')
@@ -286,6 +229,51 @@ registerNewUserWithImage(userData: any): void {
         }
       }
     });
+}
+
+
+pointageQR() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    this.toastr.error('Veuillez vous connecter d\'abord', 'Erreur');
+    return;
+  }
+
+  const decodedToken: any = jwtDecode(token);
+  const userId = decodedToken.id;
+
+  this.toastr.info('Prêt à scanner le QR Code', 'Positionnez le QR Code', {
+    timeOut: 3000,
+    progressBar: true
+  });
+
+  this.pointageService.enregistrerPointage(userId).subscribe({
+    next: (response: PointageResponse) => {
+      this.toastr.success(response.message, 'Pointage enregistré', {
+        timeOut: 5000,
+        progressBar: true
+      });
+    },
+    error: (err: any) => {
+      this.toastr.error(
+        err.error?.message || 'Erreur lors du pointage',
+        'Erreur',
+        { timeOut: 5000, progressBar: true }
+      );
+    }
+  });
+}
+openQrScanner() {
+  const dialogRef = this.dialog.open(ScanQrDialogComponent, {
+    width: '80%',
+    maxWidth: '600px'
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.toastr.success('Pointage effectué avec succès', 'Succès');
+    }
+  });
 }
   
 }
