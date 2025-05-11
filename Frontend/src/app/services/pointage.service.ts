@@ -15,9 +15,7 @@ export class PointageService {
 enregistrerPointage(userId: string): Observable<any> {
   return this.http.post(`${this.apiUrl}/scan-qr`, { userId });
 }
-  // enregistrerPointageQr(qrCodeData: string): Observable<any> {
-  //  return this.http.post(`${this.apiUrl}/scan-qr`, { qrCodeData });
-  // }
+
 
   getPointagesUtilisateur(userId: string): Observable<any[]> {
     const token = localStorage.getItem('token');
