@@ -265,8 +265,7 @@ pointageQR() {
 }
 openQrScanner() {
   const dialogRef = this.dialog.open(ScanQrDialogComponent, {
-    width: '80%',
-    maxWidth: '600px'
+    width: '450px'
   });
 
   dialogRef.afterClosed().subscribe(result => {
