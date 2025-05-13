@@ -80,18 +80,11 @@ export class UsersController {
 @UseGuards(AuthGuard('jwt'))
 async getQrCodeForUser(
   @Param('id') id: string,
-  @Req() req: RequestWithUser // Vous devrez créer cette interface si elle n'existe pas
+  @Req() req: RequestWithUser // créer cette interface si elle n'existe pas
 ): Promise<{ qrCode: string }> {
   const qrCode = await this.usersService.generateAndSendQrCode(id, req.user.email);
   return { qrCode };
 }
-
-  //@Get(':id/qrcode')
-  //@UseGuards(AuthGuard('jwt'))
- // async getQrCodeForUser(@Param('id') id: string): Promise<{ qrCode: string }> {
-  //  const qrCode = await this.usersService.generateQrCode(id);
-   // return { qrCode };
-  //}
 
 
   @Put('my-info')
@@ -153,9 +146,6 @@ async sendQrCodeToEmail(
     return updatedUser;
   }
 
-
-
-  
   @Get()
   @UseGuards(AuthGuard('jwt')) 
   async findAll(): Promise<UserDocument[]> {
@@ -255,7 +245,5 @@ async getUsersByCompanyPaginated(
       throw error;
     }
   }
-
-
-  
+ 
 }

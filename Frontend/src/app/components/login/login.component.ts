@@ -105,6 +105,81 @@ export class LoginComponent {
 
 
 
+// pointageRF() {
+//   this.toastr.info('Lancement de la reconnaissance faciale...', 'Veuillez patienter', {
+//     timeOut: 3000,
+//     progressBar: true
+//   });
+
+//   this.http.get<any>('http://localhost:3000/python/launch')
+//     .subscribe({
+//       next: (response) => {
+//         if (response.status === 'success' && response.image_id) {
+//           // Trouver l'utilisateur par image
+//           this.http.get<any>(`http://localhost:3000/python/find-by-image/${response.image_id}`)
+//             .subscribe({
+//               next: (userResponse) => {
+//                 if (!userResponse || !userResponse._id) { // Vérification ajoutée
+//                   throw new Error('User information incomplete');
+//                 }
+                
+//                 // Effectuer le pointage avec le bon format de données
+//                 this.http.post<any>(
+//                   'http://localhost:3000/pointage/scan-face', 
+//                   { userId: userResponse._id }, // Format correct des données
+//                   { 
+//                     headers: { 
+//                       'Authorization': `Bearer ${localStorage.getItem('token')}` 
+//                     } 
+//                   }
+//                 ).subscribe({
+//                   next: (pointageResponse) => {
+//                     this.toastr.success(
+//                       `${pointageResponse.message} pour ${userResponse.name}`,
+//                       'Pointage enregistré',
+//                       { timeOut: 5000, progressBar: true }
+//                     );
+//                   },
+//                   error: (pointageErr) => {
+//                     this.toastr.error(
+//                       pointageErr.error?.message || 'Erreur lors du pointage',
+//                       'Erreur',
+//                       { timeOut: 5000, progressBar: true }
+//                     );
+//                   }
+//                 });
+//               },
+//               error: (userErr) => {
+//                 console.error('Erreur utilisateur:', userErr);
+//                 this.toastr.warning(
+//                   'Utilisateur reconnu mais informations non trouvées',
+//                   'Attention',
+//                   { timeOut: 5000, progressBar: true }
+//                 );
+//               }
+//             });
+//         } else if (response.status === 'info') {
+//           this.openNewUserDialog();
+//         } else {
+//           this.toastr.warning(response.message || 'Réponse inattendue', 'Attention', {
+//             timeOut: 5000,
+//             progressBar: true
+//           });
+//         }
+//       },
+//       error: (err) => {
+//         console.error('Erreur HTTP:', err);
+//         this.toastr.error(
+//           err.error?.message || err.message || 'Erreur de communication avec le serveur',
+//           'Erreur',
+//           { timeOut: 5000, progressBar: true }
+//         );
+//       }
+//     });
+// }
+
+// Dans login.component.ts - méthode pointageRF modifiée
+
 pointageRF() {
   this.toastr.info('Lancement de la reconnaissance faciale...', 'Veuillez patienter', {
     timeOut: 3000,
@@ -115,64 +190,70 @@ pointageRF() {
     .subscribe({
       next: (response) => {
         if (response.status === 'success' && response.image_id) {
-          // Trouver l'utilisateur par image
           this.http.get<any>(`http://localhost:3000/python/find-by-image/${response.image_id}`)
             .subscribe({
               next: (userResponse) => {
-                if (!userResponse || !userResponse._id) { // Vérification ajoutée
-                  throw new Error('User information incomplete');
+                if (!userResponse?._id) {
+                  throw new Error('Informations utilisateur incomplètes');
                 }
                 
-                // Effectuer le pointage avec le bon format de données
                 this.http.post<any>(
                   'http://localhost:3000/pointage/scan-face', 
-                  { userId: userResponse._id }, // Format correct des données
-                  { 
-                    headers: { 
-                      'Authorization': `Bearer ${localStorage.getItem('token')}` 
-                    } 
-                  }
+                  { userId: userResponse._id },
+                  { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } }
                 ).subscribe({
                   next: (pointageResponse) => {
                     this.toastr.success(
                       `${pointageResponse.message} pour ${userResponse.name}`,
                       'Pointage enregistré',
-                      { timeOut: 5000, progressBar: true }
+                      { timeOut: 1500, progressBar: true }
                     );
                   },
                   error: (pointageErr) => {
-                    this.toastr.error(
-                      pointageErr.error?.message || 'Erreur lors du pointage',
-                      'Erreur',
-                      { timeOut: 5000, progressBar: true }
-                    );
+                    let errorMessage = pointageErr.error?.message || 'Erreur lors du pointage';
+                    let errorTitle = 'Erreur';
+                    let timeOut = 1500;
+
+                    if (pointageErr.error?.code === 'QR_ALREADY_USED') {
+                      errorMessage = 'Vous avez déjà pointé aujourd\'hui via QR code';
+                      errorTitle = 'Méthode de pointage différente';
+                    } else if (pointageErr.error?.code === 'FACE_ALREADY_USED') {
+                      errorMessage = 'Vous avez déjà pointé aujourd\'hui via reconnaissance faciale';
+                      errorTitle = 'Pointage déjà effectué';
+                    } else if (pointageErr.error?.code === 'USER_NOT_FOUND') {
+                      errorMessage = 'Utilisateur non reconnu dans le système';
+                      errorTitle = 'Erreur utilisateur';
+                    }
+
+                    this.toastr.error(errorMessage, errorTitle, { timeOut, progressBar: true });
                   }
                 });
               },
               error: (userErr) => {
                 console.error('Erreur utilisateur:', userErr);
                 this.toastr.warning(
-                  'Utilisateur reconnu mais informations non trouvées',
+                  'Visage reconnu mais informations utilisateur non trouvées',
                   'Attention',
-                  { timeOut: 5000, progressBar: true }
+                  { timeOut: 1500, progressBar: true }
                 );
               }
             });
         } else if (response.status === 'info') {
           this.openNewUserDialog();
         } else {
-          this.toastr.warning(response.message || 'Réponse inattendue', 'Attention', {
-            timeOut: 5000,
-            progressBar: true
-          });
+          this.toastr.warning(
+            response.message || 'Réponse inattendue du serveur de reconnaissance',
+            'Attention',
+            { timeOut: 1500, progressBar: true }
+          );
         }
       },
       error: (err) => {
         console.error('Erreur HTTP:', err);
         this.toastr.error(
           err.error?.message || err.message || 'Erreur de communication avec le serveur',
-          'Erreur',
-          { timeOut: 5000, progressBar: true }
+          'Erreur système',
+          { timeOut: 1500, progressBar: true }
         );
       }
     });
@@ -214,14 +295,14 @@ registerNewUserWithImage(userData: any): void {
                 this.toastr.success(
                   `Nouvel utilisateur enregistré: ${response.user.name}`,
                   'Succès',
-                  { timeOut: 5000, progressBar: true }
+                  { timeOut: 1500, progressBar: true }
                 );
               },
               error: (err) => {
                 this.toastr.error(
                   'Erreur lors de l\'enregistrement',
                   'Erreur',
-                  { timeOut: 5000, progressBar: true }
+                  { timeOut: 1500, progressBar: true }
                 );
                 console.error(err);
               }
@@ -250,7 +331,7 @@ pointageQR() {
   this.pointageService.enregistrerPointage(userId).subscribe({
     next: (response: PointageResponse) => {
       this.toastr.success(response.message, 'Pointage enregistré', {
-        timeOut: 5000,
+        timeOut: 1500,
         progressBar: true
       });
     },
@@ -258,7 +339,7 @@ pointageQR() {
       this.toastr.error(
         err.error?.message || 'Erreur lors du pointage',
         'Erreur',
-        { timeOut: 5000, progressBar: true }
+        { timeOut: 1500, progressBar: true }
       );
     }
   });

@@ -1,5 +1,5 @@
 //pointage.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
@@ -28,9 +28,12 @@ export class PointageService {
     }).exec();
 
     const pointageFace = pointageExistants.find(p => p.source === PointageSource.FACE);
-    if (pointageFace) {
-      throw new Error('Vous avez déjà pointé via reconnaissance faciale aujourd\'hui');
-    }
+  if (pointageFace) {
+    throw new BadRequestException({
+      message: 'Pointage déjà effectué aujourd\'hui via reconnaissance faciale',
+      code: 'FACE_ALREADY_USED'
+    });
+  }
 
     const pointageQr = pointageExistants.find(p => p.source === PointageSource.QR);
 
@@ -52,13 +55,13 @@ export class PointageService {
       pointageQr.sortie = heureActuelle;
       await pointageQr.save();
       return { 
-        message: `Sortie enregistrée à ${heureActuelle}`, 
+        message: `Sortie enregistrée à ${heureActuelle} via QR code`, 
         type: 'sortie' 
       };
     }
 
     return { 
-      message: 'Pointage déjà complet pour aujourd\'hui', 
+      message: 'Pointage déjà complet pour aujourd\'hui (via QR code)', 
       type: 'complet' 
     };
   }
@@ -85,6 +88,16 @@ async getPointagesByMonth(userId: string, month: number, year: number) {
 }
 
   async enregistrerPointageFace(userId: string) {
+
+    const user = await this.userModel.findById(userId).exec();
+    if (!user) {
+      throw new NotFoundException({
+        message: 'Utilisateur non trouvé',
+        code: 'USER_NOT_FOUND'
+      });
+    }
+
+
     const dateAuj = moment().format('YYYY-MM-DD');
     const heureActuelle = moment().format('HH:mm:ss');
 
@@ -95,7 +108,10 @@ async getPointagesByMonth(userId: string, month: number, year: number) {
 
     const pointageQr = pointageExistants.find(p => p.source === PointageSource.QR);
     if (pointageQr) {
-      throw new Error('Vous avez déjà pointé via QR code aujourd\'hui');
+      throw new BadRequestException({
+        message: 'Vous avez déjà pointé via QR code aujourd\'hui',
+        code: 'QR_ALREADY_USED'
+      });
     }
 
     const pointageFace = pointageExistants.find(p => p.source === PointageSource.FACE);
@@ -109,7 +125,7 @@ async getPointagesByMonth(userId: string, month: number, year: number) {
       });
       await newPointage.save();
       return { 
-        message: `Entrée enregistrée à ${heureActuelle}`, 
+        message: `Entrée enregistrée à ${heureActuelle} via reconnaissance faciale`, 
         type: 'entree' 
       };
     }
@@ -118,13 +134,14 @@ async getPointagesByMonth(userId: string, month: number, year: number) {
       pointageFace.sortie = heureActuelle;
       await pointageFace.save();
       return { 
-        message: `Sortie enregistrée à ${heureActuelle}`, 
+        message: `Sortie enregistrée à ${heureActuelle} via reconnaissance faciale`, 
         type: 'sortie' 
+      
       };
     }
 
     return { 
-      message: 'Pointage déjà complet pour aujourd\'hui', 
+      message: 'Pointage déjà complet pour aujourd\'hui (via reconnaissance faciale)', 
       type: 'complet' 
     };
   }
