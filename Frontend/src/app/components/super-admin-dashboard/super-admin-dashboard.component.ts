@@ -3,6 +3,8 @@ import { StatisticsService } from '../../services/statistics.service';
 import { AuthService } from '../../services/auth.service';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
+import { Chart } from 'chart.js';
+
 
 
 
@@ -274,5 +276,177 @@ private getPointColor(label: string): string {
     });
   }
 
+printDashboard(): void {
+  // Préparation des données
+  document.body.setAttribute('data-print-date', new Date().toLocaleString());
   
+  // Créer un conteneur spécial pour l'impression
+  const printContainer = document.createElement('div');
+  printContainer.className = 'print-container';
+  
+  // Ajouter le titre principal
+  const mainTitle = document.createElement('h1');
+  mainTitle.textContent = 'Tableau de Bord SuperAdmin';
+  mainTitle.style.textAlign = 'center';
+  mainTitle.style.marginBottom = '10px';
+  printContainer.appendChild(mainTitle);
+
+  // Première ligne : Compagnies et Employés
+  const firstRow = document.createElement('div');
+  firstRow.className = 'print-row';
+  
+  // Section Compagnies
+  const companiesSection = this.createStatSection('Compagnies', this.totalCompanies);
+  firstRow.appendChild(companiesSection);
+  
+  // Section Employés
+  const employeesSection = this.createStatSection('Employés', this.totalEmployees);
+  firstRow.appendChild(employeesSection);
+  
+  printContainer.appendChild(firstRow);
+
+  // Deuxième ligne : Stagiaires
+  const secondRow = document.createElement('div');
+  secondRow.className = 'print-row';
+  
+  // Section Stagiaires
+  const internsSection = this.createStatSection('Stagiaires', this.totalInterns);
+  secondRow.appendChild(internsSection);
+  
+  // Ajouter un élément vide pour maintenir l'alignement
+  const emptySection = document.createElement('div');
+  emptySection.className = 'print-section';
+  emptySection.style.visibility = 'hidden';
+  secondRow.appendChild(emptySection);
+  
+  printContainer.appendChild(secondRow);
+
+  // Troisième ligne : Évolution des compagnies et employés
+  const thirdRow = document.createElement('div');
+  thirdRow.className = 'print-row';
+  
+  // Graphique Compagnies
+  const companiesChartSection = this.createChartSection('Évolution des compagnies', this.companiesChartData);
+  thirdRow.appendChild(companiesChartSection);
+  
+  // Graphique Employés
+  const employeesChartSection = this.createChartSection('Évolution des employés', this.employeesChartData);
+  thirdRow.appendChild(employeesChartSection);
+  
+  printContainer.appendChild(thirdRow);
+
+  // Quatrième ligne : Évolution des stagiaires
+  const fourthRow = document.createElement('div');
+  fourthRow.className = 'print-row';
+  
+  // Graphique Stagiaires
+  const internsChartSection = this.createChartSection('Évolution des stagiaires', this.internsChartData);
+  fourthRow.appendChild(internsChartSection);
+  
+  // Ajouter un élément vide pour maintenir l'alignement
+  const emptyChartSection = document.createElement('div');
+  emptyChartSection.className = 'print-section';
+  emptyChartSection.style.visibility = 'hidden';
+  fourthRow.appendChild(emptyChartSection);
+  
+  printContainer.appendChild(fourthRow);
+
+  // Ajouter le conteneur au body
+  document.body.appendChild(printContainer);
+  document.body.classList.add('print-mode');
+
+  // Forcer la mise à jour des graphiques
+  setTimeout(() => {
+    this.companiesChartData = {...this.companiesChartData};
+    this.employeesChartData = {...this.employeesChartData};
+    this.internsChartData = {...this.internsChartData};
+    
+    // Imprimer après un court délai
+    setTimeout(() => {
+      window.print();
+      
+      // Nettoyage
+      printContainer.remove();
+      document.body.classList.remove('print-mode');
+      document.body.removeAttribute('data-print-date');
+    }, 500);
+  }, 100);
+}
+
+private createStatSection(title: string, value: number): HTMLElement {
+  const section = document.createElement('div');
+  section.className = 'print-section stat-section';
+  
+  const valueDiv = document.createElement('div');
+  valueDiv.className = 'stat-value';
+  valueDiv.textContent = value.toString();
+  valueDiv.style.fontSize = '32px';
+  valueDiv.style.fontWeight = 'bold';
+  valueDiv.style.textAlign = 'center';
+  valueDiv.style.margin = '5px 0';
+  
+  const titleDiv = document.createElement('div');
+  titleDiv.className = 'stat-title';
+  titleDiv.textContent = title;
+  titleDiv.style.textAlign = 'center';
+  titleDiv.style.fontSize = '18px';
+  
+  section.appendChild(valueDiv);
+  section.appendChild(titleDiv);
+  
+  return section;
+}
+
+private createChartSection(title: string, chartData: any): HTMLElement {
+  const section = document.createElement('div');
+  section.className = 'print-section chart-section';
+  
+  const titleDiv = document.createElement('h2');
+  titleDiv.textContent = title;
+  titleDiv.style.textAlign = 'center';
+  titleDiv.style.marginBottom = '5px';
+  
+  const canvas = document.createElement('canvas');
+  canvas.height = 200;
+  canvas.width = 300;
+  
+  section.appendChild(titleDiv);
+  section.appendChild(canvas);
+  
+  // Copier le graphique original
+  setTimeout(() => {
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: chartData.labels,
+          datasets: [{
+            ...chartData.datasets[0],
+            borderWidth: 2,
+            pointRadius: 4
+          }]
+        },
+        options: {
+          responsive: false,
+          plugins: {
+            legend: {
+              position: 'top'
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                precision: 0
+              }
+            }
+          }
+        }
+      });
+    }
+  }, 50);
+  
+  return section;
+}
 }
