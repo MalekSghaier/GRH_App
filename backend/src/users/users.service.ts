@@ -290,8 +290,6 @@ async findUsersForAdminPaginated(page: number = 1, limit: number = 5): Promise<{
     });
   }
 
-
-
   async associateImageToUser(userId: string, imageId: string): Promise<void> {
     await this.userModel.findByIdAndUpdate(userId, { 
       $set: { profileImageId: imageId } 
@@ -316,5 +314,9 @@ async findUsersForAdminPaginated(page: number = 1, limit: number = 5): Promise<{
       throw new NotFoundException(`Aucun utilisateur trouvé avec l'ID d'image ${imageId}`);
     }
     return user;
+  }
+
+  async getAllUsers(): Promise<UserDocument[]> {
+    return this.userModel.find().sort({ createdAt: 1 }).exec();
   }
 }

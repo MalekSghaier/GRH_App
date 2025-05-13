@@ -106,6 +106,10 @@
 						</li>
 					</ul>
 				</div>
+				<a href="javascript:void(0)" class="btn-download" >
+					<i class='bx bxs-cloud-download bx-fade-down-hover' ></i>
+					<span class="text">Obtenir PDF</span>
+				</a>
 
 			</div>
 
@@ -132,6 +136,57 @@
 					</span>
 				</li>
 			</ul>
+
+			<div class="table-data">
+  <div class="order">
+    <div class="charts-grid">
+      <!-- Graphique d'évolution des compagnies -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <i class='bx bxs-building'></i>
+          <h3>Évolution des compagnies</h3>
+        </div>
+        <div class="chart-wrapper">
+          <canvas baseChart
+            [data]="companiesChartData"
+            [options]="companiesChartOptions"
+            [type]="companiesChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Graphique d'évolution des employés -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <i class='bx bxs-user'></i>
+          <h3>Évolution des employés</h3>
+        </div>
+        <div class="chart-wrapper">
+          <canvas baseChart
+            [data]="employeesChartData"
+            [options]="companiesChartOptions"
+            [type]="companiesChartType">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Graphique d'évolution des stagiaires -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <i class='bx bxs-graduation'></i>
+          <h3>Évolution des stagiaires</h3>
+        </div>
+        <div class="chart-wrapper">
+          <canvas baseChart
+            [data]="internsChartData"
+            [options]="companiesChartOptions" 
+            [type]="companiesChartType">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 		</main>
 		<!-- MAIN -->
 	</section>

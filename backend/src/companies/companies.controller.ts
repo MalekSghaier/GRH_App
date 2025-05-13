@@ -1,3 +1,4 @@
+  //compagnies.controller.ts
   import {Controller,Get,Post,Put,Delete,Body,Param,UseGuards,UseInterceptors,UploadedFiles,  BadRequestException,Query, NotFoundException ,
 } from '@nestjs/common';
   import { CompaniesService } from './companies.service';
@@ -92,16 +93,17 @@
     async getStatistics() {
       return this.companiesService.getStatistics();
     }
-
+    @Get('monthly-evolution')
+    async getMonthlyEvolution() {
+      return this.companiesService.getMonthlyEvolution();
+    }
     @Get('my-info')
     @UseGuards(AuthGuard('jwt')) 
     async getMyInfo(@Request() req: ExpressRequest): Promise<CompanyDocument> {
     const companyId = req.user?.id; 
-  
     if (!companyId) {
       throw new NotFoundException("Compagnie non trouvée");
     }
-  
     // Vérification explicite que `companyId` est bien une chaîne de caractères (string)
     if (typeof companyId !== 'string') {
       throw new NotFoundException("ID de compagnie invalide");

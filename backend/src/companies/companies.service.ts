@@ -1,3 +1,4 @@
+  //compagnies.service.ts
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -5,12 +6,14 @@ import { Company, CompanyDocument } from '../schemas/company.schema';
 import { UsersService } from 'src/users/users.service';
 import { MongoServerError } from 'mongodb'; // Importer MongoServerError
 import * as bcrypt from 'bcrypt';
+import { UserRole } from 'src/schemas/user.schema';
 
 
 @Injectable()
 export class CompaniesService {
   constructor(@InjectModel(Company.name) private companyModel: Model<CompanyDocument>,
   private readonly usersService: UsersService, ) {}
+
 
 
   async getStatistics() {
@@ -184,4 +187,55 @@ export class CompaniesService {
       (error as { code: number }).code === 11000
     );
   }
+
+
+async getMonthlyEvolution() {
+  // Récupérer l'année en cours
+  const currentYear = new Date().getFullYear();
+
+  // Initialiser les données mensuelles
+  const monthlyData = {
+    months: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
+    companies: Array(12).fill(0),
+    employees: Array(12).fill(0),
+    interns: Array(12).fill(0)
+  };
+
+  // 1. Compter les compagnies
+  const companies = await this.companyModel.find({
+    createdAt: { $gte: new Date(`${currentYear}-01-01`) }
+  }).sort({ createdAt: 1 }).exec();
+
+  companies.forEach(company => {
+    if (company.createdAt) {
+      const month = new Date(company.createdAt).getMonth();
+      monthlyData.companies[month]++;
+    }
+  });
+
+  // 2. Compter les employés et stagiaires
+  const users = await this.usersService.getAllUsers();
+
+  users.forEach((user: any) => {
+    if (user.createdAt && new Date(user.createdAt).getFullYear() === currentYear) {
+      const month = new Date(user.createdAt).getMonth();
+      
+      // Utilisation de UserRole pour la comparaison
+      if (user.role === UserRole.EMPLOYEE) {
+        monthlyData.employees[month]++;
+      } else if (user.role === UserRole.INTERN) {
+        monthlyData.interns[month]++;
+      }
+    }
+  });
+
+  // Calculer les totaux cumulés
+  for (let i = 1; i < 12; i++) {
+    monthlyData.companies[i] += monthlyData.companies[i - 1];
+    monthlyData.employees[i] += monthlyData.employees[i - 1];
+    monthlyData.interns[i] += monthlyData.interns[i - 1];
+  }
+
+  return monthlyData;
+}
 }

@@ -18,7 +18,8 @@ export interface IUser extends Document {
   company?: string; 
   soldeConges: number; 
   profileImageId?: string;
-
+  createdAt: Date; // Ajoutez cette ligne
+  updatedAt: Date; // Optionnel
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -43,7 +44,12 @@ export const UserSchema = new Schema<IUser>({
     min: 0 // Empêche les valeurs négatives
   },
   profileImageId: { type: String },
-}, { collection: 'users' });
+}, { 
+  collection: 'users' ,
+  timestamps: true 
+
+
+});
 
 UserSchema.pre<IUser>('save', async function (next: (err?: CallbackError) => void) {
   if (!this.isModified('password')) return next();

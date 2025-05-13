@@ -40,6 +40,10 @@ export class Company {
   @Prop({ required: true, unique: true })
   email: string;
 
+  @Prop({ default: Date.now })
+  createdAt: Date;
+
+
   // Ajouter le champ _id explicitement (optionnel, car Mongoose l'ajoute automatiquement)
   _id?: string;
 }

@@ -9,8 +9,6 @@ import { Chart, ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 import  {DocumentRequestsService} from '../../services/document-requests.service'
 
-
-
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
@@ -52,7 +50,7 @@ export class AdminDashboardComponent implements AfterViewInit,OnInit {
     private userService: UserService,
     private congesService: CongesService ,
     private jobOffersService: JobOffersService,
-    private internshipOffersService: InternshipOffersService ,// Ajoutez cette injection
+    private internshipOffersService: InternshipOffersService ,
     private documentRequestsService :DocumentRequestsService
 
   ) {}

@@ -1,24 +1,70 @@
 import { Component, AfterViewInit ,ViewEncapsulation , OnInit } from '@angular/core';
 import { StatisticsService } from '../../services/statistics.service';
 import { AuthService } from '../../services/auth.service';
+import { ChartConfiguration, ChartType } from 'chart.js';
+import { NgChartsModule } from 'ng2-charts';
+
 
 
 @Component({
   selector: 'app-super-admin-dashboard',
+  imports: [NgChartsModule],
   templateUrl: './super-admin-dashboard.component.html',
   styleUrl:'./super-admin-dashboard.component.css',
-  encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
+  encapsulation: ViewEncapsulation.None 
 })
 export class SuperAdminDashboardComponent implements AfterViewInit , OnInit {
 
   totalCompanies: number = 0;
   totalEmployees: number = 0;
   totalInterns: number = 0;
-  constructor(private statisticsService: StatisticsService,private authService: AuthService) {}
+public companiesChartData: ChartConfiguration['data'] = {
+  labels: [],
+  datasets: []
+};
+
+    public companiesChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Évolution mensuelle des compagnies'
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          precision: 0
+        }
+      }
+    }
+  };
+
+    public companiesChartType: ChartType = 'line';
+
+  // Graphique d'évolution des employés
+public employeesChartData: ChartConfiguration['data'] = {
+  labels: [],
+  datasets: []
+};
+
+    // Graphique d'évolution des stagiaires
+public internsChartData: ChartConfiguration['data'] = {
+  labels: [],
+  datasets: []
+};
+
+  constructor(
+    private statisticsService: StatisticsService,
+    private authService: AuthService
+  ) {}
 
 
   ngOnInit(): void {
     this.loadStatistics();
+    this.loadMonthlyEvolutionData();
+
   }
   logout(): void {
     this.authService.logout(); // Appelez la méthode logout
@@ -36,6 +82,74 @@ export class SuperAdminDashboardComponent implements AfterViewInit , OnInit {
       },
     );
   }
+
+private loadMonthlyEvolutionData(): void {
+  this.statisticsService.getMonthlyEvolution().subscribe({
+    next: (data) => {
+      console.log('Données reçues:', data); // Pour le débogage
+      
+      // Mise à jour des graphiques
+      this.updateChartData(this.companiesChartData, data.months, data.companies, 'Compagnies');
+      this.updateChartData(this.employeesChartData, data.months, data.employees, 'Employés');
+      this.updateChartData(this.internsChartData, data.months, data.interns, 'Stagiaires');
+      
+      // Forcer la mise à jour des graphiques
+      this.companiesChartData = {...this.companiesChartData};
+      this.employeesChartData = {...this.employeesChartData};
+      this.internsChartData = {...this.internsChartData};
+    },
+    error: (error) => {
+      console.error('Erreur lors du chargement des données mensuelles', error);
+    }
+  });
+}
+
+private updateChartData(chartData: ChartConfiguration['data'], labels: string[], data: number[], label: string): void {
+  console.log(`Mise à jour du graphique ${label}:`, data); // Debug
+  
+  chartData.labels = [...labels];
+  chartData.datasets = [{
+    data: [...data],
+    label: label,
+    backgroundColor: this.getBackgroundColor(label),
+    borderColor: this.getBorderColor(label),
+    pointBackgroundColor: this.getPointColor(label),
+    pointBorderColor: '#fff',
+    pointHoverBackgroundColor: '#fff',
+    pointHoverBorderColor: this.getBorderColor(label),
+    fill: 'origin',
+    tension: 0.1
+  }];
+}
+
+private getBackgroundColor(label: string): string {
+  switch(label) {
+    case 'Compagnies': return 'rgba(54, 162, 235, 0.2)';
+    case 'Employés': return 'rgba(255, 209, 57, 0.2)';
+    case 'Stagiaires': return 'rgba(247, 141, 95, 0.2)';
+    default: return 'rgba(201, 203, 207, 0.2)';
+  }
+}
+
+private getBorderColor(label: string): string {
+  switch(label) {
+    case 'Compagnies': return 'rgba(54, 162, 235, 1)';
+    case 'Employés': return 'rgba(255, 206, 38, 1)';
+    case 'Stagiaires': return 'rgba(253, 114, 56, 1)';
+    default: return 'rgba(201, 203, 207, 1)';
+  }
+}
+
+private getPointColor(label: string): string {
+  switch(label) {
+    case 'Compagnies': return 'rgba(54, 162, 235, 1)';
+    case 'Employés': return 'rgba(255, 206, 38, 1)';
+    case 'Stagiaires': return 'rgba(253, 114, 56, 1)';
+    default: return 'rgba(201, 203, 207, 1)';
+  }
+}
+
+
 
   ngAfterViewInit(): void {
     this.initializeSidebar();
@@ -159,4 +273,6 @@ export class SuperAdminDashboardComponent implements AfterViewInit , OnInit {
       }
     });
   }
+
+  
 }

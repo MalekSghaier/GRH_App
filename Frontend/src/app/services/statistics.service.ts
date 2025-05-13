@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class StatisticsService {
-  private apiUrl = 'http://localhost:3000/companies'; // Remplacez par l'URL de votre API
+  private apiUrl = 'http://localhost:3000/companies'; 
 
   constructor(private http: HttpClient) {}
 
@@ -30,4 +30,21 @@ export class StatisticsService {
       { headers }
     );
   }
+
+getMonthlyEvolution(): Observable<{ 
+  months: string[]; 
+  companies: number[]; 
+  employees: number[]; 
+  interns: number[] 
+}> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
+  return this.http.get<{
+    months: string[];
+    companies: number[];
+    employees: number[];
+    interns: number[];
+  }>(`${this.apiUrl}/monthly-evolution`, { headers });
+}
 }

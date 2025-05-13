@@ -198,7 +198,56 @@ body {
 }
 
 
+/* Dans votre fichier super-admin-dashboard.component.css */
+.table-data {
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 24px;
+  margin-top: 24px;
+  width: 100%;
+}
 
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.chart-card {
+  background: var(--light);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-5px);
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.chart-header i {
+  font-size: 24px;
+  margin-right: 10px;
+  color: var(--blue);
+}
+
+.chart-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 250px;
+  width: 100%;
+}
 
 /* NAVBAR */
 #content nav {
