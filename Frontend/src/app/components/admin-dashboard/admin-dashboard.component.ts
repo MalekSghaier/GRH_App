@@ -83,7 +83,6 @@ export class AdminDashboardComponent implements AfterViewInit,OnInit {
   });
 
   }
-
 navigateToJobOffers(): void {
   this.router.navigate(['/offres-emploi'], { 
     queryParams: { tab: 'mes-offres' } 
@@ -94,7 +93,6 @@ navigateToInternshipOffers(): void {
     queryParams: { tab: 'mes-offres' } 
   });
 }
-
   private loadCounts(): void {
     this.userService.countEmployees().subscribe({
       next: (count) => {
