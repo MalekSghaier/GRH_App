@@ -8,6 +8,7 @@ import { InternshipOffersService } from '../../services/internship-offers.servic
 import { Chart, ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 import  {DocumentRequestsService} from '../../services/document-requests.service'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -51,7 +52,9 @@ export class AdminDashboardComponent implements AfterViewInit,OnInit {
     private congesService: CongesService ,
     private jobOffersService: JobOffersService,
     private internshipOffersService: InternshipOffersService ,
-    private documentRequestsService :DocumentRequestsService
+    private documentRequestsService :DocumentRequestsService,
+    private router: Router
+
 
   ) {}
 
@@ -67,6 +70,30 @@ export class AdminDashboardComponent implements AfterViewInit,OnInit {
  
   }
 
+  navigateToEmployees(): void {
+  this.router.navigate(['/users'], { 
+    queryParams: { role: 'employé' } 
+  });
+
+  }
+
+  navigateToInterns(): void {
+  this.router.navigate(['/users'], { 
+    queryParams: { role: 'stagiaire' } 
+  });
+
+  }
+
+navigateToJobOffers(): void {
+  this.router.navigate(['/offres-emploi'], { 
+    queryParams: { tab: 'mes-offres' } 
+  });
+}
+navigateToInternshipOffers(): void {
+  this.router.navigate(['/offres-stage'], { 
+    queryParams: { tab: 'mes-offres' } 
+  });
+}
 
   private loadCounts(): void {
     this.userService.countEmployees().subscribe({

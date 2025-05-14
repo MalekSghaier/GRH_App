@@ -7,6 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 import { RouterLink } from '@angular/router'; 
 import { debounceTime, distinctUntilChanged, switchMap, map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+
 
 @Component({
   selector: 'app-users',
@@ -27,36 +29,70 @@ export class UsersComponent implements AfterViewInit, OnInit {
 
   constructor(
     private userService: UserService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private route: ActivatedRoute
+
   ) {}
 
-  ngOnInit(): void {
-    this.currentCompanyName = localStorage.getItem('companyName');
-    this.loadUsers();
+  // ngOnInit(): void {
+  //   this.currentCompanyName = localStorage.getItem('companyName');
+  //   this.loadUsers();
     
-    this.searchTerms.pipe(
-      debounceTime(100),
-      distinctUntilChanged(),
-      switchMap((query: string) => {
-        if (this.currentCompanyName) {
-          return this.userService.searchUsers(query).pipe(
-            map(users => users.filter(user => user.company === this.currentCompanyName))
-          );
-        } else {
-          return this.userService.searchUsers(query);
-        }
-      })
-    ).subscribe({
-      next: (users) => {
-        this.users = users;
-        this.isEmpty = users.length === 0;
-      },
-      error: (err) => {
-        console.error('Erreur lors de la recherche des utilisateurs:', err);
-        this.isEmpty = true;
+  //   this.searchTerms.pipe(
+  //     debounceTime(100),
+  //     distinctUntilChanged(),
+  //     switchMap((query: string) => {
+  //       if (this.currentCompanyName) {
+  //         return this.userService.searchUsers(query).pipe(
+  //           map(users => users.filter(user => user.company === this.currentCompanyName))
+  //         );
+  //       } else {
+  //         return this.userService.searchUsers(query);
+  //       }
+  //     })
+  //   ).subscribe({
+  //     next: (users) => {
+  //       this.users = users;
+  //       this.isEmpty = users.length === 0;
+  //     },
+  //     error: (err) => {
+  //       console.error('Erreur lors de la recherche des utilisateurs:', err);
+  //       this.isEmpty = true;
+  //     }
+  //   });
+  // }
+
+  ngOnInit(): void {
+  this.currentCompanyName = localStorage.getItem('companyName');
+  
+  this.route.queryParams.subscribe(params => {
+    const roleFilter = params['role'];
+    this.loadUsers(roleFilter);
+  });
+  
+  // Gardez votre logique de recherche existante
+  this.searchTerms.pipe(
+    debounceTime(100),
+    distinctUntilChanged(),
+    switchMap((query: string) => {
+      if (this.currentCompanyName) {
+        return this.userService.searchUsers(query).pipe(
+          map(users => users.filter(user => user.company === this.currentCompanyName)))
+      } else {
+        return this.userService.searchUsers(query);
       }
-    });
-  }
+    })
+  ).subscribe({
+    next: (users) => {
+      this.users = users;
+      this.isEmpty = users.length === 0;
+    },
+    error: (err) => {
+      console.error('Erreur lors de la recherche des utilisateurs:', err);
+      this.isEmpty = true;
+    }
+  });
+}
 
   search(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
@@ -64,41 +100,91 @@ export class UsersComponent implements AfterViewInit, OnInit {
     this.searchTerms.next(query);
   }
 
-  loadUsers(): void {
-    if (this.currentCompanyName) {
-      this.loadCompanyUsers(this.currentCompanyName);
-    } else {
-      this.loadAllUsers();
-    }
-  }
+  // loadUsers(): void {
+  //   if (this.currentCompanyName) {
+  //     this.loadCompanyUsers(this.currentCompanyName);
+  //   } else {
+  //     this.loadAllUsers();
+  //   }
+  // }
 
-  loadCompanyUsers(companyName: string): void {
-    this.userService.getUsersByCompanyPaginated(companyName, this.currentPage, this.itemsPerPage).subscribe({
-      next: (response) => {
-        this.users = response.data;
-        this.totalItems = response.total;
-        this.isEmpty = this.users.length === 0;
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des utilisateurs:', err);
-        this.isEmpty = true;
-      },
-    });
+  loadUsers(roleFilter?: string): void {
+  if (this.currentCompanyName) {
+    this.loadCompanyUsers(this.currentCompanyName, roleFilter);
+  } else {
+    this.loadAllUsers(roleFilter);
   }
+}
 
-  loadAllUsers(): void {
-    this.userService.getPaginatedAdminUsers(this.currentPage, this.itemsPerPage).subscribe({
-      next: (response) => {
-        this.users = response.data;
-        this.totalItems = response.total;
-        this.isEmpty = this.users.length === 0;
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des utilisateurs:', err);
-        this.isEmpty = true;
-      },
-    });
-  }
+  // loadCompanyUsers(companyName: string): void {
+  //   this.userService.getUsersByCompanyPaginated(companyName, this.currentPage, this.itemsPerPage).subscribe({
+  //     next: (response) => {
+  //       this.users = response.data;
+  //       this.totalItems = response.total;
+  //       this.isEmpty = this.users.length === 0;
+  //     },
+  //     error: (err) => {
+  //       console.error('Erreur lors du chargement des utilisateurs:', err);
+  //       this.isEmpty = true;
+  //     },
+  //   });
+  // }
+
+  loadCompanyUsers(companyName: string, roleFilter?: string): void {
+  this.userService.getUsersByCompanyPaginated(companyName, this.currentPage, this.itemsPerPage).subscribe({
+    next: (response) => {
+      let filteredUsers = response.data;
+      
+      // Appliquez le filtre si présent
+      if (roleFilter) {
+        filteredUsers = filteredUsers.filter(user => user.role === roleFilter);
+      }
+      
+      this.users = filteredUsers;
+      this.totalItems = response.total;
+      this.isEmpty = this.users.length === 0;
+    },
+    error: (err) => {
+      console.error('Erreur lors du chargement des utilisateurs:', err);
+      this.isEmpty = true;
+    },
+  });
+}
+
+  // loadAllUsers(): void {
+  //   this.userService.getPaginatedAdminUsers(this.currentPage, this.itemsPerPage).subscribe({
+  //     next: (response) => {
+  //       this.users = response.data;
+  //       this.totalItems = response.total;
+  //       this.isEmpty = this.users.length === 0;
+  //     },
+  //     error: (err) => {
+  //       console.error('Erreur lors du chargement des utilisateurs:', err);
+  //       this.isEmpty = true;
+  //     },
+  //   });
+  // }
+
+  loadAllUsers(roleFilter?: string): void {
+  this.userService.getPaginatedAdminUsers(this.currentPage, this.itemsPerPage).subscribe({
+    next: (response) => {
+      let filteredUsers = response.data;
+      
+      // Appliquez le filtre si présent
+      if (roleFilter) {
+        filteredUsers = filteredUsers.filter(user => user.role === roleFilter);
+      }
+      
+      this.users = filteredUsers;
+      this.totalItems = response.total;
+      this.isEmpty = this.users.length === 0;
+    },
+    error: (err) => {
+      console.error('Erreur lors du chargement des utilisateurs:', err);
+      this.isEmpty = true;
+    },
+  });
+}
 
   onPageChange(page: number): void {
     this.currentPage = page;

@@ -204,6 +204,18 @@ body {
 	display: flex;
 	align-items: center;
 	grid-gap: 24px;
+	cursor: pointer; 
+    transition: all 0.3s ease; 
+}
+#content main .box-info li:hover {
+  background: #f0f4f8; /* Couleur légèrement différente au survol */
+  transform: translateY(-2px); /* Léger effet de "soulèvement" */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre portée pour l'effet 3D */
+}
+/* Pour que tout le contenu à l'intérieur hérite du curseur pointer */
+#content main .box-info li, 
+#content main .box-info li * {
+  cursor: pointer;
 }
 #content main .box-info li .bx {
 	width: 80px;

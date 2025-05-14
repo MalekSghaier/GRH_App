@@ -18,8 +18,8 @@ export interface IUser extends Document {
   company?: string; 
   soldeConges: number; 
   profileImageId?: string;
-  createdAt: Date; // Ajoutez cette ligne
-  updatedAt: Date; // Optionnel
+  createdAt: Date; 
+  updatedAt: Date; 
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 

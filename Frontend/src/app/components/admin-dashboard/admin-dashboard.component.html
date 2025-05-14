@@ -41,33 +41,21 @@
 			</div>
 
 			<ul class="box-info">
-				<li>
-
+				<li (click)="navigateToEmployees()" >
 					<i class='bx bxs-group' ></i>
 					<span class="text">
 						<h3>{{ employeeCount }}</h3>
 						<p>Employés</p>
 					</span>
 				</li>
-				<li>
+				<li (click)="navigateToInterns()">
 					<i class='bx bxs-graduation'></i>					
 					<span class="text">
 						<h3>{{ internCount }}</h3>
 						<p>Stagiaires</p>
 					</span>
 				</li>
-				<!-- 
-
-				<li>
-					<i class='bx bx-swim'></i>					
-					<span class="text">
-						<h3>{{ pendingCongesCount }}</h3>
-						<p>Congés demandés</p>
-					</span>
-				</li>
-				Ceci est un commentaire -->
-
-				<li>
+				<li (click)="navigateToJobOffers()">
 					<i class='bx bxs-briefcase'></i>					
 					<span class="text">
 						<h3>{{ jobOffersCount }}</h3>
@@ -75,7 +63,7 @@
 					</span>
 				</li>
 
-				<li>
+				<li (click)="navigateToInternshipOffers()">
 					<i class='bx bxs-calendar'></i>
 					<span class="text">
 						<h3>{{ internshipOffersCount }}</h3>

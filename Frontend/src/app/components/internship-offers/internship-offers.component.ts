@@ -2,7 +2,7 @@
 import { Component, ViewEncapsulation, AfterViewInit, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.component';
 import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component';
 import { MatCardModule } from '@angular/material/card';
@@ -78,12 +78,34 @@ export class InternshipOffersComponent implements AfterViewInit, OnInit {
     private internshipOffersService: InternshipOffersService,
     private snackBar: MatSnackBar,
     private toastr: ToastrService,
-    private internshipApplicationsService: InternshipApplicationsService
+    private internshipApplicationsService: InternshipApplicationsService,
+    private route: ActivatedRoute
   ) {}
 
+  selectedTabIndex = 0; 
+
+  
   ngOnInit(): void {
-    this.loadMyOffers();
-    this.loadApplications();
+
+    this.route.queryParams.subscribe(params => {
+    const tab = params['tab'];
+    
+    // Définir l'onglet sélectionné en fonction du paramètre
+    if (tab === 'mes-offres') {
+      this.selectedTabIndex = 1; // Index de l'onglet "Mes offres publiées"
+    } else if (tab === 'candidatures') {
+      this.selectedTabIndex = 2; // Index de l'onglet "Candidatures reçues"
+    } else {
+      this.selectedTabIndex = 0; // Onglet par défaut
+    }
+
+    // Charger les données appropriées
+    if (this.selectedTabIndex === 1) {
+      this.loadMyOffers();
+    } else if (this.selectedTabIndex === 2) {
+      this.loadApplications();
+    }
+  });
     this.loadPendingCount();
     
     // Configurez la recherche réactive
