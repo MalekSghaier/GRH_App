@@ -34,6 +34,7 @@ import { AllWorksComponent } from './all-works/all-works.component';
 import { WorkDetailsComponent } from './components/work-details/work-details.component';
 import { ProfilEmployComponent } from './components/profil-employ/profil-employ.component';
 import { PointageEmployComponent } from './components/pointage-employ/pointage-employ.component';
+import { PresenceComponent } from './components/presence/presence.component';
 
 export const routes: Routes = [
 
@@ -183,6 +184,11 @@ export const routes: Routes = [
     { 
         path: 'pointage-employ', 
         component: PointageEmployComponent
+    },
+    
+    { 
+        path: 'presence', 
+        component: PresenceComponent
     },
 
 
