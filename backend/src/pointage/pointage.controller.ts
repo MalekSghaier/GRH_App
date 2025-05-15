@@ -83,4 +83,12 @@ export class PointageController {
    async getPresenceAujourdhui() {
    return this.pointageService.getPresenceAujourdhui();
   }
+
+  @Get('by-date')
+async getPointagesByDate(@Query('date') date: string) {
+  if (!date) {
+    throw new BadRequestException('La date est requise');
+  }
+  return this.pointageService.getPointagesByDate(date);
+}
 }

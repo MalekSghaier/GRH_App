@@ -225,4 +225,83 @@ async getPresenceAujourdhui() {
     throw error;
   }
 }
+
+async getPointagesByDate(date: string) {
+  try {
+    const pointages = await this.pointageModel.aggregate([
+      {
+        $match: {
+          date: date // Format attendu: 'YYYY-MM-DD'
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
+      {
+        $unwind: {
+          path: '$user',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          nomComplet: { 
+            $ifNull: [
+              '$user.name', 
+              'Utilisateur inconnu'
+            ] 
+          },
+          date: 1,
+          entree: 1,
+          sortie: 1,
+          source: 1,
+          heuresTravail: {
+            $cond: {
+              if: { $and: [
+                { $ifNull: ['$entree', false] },
+                { $ifNull: ['$sortie', false] }
+              ]},
+              then: {
+                $divide: [
+                  { 
+                    $subtract: [
+                      { 
+                        $dateFromString: { 
+                          dateString: { $concat: ['$date', 'T', '$sortie'] },
+                          format: '%Y-%m-%dT%H:%M:%S'
+                        } 
+                      },
+                      { 
+                        $dateFromString: { 
+                          dateString: { $concat: ['$date', 'T', '$entree'] },
+                          format: '%Y-%m-%dT%H:%M:%S'
+                        } 
+                      }
+                    ]
+                  },
+                  3600000
+                ]
+              },
+              else: null
+            }
+          }
+        }
+      },
+      {
+        $sort: { entree: -1 }
+      }
+    ]);
+
+    return pointages;
+  } catch (error) {
+    console.error('Erreur dans getPointagesByDate:', error);
+    throw error;
+  }
+}
 }

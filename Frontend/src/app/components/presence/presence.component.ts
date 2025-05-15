@@ -7,6 +7,7 @@ import { PointageService } from '../../services/pointage.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { InitialsPipe } from '../../pipes/initials.pipe';
+import moment from 'moment';
 
 
 @Component({
@@ -26,6 +27,8 @@ export class PresenceComponent implements AfterViewInit, OnInit{
   arrivedCount = 0;
   averageHours = 0;
   filter: 'all' | 'present' | 'left' = 'all';
+  selectedDate: string = moment().format('YYYY-MM-DD');
+
 
   constructor(
     private pointageService: PointageService,
@@ -36,19 +39,40 @@ export class PresenceComponent implements AfterViewInit, OnInit{
     this.loadPresence();
   }
 
-  loadPresence(): void {
-    this.pointageService.getPresenceAujourdhui().subscribe({
-      next: (data) => {
-        this.employees = data.map(emp => ({
-          ...emp,
-          heuresTravail: emp.heuresTravail ? parseFloat(emp.heuresTravail.toFixed(2)) : null
-        }));
-        this.updateStats();
-        this.filterByStatus('all');
-      },
-      error: (err) => console.error('Erreur chargement présence', err)
-    });
-  }
+  loadPresence(date?: string): void {
+  const loadDate = date || this.selectedDate;
+  
+  this.pointageService.getPointagesByDate(loadDate).subscribe({
+    next: (data) => {
+      this.employees = data.map(emp => ({
+        ...emp,
+        heuresTravail: emp.heuresTravail ? parseFloat(emp.heuresTravail.toFixed(2)) : null
+      }));
+      this.updateStats();
+      this.filterByStatus('all');
+      this.today = new Date(loadDate).toLocaleDateString('fr-FR'); // Mise à jour de la date affichée
+    },
+    error: (err) => console.error('Erreur chargement présence', err)
+  });
+}
+
+onDateChange(event: any): void {
+  this.selectedDate = moment(event.target.value).format('YYYY-MM-DD');
+  this.loadPresence(this.selectedDate);
+}
+  // loadPresence(): void {
+  //   this.pointageService.getPresenceAujourdhui().subscribe({
+  //     next: (data) => {
+  //       this.employees = data.map(emp => ({
+  //         ...emp,
+  //         heuresTravail: emp.heuresTravail ? parseFloat(emp.heuresTravail.toFixed(2)) : null
+  //       }));
+  //       this.updateStats();
+  //       this.filterByStatus('all');
+  //     },
+  //     error: (err) => console.error('Erreur chargement présence', err)
+  //   });
+  // }
 
     updateStats(): void {
     this.arrivedCount = this.employees.length;
