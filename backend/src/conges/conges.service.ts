@@ -7,10 +7,6 @@ import { UsersService } from '../users/users.service'; // Importez le service Us
 import { User, UserDocument} from '../schemas/user.schema';
 import { SoldeCongesService } from '../solde-conges/solde-conges.service';
 
-
-
-
-
 @Injectable()
 export class CongesService {
   constructor(@InjectModel('Conge') private readonly congeModel: Model<IConge>,
@@ -173,31 +169,39 @@ export class CongesService {
     }).exec();
   }
 
-  async findByCompanyPaginated(
-    company: string,
-    page: number = 1,
-    limit: number = 5
-  ): Promise<{ data: IConge[]; total: number }> {
-    // Trouver d'abord les utilisateurs de la compagnie
-    const users = await this.userModel.find({
-      company,
-      role: { $in: ['employé', 'stagiaire'] }
-    }).select('_id').lean();
-  
-    const userIds = users.map(user => user._id);
-  
-    // Si aucun utilisateur trouvé, retourner vide
-    if (userIds.length === 0) {
-      return { data: [], total: 0 };
-    }
-  
-    const skip = (page - 1) * limit;
-  
-    const [data, total] = await Promise.all([
-      this.congeModel.find({ 
-        userId: { $in: userIds },
-        status: 'pending' // Ajout du filtre pour les congés en attente
-      })
+async findByCompanyPaginated(
+  company: string,
+  page: number = 1,
+  limit: number = 5,
+  status?: 'pending' | 'approved' | 'rejected'
+): Promise<{ data: IConge[]; total: number }> {
+  // Trouver d'abord les utilisateurs de la compagnie
+  const users = await this.userModel.find({
+    company,
+    role: { $in: ['employé', 'stagiaire'] }
+  }).select('_id').lean();
+
+  const userIds = users.map(user => user._id);
+
+  // Si aucun utilisateur trouvé, retourner vide
+  if (userIds.length === 0) {
+    return { data: [], total: 0 };
+  }
+
+  const skip = (page - 1) * limit;
+
+  // Créer le filtre de base
+  const filter: any = { 
+    userId: { $in: userIds }
+  };
+
+  // Ajouter le filtre de statut si spécifié
+  if (status) {
+    filter.status = status;
+  }
+
+  const [data, total] = await Promise.all([
+    this.congeModel.find(filter)
       .populate({
         path: 'userId',
         select: 'name email role company'
@@ -207,14 +211,11 @@ export class CongesService {
       .sort({ createdAt: -1 })
       .exec(),
       
-      this.congeModel.countDocuments({ 
-        userId: { $in: userIds },
-        status: 'pending' // Même filtre pour le count
-      }).exec()
-    ]);
-  
-    return { data, total };
-  }
+    this.congeModel.countDocuments(filter).exec()
+  ]);
+
+  return { data, total };
+}
 
   async getMonthlyCongesStats(companyName: string): Promise<{month: string, count: number, year: number}[]> {
     // 1. Trouver les utilisateurs de la compagnie

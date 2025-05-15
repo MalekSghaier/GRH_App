@@ -4,95 +4,103 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-  <title>AdminHub</title>
+  <title>Gestion des congés</title>
 </head>
 <body>
   <app-shared-sidebar></app-shared-sidebar>
   <section id="content">
     <app-shared-navbar></app-shared-navbar>
 
-    <!-- MAIN -->
     <main>
       <div class="head-title">
         <div class="left">
-          <h1>Tableau de bord</h1>
-          <ul class="breadcrumb">
-            <li>
-              <a href="#">Tableau de bord</a>
-            </li>
-            <li><i class='bx bx-chevron-right'></i></li>
-            <li>
-              <a class="active" href="conges">Congés</a>
-            </li>
-          </ul>
+          <h1>Gestion des congés</h1>
+          <div class="header-actions">
+            <div class="stats-summary">
+              <div class="stat-card" [class.active]="filter === 'all'">
+                <span class="stat-value">{{ totalItems }}</span>
+                <span class="stat-label">Total</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="conges-container">
+        <!-- Filtres -->
+        <div class="filters">
+          <button (click)="filterConges('pending')" [class.active]="filter === 'pending'">
+            <i class='bx bx-time'></i> En attente
+          </button>
+          <button (click)="filterConges('approved')" [class.active]="filter === 'approved'">
+            <i class='bx bx-check-circle'></i> Approuvés
+          </button>
+          <button (click)="filterConges('rejected')" [class.active]="filter === 'rejected'">
+            <i class='bx bx-x-circle'></i> Rejetés
+          </button>
         </div>
 
+        <!-- Liste des congés -->
+        <div class="conges-list">
+          <div *ngFor="let conge of filteredConges" class="conge-card" [class]="conge.status">
+            <div class="conge-header">
+              <div class="employee-avatar">
+                <div class="avatar-circle">
+                  {{ conge.userId?.name | initials }}
+                </div>
+              </div>
+              <div class="employee-info">
+                <h3>{{ conge.userId?.name || 'Utilisateur inconnu' }}</h3>
+                <div class="conge-status" [class]="conge.status">
+                  {{ translateStatus(conge.status) }}
+                </div>
+              </div>
+              <div class="conge-dates">
+                <div class="date-range">
+                  <i class='bx bx-calendar'></i>
+                  {{ conge.startDate | date:'shortDate' }} - {{ conge.endDate | date:'shortDate' }}
+                </div>
+                <div class="duration">
+                  {{ calculateDuration(conge.startDate, conge.endDate) }} jours
+                </div>
+              </div>
+            </div>
 
+            <div class="conge-body">
+              <div class="conge-reason">
+                <i class='bx bx-note'></i>
+                <p>{{ conge.reason }}</p>
+              </div>
+              
+              <div class="conge-actions" *ngIf="conge.status === 'pending'">
+                <button class="btn-approve" (click)="updateStatus(conge._id, 'approved')">
+                  <i class='bx bx-check'></i> Approuver
+                </button>
+                <button class="btn-reject" (click)="updateStatus(conge._id, 'rejected')">
+                  <i class='bx bx-x'></i> Rejeter
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="filteredConges.length === 0" class="empty-state">
+            <i class='bx bx-calendar-alt'></i>
+            <p>Aucun congé trouvé</p>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" *ngIf="totalItems > itemsPerPage">
+          <button (click)="previousPage()" [disabled]="currentPage === 1">
+            <i class='bx bx-chevron-left'></i> Précédent
+          </button>
+          <span>Page {{ currentPage }} sur {{ totalPages }}</span>
+          <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+            Suivant <i class='bx bx-chevron-right'></i>
+          </button>
+        </div>
       </div>
-
-<!-- ... contenu existant avant le tableau ... -->
-
-<div class="table-data">
-  <div class="order">
-    <table *ngIf="!isEmpty; else emptyMessage">
-      <thead>
-        <tr>
-          <th>Employé</th>
-          <th>Début du Congé</th>
-          <th>Fin du Congé</th>
-          <th>Motif</th>
-          <th>État</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let conge of conges">
-          <td>{{ conge.userId?.name || 'Utilisateur inconnu' }}</td>
-          <td>{{ conge.startDate | date }}</td>
-          <td>{{ conge.endDate | date }}</td>
-          <td>{{ conge.reason }}</td>
-          <td>{{ translateStatus(conge.status) }}</td>
-          <td>
-            <button *ngIf="conge.status === 'pending'" class="no-border-button" (click)="updateStatus(conge._id, 'approved')">
-              <i class='bx bx-check bx-sm' style="color: #28a745;"></i>
-            </button>
-            <button *ngIf="conge.status === 'pending'" class="no-border-button" (click)="updateStatus(conge._id, 'rejected')">
-              <i class='bx bx-x bx-sm' style="color: #dc3545;"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- Pagination -->
-    <div class="pagination" *ngIf="totalItems > itemsPerPage">
-      <button 
-        (click)="onPageChange(currentPage - 1)" 
-        [disabled]="currentPage === 1">
-        Précédent
-      </button>
-      
-      <span>Page {{ currentPage }}</span>
-      
-      <button 
-        (click)="onPageChange(currentPage + 1)" 
-        [disabled]="currentPage * itemsPerPage >= totalItems">
-        Suivant
-      </button>
-    </div>
-
-    <ng-template #emptyMessage>
-      <div class="empty-message">
-        <p>Aucun congé trouvé.</p>
-      </div>
-    </ng-template>
-  </div>
-</div>
-
-<!-- ... reste du contenu ... -->
     </main>
-    <!-- MAIN -->
   </section>
-  <!-- CONTENT -->
 </body>
 </html>

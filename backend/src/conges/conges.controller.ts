@@ -73,27 +73,27 @@ export class CongesController {
     return { message: 'Congé supprimé avec succès' };
   }
 
-  @Get('company/paginated')
-  @UseGuards(AuthGuard('jwt'))
-  async getCompanyCongesPaginated(
-    @Req() req: Request & { user?: UserPayload },
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 5
-  ) {
-    // Vérification stricte du user et companyName
-    if (!req.user?.companyName) {
-      throw new UnauthorizedException('Company name not found in token');
-    }
-
-    // Conversion explicite des query params
-    const pageNumber = Number(page) || 1;
-    const limitNumber = Number(limit) || 10;
-
-    return this.congesService.findByCompanyPaginated(
-      req.user.companyName,
-      pageNumber,
-      limitNumber
-    );
+@Get('company/paginated')
+@UseGuards(AuthGuard('jwt'))
+async getCompanyCongesPaginated(
+  @Req() req: Request & { user?: UserPayload },
+  @Query('page') page: number = 1,
+  @Query('limit') limit: number = 5,
+  @Query('status') status?: 'pending' | 'approved' | 'rejected'
+) {
+  if (!req.user?.companyName) {
+    throw new UnauthorizedException('Company name not found in token');
   }
+
+  const pageNumber = Number(page) || 1;
+  const limitNumber = Number(limit) || 10;
+
+  return this.congesService.findByCompanyPaginated(
+    req.user.companyName,
+    pageNumber,
+    limitNumber,
+    status
+  );
+}
 
 }

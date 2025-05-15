@@ -36,14 +36,21 @@ export class CongesService {
     return this.http.get<any[]>(`${this.apiUrl}/pending`, { headers });
   }
 
-  getCompanyCongesPaginated(page: number = 1, limit: number = 5): Observable<PaginatedCongesResponse> {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<PaginatedCongesResponse>(
-      `${this.apiUrl}/company/paginated?page=${page}&limit=${limit}`,
-      { headers }
-    );
+getCompanyCongesPaginated(
+  page: number = 1, 
+  limit: number = 5,
+  status: 'all' | 'pending' | 'approved' | 'rejected' = 'pending'
+): Observable<PaginatedCongesResponse> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
+  let url = `${this.apiUrl}/company/paginated?page=${page}&limit=${limit}`;
+  if (status !== 'all') {
+    url += `&status=${status}`;
   }
+  
+  return this.http.get<PaginatedCongesResponse>(url, { headers });
+}
 
   getPendingCongesCountForCompany(): Observable<{ count: number }> {
     const token = localStorage.getItem('token');
@@ -96,5 +103,11 @@ delete(id: string): Observable<void> {
   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
   return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
 }
+
+countPendingConges(): Observable<number> {
+  return this.http.get<number>(`${this.apiUrl}/count-pending`);
+}
+
+
 
 }
