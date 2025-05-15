@@ -3,23 +3,46 @@ import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component'
 import { SharedSidebarComponent } from '../shared-sidebar/shared-sidebar.component';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { PointageService } from '../../services/pointage.service';
+import { MatTableModule } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
 
 
 @Component({
   selector: 'app-presence',
-  imports: [SharedNavbarComponent, SharedSidebarComponent, CommonModule, RouterLink],
+  imports: [SharedNavbarComponent, SharedSidebarComponent, CommonModule, MatTableModule, MatCardModule],
   templateUrl: './presence.component.html',
   styleUrl: './presence.component.css',
   encapsulation: ViewEncapsulation.None
   
 })
 export class PresenceComponent implements AfterViewInit, OnInit{
+  displayedColumns: string[] = ['nomComplet', 'date', 'entree', 'sortie', 'heuresTravail'];
+  dataSource: any[] = [];
+  today = new Date().toLocaleDateString();
 
   constructor(
-      private route: ActivatedRoute
+    private pointageService: PointageService,
+    private route: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadPresence();
+  }
+
+    loadPresence(): void {
+    this.pointageService.getPresenceAujourdhui().subscribe({
+      next: (data) => {
+        this.dataSource = data.map(item => ({
+          ...item,
+          heuresTravail: item.heuresTravail 
+            ? item.heuresTravail.toFixed(2) + 'h' 
+            : '-'
+        }));
+      },
+      error: (err) => console.error('Erreur chargement présence', err)
+    });
+  }
 
   ngAfterViewInit(): void {
     this.initializeSidebar();

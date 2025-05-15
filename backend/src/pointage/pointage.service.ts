@@ -139,10 +139,90 @@ async getPointagesByMonth(userId: string, month: number, year: number) {
       
       };
     }
-
     return { 
       message: 'Pointage déjà complet pour aujourd\'hui (via reconnaissance faciale)', 
       type: 'complet' 
     };
   }
+
+async getPresenceAujourdhui() {
+  const dateAuj = moment().format('YYYY-MM-DD');
+  try {
+    const pointages = await this.pointageModel.aggregate([
+      {
+        $match: {
+          date: dateAuj
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
+      {
+        $unwind: {
+          path: '$user',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          nomComplet: { 
+            $ifNull: [
+              '$user.name', 
+              'Utilisateur inconnu'
+            ] 
+          },
+          date: 1,
+          entree: 1,
+          sortie: 1,
+          source: 1,
+          heuresTravail: {
+            $cond: {
+              if: { $and: [
+                { $ifNull: ['$entree', false] },
+                { $ifNull: ['$sortie', false] }
+              ]},
+              then: {
+                $divide: [
+                  { 
+                    $subtract: [
+                      { 
+                        $dateFromString: { 
+                          dateString: { $concat: ['$date', 'T', '$sortie'] },
+                          format: '%Y-%m-%dT%H:%M:%S'
+                        } 
+                      },
+                      { 
+                        $dateFromString: { 
+                          dateString: { $concat: ['$date', 'T', '$entree'] },
+                          format: '%Y-%m-%dT%H:%M:%S'
+                        } 
+                      }
+                    ]
+                  },
+                  3600000 // convertir ms en heures
+                ]
+              },
+              else: null
+            }
+          }
+        }
+      },
+      {
+        $sort: { entree: -1 }
+      }
+    ]);
+
+    console.log('Pointages trouvés:', JSON.stringify(pointages, null, 2)); 
+    return pointages;
+  } catch (error) {
+    console.error('Erreur dans getPresenceAujourdhui:', error);
+    throw error;
+  }
+}
 }

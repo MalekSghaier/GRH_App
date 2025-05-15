@@ -1,0 +1,23 @@
+/* presence.component.css */
+.container {
+  padding: 20px;
+}
+
+mat-card {
+  margin: 20px;
+}
+
+table {
+  width: 100%;
+}
+
+.no-data {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
+.mat-header-cell {
+  font-weight: bold;
+  background-color: #f5f5f5;
+}

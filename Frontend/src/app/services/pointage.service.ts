@@ -35,4 +35,10 @@ enregistrerPointage(userId: string): Observable<any> {
   return this.http.post(`${this.apiUrl}/scan-face`, { userId });
 }
 
+  getPresenceAujourdhui(): Observable<any[]> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.get<any[]>(`${this.apiUrl}/today`, { headers });
+}
+
 }

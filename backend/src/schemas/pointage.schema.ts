@@ -1,12 +1,12 @@
 // src/schemas/pointage.schema.ts
-import { Schema, Document, model } from 'mongoose';
+import { Schema, Document, model ,Types } from 'mongoose';
 
 export enum PointageSource {
   QR = 'qr',
   FACE = 'face'
 }
 export class Pointage extends Document {
-  userId: string;
+  userId: Types.ObjectId; 
   date: string;
   entree: string;
   sortie?: string;
@@ -14,7 +14,11 @@ export class Pointage extends Document {
 }
 
 export const PointageSchema = new Schema<Pointage>({
-  userId: { type: String, required: true },
+  userId: { 
+  type: Schema.Types.ObjectId, 
+  ref: 'User', 
+  required: true 
+  },
   date: { type: String, required: true },
   entree: { type: String, required: true },
   sortie: { type: String },

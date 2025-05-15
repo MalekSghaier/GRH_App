@@ -79,4 +79,8 @@ export class PointageController {
     Number(year)
   );
 }
+  @Get('today')
+   async getPresenceAujourdhui() {
+   return this.pointageService.getPresenceAujourdhui();
+  }
 }
