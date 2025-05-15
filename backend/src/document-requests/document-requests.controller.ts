@@ -8,15 +8,11 @@ import {Controller,Post,Get,Body,UseGuards,Req,Param,UnauthorizedException,BadRe
   import { EmailService } from 'src/email/email.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-
-  
   // Interface pour représenter un utilisateur authentifié
   interface AuthenticatedUser {
     id: string;
     role: string; // Ajouter cette ligne
-
   }
-  
   // Interface pour les données du formulaire
   interface CreateDocumentRequestDto {
     fullName: string;
