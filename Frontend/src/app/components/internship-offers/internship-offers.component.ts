@@ -106,6 +106,8 @@ export class InternshipOffersComponent implements AfterViewInit, OnInit {
       this.loadApplications();
     }
   });
+    this.loadMyOffers();
+    this.loadApplications();
     this.loadPendingCount();
     
     // Configurez la recherche réactive

@@ -90,6 +90,10 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
 
+    this.loadMyOffers();
+    this.loadApplications();
+
+
     this.route.queryParams.subscribe(params => {
     const tab = params['tab'];
     
@@ -111,11 +115,6 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
   });
 
   this.loadPendingCount();
-  
-    // this.loadMyOffers();
-    // this.loadApplications();
-    // this.loadPendingCount();
-    
     // Configurez la recherche réactive
     this.searchTerms.pipe(
       debounceTime(300), // Délai de 300ms après la dernière frappe
