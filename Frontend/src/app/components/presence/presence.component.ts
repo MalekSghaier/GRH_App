@@ -6,11 +6,12 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PointageService } from '../../services/pointage.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
+import { InitialsPipe } from '../../pipes/initials.pipe';
 
 
 @Component({
   selector: 'app-presence',
-  imports: [SharedNavbarComponent, SharedSidebarComponent, CommonModule, MatTableModule, MatCardModule],
+  imports: [SharedNavbarComponent, SharedSidebarComponent, CommonModule, MatTableModule, MatCardModule,InitialsPipe],
   templateUrl: './presence.component.html',
   styleUrl: './presence.component.css',
   encapsulation: ViewEncapsulation.None
@@ -19,7 +20,12 @@ import { MatCardModule } from '@angular/material/card';
 export class PresenceComponent implements AfterViewInit, OnInit{
   displayedColumns: string[] = ['nomComplet', 'date', 'entree', 'sortie', 'heuresTravail'];
   dataSource: any[] = [];
-  today = new Date().toLocaleDateString();
+  employees: any[] = [];
+  filteredEmployees: any[] = [];
+  today = new Date().toLocaleDateString('fr-FR');
+  arrivedCount = 0;
+  averageHours = 0;
+  filter: 'all' | 'present' | 'left' = 'all';
 
   constructor(
     private pointageService: PointageService,
@@ -30,18 +36,48 @@ export class PresenceComponent implements AfterViewInit, OnInit{
     this.loadPresence();
   }
 
-    loadPresence(): void {
+  loadPresence(): void {
     this.pointageService.getPresenceAujourdhui().subscribe({
       next: (data) => {
-        this.dataSource = data.map(item => ({
-          ...item,
-          heuresTravail: item.heuresTravail 
-            ? item.heuresTravail.toFixed(2) + 'h' 
-            : '-'
+        this.employees = data.map(emp => ({
+          ...emp,
+          heuresTravail: emp.heuresTravail ? parseFloat(emp.heuresTravail.toFixed(2)) : null
         }));
+        this.updateStats();
+        this.filterByStatus('all');
       },
       error: (err) => console.error('Erreur chargement présence', err)
     });
+  }
+
+    updateStats(): void {
+    this.arrivedCount = this.employees.length;
+    
+    const employeesWithHours = this.employees.filter(e => e.heuresTravail);
+    if (employeesWithHours.length > 0) {
+      const totalHours = employeesWithHours.reduce((sum, emp) => sum + emp.heuresTravail, 0);
+      this.averageHours = parseFloat((totalHours / employeesWithHours.length).toFixed(1));
+    }
+  }
+
+    filterByStatus(status: 'all' | 'present' | 'left'): void {
+    this.filter = status;
+    switch(status) {
+      case 'present':
+        this.filteredEmployees = this.employees.filter(emp => !emp.sortie);
+        break;
+      case 'left':
+        this.filteredEmployees = this.employees.filter(emp => !!emp.sortie);
+        break;
+      default:
+        this.filteredEmployees = [...this.employees];
+    }
+  }
+
+    getHoursPercentage(emp: any): number {
+    if (!emp.heuresTravail) return 0;
+    // Supposons une journée standard de 8h
+    return Math.min((emp.heuresTravail / 8) * 100, 100);
   }
 
   ngAfterViewInit(): void {

@@ -1,23 +1,217 @@
-/* presence.component.css */
-.container {
+/* Variables */
+:root {
+  --primary-color: #1a84ef;
+  --present-color: #4caf50;
+  --left-color: #f44336;
+  --background-light: #f5f5f5;
+  --text-dark: #333;
+  --text-light: #666;
+}
+
+/* Layout */
+.presence-container {
   padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-mat-card {
-  margin: 20px;
+.head-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
 }
 
-table {
-  width: 100%;
+.date-badge {
+  background: var(--primary-color);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
 }
 
-.no-data {
+.stats-summary {
+  display: flex;
+  gap: 15px;
+}
+
+.stat-card {
+  background: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.stat-card i {
+  font-size: 20px;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filters button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  background: #e0e0e0;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.filters button.active {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* Timeline */
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.employee-card {
+  background: white;
+  border-radius: 12px;
   padding: 20px;
-  text-align: center;
-  color: #666;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
 }
 
-.mat-header-cell {
+.employee-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+}
+
+.employee-card.present {
+  border-left: 4px solid var(--present-color);
+}
+
+.employee-card.left {
+  border-left: 4px solid var(--left-color);
+}
+
+/* Employee avatar */
+.employee-avatar {
+  margin-right: 15px;
+  position: relative;
+}
+
+.avatar-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: bold;
-  background-color: #f5f5f5;
+  font-size: 18px;
+}
+
+.status-indicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ccc;
+  border: 2px solid white;
+}
+
+.status-indicator.present {
+  background: var(--present-color);
+}
+
+/* Employee info */
+.employee-info {
+  flex: 1;
+}
+
+.employee-info h3 {
+  margin: 0 0 8px 0;
+  color: var(--text-dark);
+}
+
+.time-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.time-info i {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.time-entry i {
+  color: var(--present-color);
+}
+
+.time-exit i {
+  color: var(--left-color);
+}
+
+.still-here i {
+  color: var(--primary-color);
+}
+
+/* Hours worked */
+.hours-worked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 15px;
+}
+
+.hours-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--primary-color) calc(var(--percentage) * 1%),
+    #e0e0e0 0
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.hours-worked span {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .timeline {
+    grid-template-columns: 1fr;
+  }
+  
+  .head-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
 }
