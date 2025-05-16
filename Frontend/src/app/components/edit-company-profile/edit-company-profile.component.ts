@@ -17,6 +17,8 @@ export class EditCompanyProfileComponent implements OnInit {
   companyForm: FormGroup;
   company: any;
   currentCompany: any;
+  logoFileName: string = '';
+  signatureFileName: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -44,6 +46,12 @@ export class EditCompanyProfileComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       this.companyForm.get(field)?.setValue(file);
+      // Mettre à jour le nom du fichier pour l'affichage
+      if (field === 'logo') {
+        this.logoFileName = file.name;
+      } else if (field === 'signature') {
+        this.signatureFileName = file.name;
+      }
     }
   }
 
@@ -51,7 +59,7 @@ export class EditCompanyProfileComponent implements OnInit {
     this.companyService.getMyInfo().subscribe({
       next: (data) => {
         this.company = data;
-        this.currentCompany = data; // Sauvegarder les données actuelles
+        this.currentCompany = data;
         this.companyForm.patchValue({
           name: data.name,
           address: data.address,
@@ -59,6 +67,13 @@ export class EditCompanyProfileComponent implements OnInit {
           taxId: data.taxId,
           email: data.email
         });
+        // Initialiser les noms de fichiers si des fichiers existent déjà
+        if (data.logo) {
+          this.logoFileName = 'Logo actuel';
+        }
+        if (data.signature) {
+          this.signatureFileName = 'Signature actuelle';
+        }
       },
       error: (err) => {
         console.error('Erreur lors du chargement des données', err);
@@ -91,7 +106,6 @@ export class EditCompanyProfileComponent implements OnInit {
     if (logo instanceof File) {
       formData.append('logo', logo, logo.name);
     } else if (this.currentCompany?.logo) {
-      // Conserver l'ancien logo si aucun nouveau n'est fourni
       formData.append('logo', this.currentCompany.logo);
     }
 
@@ -99,7 +113,6 @@ export class EditCompanyProfileComponent implements OnInit {
     if (signature instanceof File) {
       formData.append('signature', signature, signature.name);
     } else if (this.currentCompany?.signature) {
-      // Conserver l'ancienne signature si aucune nouvelle n'est fournie
       formData.append('signature', this.currentCompany.signature);
     }
 
@@ -119,13 +132,12 @@ export class EditCompanyProfileComponent implements OnInit {
           error.message || 'Une erreur est survenue lors de la mise à jour',
           'Erreur',
           { 
-            timeOut: 3000, // Augmentez le temps d'affichage
+            timeOut: 3000,
             progressBar: true,
-            enableHtml: true // Permet d'afficher du HTML si nécessaire
+            enableHtml: true
           }
         );
         
-        // Afficher le détail de l'erreur si disponible
         if (error.details) {
           console.error('Détails de l\'erreur:', error.details);
         }
