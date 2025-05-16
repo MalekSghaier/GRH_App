@@ -1,36 +1,50 @@
-<h2 mat-dialog-title>Planifier l'entretien</h2>
+<h2 mat-dialog-title class="dialog-title">Planifier l'entretien</h2>
 <mat-dialog-content>
   <form [formGroup]="interviewForm" class="interview-form">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Date de l'entretien</mat-label>
-      <input matInput 
-             [matDatepicker]="picker" 
-             formControlName="date" 
-             required
-             [value]="formatDateForDisplay(interviewForm.value.date)"
-             readonly>
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker 
-                      (selectedChanged)="onDateSelected($event)"
-                      [startAt]="today"></mat-datepicker>
-      <mat-error *ngIf="interviewForm.get('date')?.hasError('required')">
-        La date est requise
-      </mat-error>
-    </mat-form-field>
+    <div class="form-header">
+      <i class='bx bx-calendar-event'></i>
+      <h3>Détails de l'entretien</h3>
+    </div>
+    
+    <div class="form-row">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Date de l'entretien</mat-label>
+        <input matInput 
+               [matDatepicker]="picker" 
+               formControlName="date" 
+               required
+               [value]="formatDateForDisplay(interviewForm.value.date)"
+               readonly>
+        <mat-datepicker-toggle matSuffix [for]="picker">
+          <i class='bx bx-calendar'></i>
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker 
+                        (selectedChanged)="onDateSelected($event)"
+                        [startAt]="today"></mat-datepicker>
+        <mat-error *ngIf="interviewForm.get('date')?.hasError('required')">
+          <i class='bx bx-error-circle'></i> La date est requise
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Heure de l'entretien</mat-label>
-      <input matInput type="time" formControlName="time" required>
-      <mat-error *ngIf="interviewForm.get('time')?.hasError('required')">
-        L'heure est requise
-      </mat-error>
-    </mat-form-field>
+    <div class="form-row">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Heure de l'entretien</mat-label>
+        <input matInput type="time" formControlName="time" required>
+        <mat-icon matSuffix></mat-icon>
+        <mat-error *ngIf="interviewForm.get('time')?.hasError('required')">
+          <i class='bx bx-error-circle'></i> L'heure est requise
+        </mat-error>
+      </mat-form-field>
+    </div>
   </form>
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()">Annuler</button>
-  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!interviewForm.valid || isLoading">
-    <span *ngIf="!isLoading">Confirmer</span>
-    <span *ngIf="isLoading">Envoi en cours...</span>
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button (click)="onCancel()" class="cancel-btn">
+    <i class='bx bx-x'></i> Annuler
+  </button>
+  <button mat-raised-button (click)="onSubmit()" [disabled]="!interviewForm.valid || isLoading" class="submit-btn">
+    <span *ngIf="!isLoading"><i class='bx bx-check'></i> Confirmer</span>
+    <span *ngIf="isLoading"><i class='bx bx-loader-circle bx-spin'></i> Envoi en cours...</span>
   </button>
 </mat-dialog-actions>

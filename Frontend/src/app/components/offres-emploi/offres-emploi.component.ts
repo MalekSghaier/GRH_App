@@ -255,7 +255,7 @@ updateStatus(appId: string, status: string): void {
     });
   } else if (status === 'Approuvé') {
     const dialogRef = this.dialog.open(InterviewFormComponent, {
-      width: '400px',
+      width: '450px',
       data: { applicationId: appId }
     });
 
