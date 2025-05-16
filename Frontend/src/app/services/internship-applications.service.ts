@@ -14,7 +14,7 @@ export class InternshipApplicationsService {
   getApplicationsByCompany(companyName: string): Observable<any[]> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any[]>(`${this.apiUrl}/company/${companyName}?status=En cours de traitement`, { headers });
+    return this.http.get<any[]>(`${this.apiUrl}/company/${companyName}`, { headers });
   }
 
   getPendingApplicationsCount(companyName: string): Observable<{count: number}> {
@@ -43,44 +43,39 @@ export class InternshipApplicationsService {
 
   searchApplications(query: string, companyName: string): Observable<any[]> {
     const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('Aucun token trouvé !');
-    }
-  
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any[]>(
-      `${this.apiUrl}/search/${encodeURIComponent(companyName)}?query=${encodeURIComponent(query)}`, 
+      `${this.apiUrl}/search/${companyName}?query=${encodeURIComponent(query)}`, 
       { headers }
     );
   }
 
-createApplication(applicationData: any): Observable<any> {
-  const formData = new FormData();
-  
-  // Ajoutez tous les champs au FormData
-  Object.keys(applicationData).forEach(key => {
-    if (key === 'cv' || key === 'coverLetter') {
-      formData.append(key, applicationData[key]);
-    } else {
-      formData.append(key, applicationData[key]);
-    }
-  });
-
-  return this.http.post(this.apiUrl, formData).pipe(
-    catchError(error => {
-      if (error.error?.message === 'Vous avez déjà postulé à cette offre de stage') {
-        return throwError(() => new Error('Vous avez déjà postulé à cette offre de stage'));
+  createApplication(applicationData: any): Observable<any> {
+    const formData = new FormData();
+    
+    Object.keys(applicationData).forEach(key => {
+      if (key === 'cv' || key === 'coverLetter') {
+        formData.append(key, applicationData[key]);
+      } else {
+        formData.append(key, applicationData[key]);
       }
-      return throwError(() => error);
-    })
-  );
-}
+    });
 
-checkExistingApplication(email: string, company: string, position: string): Observable<{hasApplied: boolean}> {
-  return this.http.get<{hasApplied: boolean}>(`${this.apiUrl}/check-application`, {
-    params: { email, company, position }
-  });
-}
+    return this.http.post(this.apiUrl, formData).pipe(
+      catchError(error => {
+        if (error.error?.message === 'Vous avez déjà postulé à cette offre de stage') {
+          return throwError(() => new Error('Vous avez déjà postulé à cette offre de stage'));
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  checkExistingApplication(email: string, company: string, position: string): Observable<{hasApplied: boolean}> {
+    return this.http.get<{hasApplied: boolean}>(`${this.apiUrl}/check-application`, {
+      params: { email, company, position }
+    });
+  }
 
 
 }

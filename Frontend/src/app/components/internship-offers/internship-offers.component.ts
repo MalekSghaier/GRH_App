@@ -1,4 +1,3 @@
-// src/app/components/internship-offers/internship-offers.component.ts
 import { Component, ViewEncapsulation, AfterViewInit, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -15,16 +14,12 @@ import { InternshipOffersService } from '../../services/internship-offers.servic
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ToastrService } from 'ngx-toastr';
 import { EditInternshipOfferComponent } from '../edit-internship-offer/edit-internship-offer.component';
-import { WorkApplicationsService } from '../../services/work-applications.service';
 import { InternshipApplicationsService } from '../../services/internship-applications.service';
 import { InterviewFormComponent } from '../interview-form/interview-form.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-
-
-
 
 @Component({
   selector: 'app-internship-offers',
@@ -41,7 +36,6 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
     MatIconModule,
     MatDialogModule,
     MatSnackBarModule,
-    MatCardModule,
     MatDatepickerModule,
     MatNativeDateModule
   ],
@@ -53,72 +47,58 @@ export class InternshipOffersComponent implements AfterViewInit, OnInit {
   private searchTerms = new Subject<string>();
   private appSearchTerms = new Subject<string>();
 
-
   offers: any[] = [];
-  displayedColumns: string[] = ['title', 'duration', 'educationLevel', 'requirements','createdAt',
-'actions'];  
+  displayedColumns: string[] = ['title', 'duration', 'educationLevel', 'requirements', 'createdAt', 'actions'];
   noDataMessage = "Aucune offre disponible";
   applications: any[] = [];
-  appDisplayedColumns: string[] = [
-    'position', 
-    'fullName', 
-    'email', 
-    'phone', 
-    'cv', 
-    'coverLetter', 
-    'createdAt',
-    'actions'
-  ];
-
+  filteredApplications: any[] = [];
+  statusFilter: string = 'all';
+  totalCount: number = 0;
   pendingCount: number = 0;
-
+  approvedCount: number = 0;
+  rejectedCount: number = 0;
 
   constructor(
     private dialog: MatDialog,
     private internshipOffersService: InternshipOffersService,
-    private snackBar: MatSnackBar,
     private toastr: ToastrService,
     private internshipApplicationsService: InternshipApplicationsService,
     private route: ActivatedRoute
   ) {}
 
-  selectedTabIndex = 0; 
+  selectedTabIndex = 0;
 
-  
   ngOnInit(): void {
-
     this.route.queryParams.subscribe(params => {
-    const tab = params['tab'];
-    
-    // Définir l'onglet sélectionné en fonction du paramètre
-    if (tab === 'mes-offres') {
-      this.selectedTabIndex = 1; // Index de l'onglet "Mes offres publiées"
-    } else if (tab === 'candidatures') {
-      this.selectedTabIndex = 2; // Index de l'onglet "Candidatures reçues"
-    } else {
-      this.selectedTabIndex = 0; // Onglet par défaut
-    }
+      const tab = params['tab'];
+      
+      if (tab === 'mes-offres') {
+        this.selectedTabIndex = 1;
+      } else if (tab === 'candidatures') {
+        this.selectedTabIndex = 2;
+      } else {
+        this.selectedTabIndex = 0;
+      }
 
-    // Charger les données appropriées
-    if (this.selectedTabIndex === 1) {
-      this.loadMyOffers();
-    } else if (this.selectedTabIndex === 2) {
-      this.loadApplications();
-    }
-  });
+      if (this.selectedTabIndex === 1) {
+        this.loadMyOffers();
+      } else if (this.selectedTabIndex === 2) {
+        this.loadApplications();
+      }
+    });
+
     this.loadMyOffers();
     this.loadApplications();
     this.loadPendingCount();
-    
-    // Configurez la recherche réactive
+
+    // Configuration de la recherche pour les offres
     this.searchTerms.pipe(
-      debounceTime(300), // Délai de 300ms après la dernière frappe
-      distinctUntilChanged(), // Ignore si le terme n'a pas changé
+      debounceTime(300),
+      distinctUntilChanged(),
       switchMap((query: string) => {
         if (query && query.trim() !== '') {
           return this.internshipOffersService.searchInternshipOffers(query);
         } else {
-          // Si la recherche est vide, rechargez les offres normales
           return this.internshipOffersService.getMyInternshipOffers();
         }
       })
@@ -126,150 +106,72 @@ export class InternshipOffersComponent implements AfterViewInit, OnInit {
       next: (offers) => {
         this.offers = offers.map(offer => ({
           ...offer,
-          duration: `${offer.duration} mois`
+          duration: `${offer.duration} mois`,
+          createdAt: new Date(offer.createdAt)
         }));
       },
       error: (err) => {
-        this.toastr.error('Erreur lors de la recherche', 'Erreur', {
-          timeOut: 1500,
-          progressBar: true
-        });
+        this.toastr.error('Erreur lors de la recherche', 'Erreur');
         console.error(err);
       }
     });
 
-        // Configurez la recherche réactive pour les applications
-        this.appSearchTerms.pipe(
-          debounceTime(300),
-          distinctUntilChanged(),
-          switchMap((query: string) => {
-            const companyName = localStorage.getItem('companyName');
-            if (!companyName) return of([]);
-            
-            if (query && query.trim() !== '') {
-              return this.internshipApplicationsService.searchApplications(query, companyName);
-            } else {
-              return this.internshipApplicationsService.getApplicationsByCompany(companyName);
-            }
-          })
-        ).subscribe({
-          next: (apps) => {
-            this.applications = apps;
-          },
-          error: (err) => {
-            this.toastr.error('Erreur lors de la recherche des candidatures', 'Erreur', {
-              timeOut: 1500,
-              progressBar: true
-            });
-            console.error(err);
-          }
-        });
+    // Configuration de la recherche pour les applications
+    this.appSearchTerms.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((query: string) => {
+        const companyName = localStorage.getItem('companyName');
+        if (!companyName) return of([]);
+        
+        if (query && query.trim() !== '') {
+          return this.internshipApplicationsService.searchApplications(query, companyName);
+        } else {
+          return this.internshipApplicationsService.getApplicationsByCompany(companyName);
+        }
+      })
+    ).subscribe({
+      next: (apps) => {
+        this.applications = apps.map(app => ({
+          ...app,
+          createdAt: new Date(app.createdAt),
+          status: app.status === 'En cours de traitement' ? 'En attente' : app.status
+        }));
+        this.filterApplications();
+        this.updateCounts();
+      },
+      error: (err) => {
+        this.toastr.error('Erreur lors de la recherche des candidatures', 'Erreur');
+        console.error(err);
+      }
+    });
   }
-
 
   ngAfterViewInit(): void {
     this.initializeSidebar();
   }
-  // Ajoutez cette méthode pour gérer l'input de recherche des applications
-  searchApplications(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    this.appSearchTerms.next(inputElement.value);
-  }
 
+  // Méthodes pour les offres
   loadMyOffers(): void {
     this.internshipOffersService.getMyInternshipOffers().subscribe({
       next: (offers) => {
         this.offers = offers.map(offer => ({
           ...offer,
           duration: `${offer.duration} mois`,
-          createdAt: new Date(offer.createdAt) // Conversion en Date
-
+          createdAt: new Date(offer.createdAt)
         }));
       },
       error: (err) => {
-        this.toastr.error('Erreur lors du chargement de vos offres', 'Erreur', {
-          timeOut: 1500,
-          progressBar: true
-        });
+        this.toastr.error('Erreur lors du chargement des offres', 'Erreur');
         console.error(err);
       }
     });
   }
 
-    // Ajoutez cette méthode pour gérer l'input de recherche
-    search(event: Event): void {
-      const inputElement = event.target as HTMLInputElement;
-      this.searchTerms.next(inputElement.value);
-    }
-
-
-
-  loadApplications(): void {
-    const companyName = localStorage.getItem('companyName');
-    if (!companyName) return;
-  
-    this.internshipApplicationsService.getApplicationsByCompany(companyName).subscribe({
-      next: (apps) => {
-        this.applications = apps.map(app => ({
-          ...app,
-          createdAt: new Date(app.createdAt) // Conversion en Date
-        }));
-      },
-      error: (err) => console.error('Erreur chargement applications', err)
-    });
+  search(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.searchTerms.next(inputElement.value);
   }
-
-
-    loadPendingCount(): void {
-      const companyName = localStorage.getItem('companyName');
-      if (!companyName) return;
-  
-      this.internshipApplicationsService.getPendingApplicationsCount(companyName).subscribe({
-        next: (response) => {
-          this.pendingCount = response.count;
-        },
-        error: (err) => {
-          console.error('Erreur chargement compteur candidatures', err);
-        }
-      });
-    }
-  
-
-// Dans la méthode updateStatus()
-updateStatus(appId: string, status: string): void {
-  if (status === 'Rejeté') {
-    this.internshipApplicationsService.updateStatus(appId, status).subscribe({
-      next: () => {
-        this.toastr.error('Demande de stage rejetée', 'Succès', {
-          timeOut: 1500,
-          progressBar: true
-        });
-        window.location.reload();
-        this.loadPendingCount(); // Recharge le compteur
-
-      },
-      error: (err) => this.toastr.error('Erreur mise à jour', 'Erreur', {
-        timeOut: 1500,
-        progressBar: true
-      })
-    });
-  } else if (status === 'Approuvé') {
-    const dialogRef = this.dialog.open(InterviewFormComponent, {
-      width: '400px',
-      data: { applicationId: appId }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        window.location.reload();
-        this.loadPendingCount(); // Recharge le compteur
-
-      }
-    });
-  }
-}
-
-
 
   openAddOfferDialog(): void {
     const dialogRef = this.dialog.open(InternshipOfferFormComponent, {
@@ -317,23 +219,108 @@ updateStatus(appId: string, status: string): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette offre ?')) {
       this.internshipOffersService.deleteInternshipOffer(id).subscribe({
         next: () => {
-          this.toastr.success('Offre supprimée avec succès', 'Succès', {
-            timeOut: 1500,
-            progressBar: true
-          });
+          this.toastr.success('Offre supprimée avec succès', 'Succès');
           this.loadMyOffers();
         },
         error: (err) => {
-          this.toastr.error('Erreur lors de la suppression', 'Erreur', {
-            timeOut: 1500,
-            progressBar: true
-          });
+          this.toastr.error('Erreur lors de la suppression', 'Erreur');
           console.error(err);
         }
       });
     }
   }
 
+  // Méthodes pour les candidatures
+  loadApplications(): void {
+    const companyName = localStorage.getItem('companyName');
+    if (!companyName) return;
+  
+    this.internshipApplicationsService.getApplicationsByCompany(companyName).subscribe({
+      next: (apps) => {
+        this.applications = apps.map(app => ({
+          ...app,
+          createdAt: new Date(app.createdAt),
+          status: app.status === 'En cours de traitement' ? 'En attente' : app.status
+        }));
+        this.filterApplications();
+        this.updateCounts();
+      },
+      error: (err) => {
+        console.error('Erreur chargement applications', err);
+        this.filteredApplications = [];
+        this.updateCounts();
+      }
+    });
+  }
+
+  searchApplications(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.appSearchTerms.next(inputElement.value);
+  }
+
+  filterByStatus(status: string): void {
+    this.statusFilter = status;
+    this.filterApplications();
+  }
+
+  filterApplications(): void {
+    if (this.statusFilter === 'all') {
+      this.filteredApplications = [...this.applications];
+    } else {
+      this.filteredApplications = this.applications.filter(app => 
+        app.status === this.statusFilter || 
+        (this.statusFilter === 'En attente' && app.status === 'En cours de traitement')
+      );
+    }
+  }
+
+  updateCounts(): void {
+    this.totalCount = this.applications.length;
+    this.pendingCount = this.applications.filter(app => 
+      app.status === 'En attente' || app.status === 'En cours de traitement'
+    ).length;
+    this.approvedCount = this.applications.filter(app => app.status === 'Approuvé').length;
+    this.rejectedCount = this.applications.filter(app => app.status === 'Rejeté').length;
+  }
+
+  loadPendingCount(): void {
+    const companyName = localStorage.getItem('companyName');
+    if (!companyName) return;
+
+    this.internshipApplicationsService.getPendingApplicationsCount(companyName).subscribe({
+      next: (response) => {
+        this.pendingCount = response.count;
+      },
+      error: (err) => {
+        console.error('Erreur chargement compteur candidatures', err);
+      }
+    });
+  }
+
+  updateStatus(appId: string, status: string): void {
+    if (status === 'Rejeté') {
+      this.internshipApplicationsService.updateStatus(appId, status).subscribe({
+        next: () => {
+          this.toastr.success('Demande de stage rejetée', 'Succès');
+          this.loadApplications();
+        },
+        error: (err) => this.toastr.error('Erreur mise à jour', 'Erreur')
+      });
+    } else if (status === 'Approuvé') {
+      const dialogRef = this.dialog.open(InterviewFormComponent, {
+        width: '450px',
+        data: { applicationId: appId }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.loadApplications();
+        }
+      });
+    }
+  }
+
+  // Méthodes pour la sidebar
   private initializeSidebar(): void {
     const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
 

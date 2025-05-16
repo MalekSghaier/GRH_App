@@ -1,4 +1,3 @@
-<!-- src/app/components/internship-offers/internship-offers.component.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,74 +31,74 @@
               <!-- Onglet 1 : Ajouter une offre -->
               <mat-tab label="📌 Ajouter une offre">
                 <div class="tab-content">
-                  <h2>Créer une nouvelle offre de stage</h2>
-                  <button class="btn-primary" (click)="openAddOfferDialog()">+ Ajouter</button>
+                  <div class="empty-state">
+                    <i class='bx bx-file-blank'></i>
+                    <h3>Créer une nouvelle offre de stage</h3>
+                    <p>Commencez par ajouter une nouvelle offre pour attirer des candidats qualifiés</p>
+                    <button class="btn-primary" (click)="openAddOfferDialog()">
+                      <i class='bx bx-plus'></i> Ajouter une offre
+                    </button>
+                  </div>
                 </div>
               </mat-tab>
 
               <!-- Onglet 2 : Mes offres publiées -->
               <mat-tab label="📂 Mes offres publiées">
-
-                <form action="#">
-                  <div class="form-input">
-                    <input type="search" placeholder="Recherche par titre ou exigences..." (input)="search($event)">
-                    <button type="button" class="search-btn"><i class='bx bx-search'></i></button>
-                  </div>
-                </form>
-                <div class="table-container">
-                  <table mat-table [dataSource]="offers" matSort class="mat-elevation-z8">
-                    <!-- Colonne Titre -->
-                    <ng-container matColumnDef="title">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Titre</th>
-                      <td mat-cell *matCellDef="let offer">{{ offer.title || '-' }}</td>
-                    </ng-container>
-
-                    <!-- Colonne Durée -->
-                    <ng-container matColumnDef="duration">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Durée</th>
-                      <td mat-cell *matCellDef="let offer">{{ offer.duration || '-' }}</td>
-                    </ng-container>
+                <div class="tab-header">
+                  <form action="#">
+                    <div class="form-input">
+                      <input type="search" placeholder="Rechercher par titre, exigences..." (input)="search($event)">
+                      <button type="button" class="search-btn"><i class='bx bx-search'></i></button>
+                    </div>
+                  </form>
+                  <div class="results-count">{{offers.length}} offre(s) trouvée(s)</div>
+                </div>
                 
-                    <!-- Colonne niveau d etude -->
-                    <ng-container matColumnDef="educationLevel">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Niveau d'Étude</th>
-                      <td mat-cell *matCellDef="let offer">{{ offer.educationLevel || '-' }}</td>
-                    </ng-container>
-
-                    <!-- Colonne Exigences -->
-                    <ng-container matColumnDef="requirements">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Exigences</th>
-                      <td mat-cell *matCellDef="let offer">{{ offer.requirements || '-' }}</td>
-                    </ng-container>
-
-                      <!-- Date Creation -->
-                      <ng-container matColumnDef="createdAt">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de création</th>
-                        <td mat-cell *matCellDef="let offer">
-                          {{ offer.createdAt | date:'dd/MM/yyyy HH:mm' }}
-                        </td>
-                      </ng-container>
-
-                    <!-- Colonne Actions -->
-                    <ng-container matColumnDef="actions">
-                      <th mat-header-cell *matHeaderCellDef>Actions</th>
-                      <td mat-cell *matCellDef="let offer">
-                        <button mat-icon-button color="primary" matTooltip="Modifier" (click)="openEditOfferDialog(offer)">
-                          <mat-icon>edit</mat-icon>
-                        </button>
-                        <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deleteOffer(offer._id)">
-                          <mat-icon>delete</mat-icon>
-                        </button>
-                      </td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                  </table>
+                <div class="table-container">
+                  <div class="card-list">
+                    <div *ngFor="let offer of offers" class="offer-card">
+                      <div class="offer-header">
+                        <h3>{{ offer.title || '-' }}</h3>
+                        <div class="offer-actions">
+                          <button mat-icon-button color="primary" matTooltip="Modifier" (click)="openEditOfferDialog(offer)">
+                            <i class='bx bx-edit'></i>
+                          </button>
+                          <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deleteOffer(offer._id)">
+                            <i class='bx bx-trash'></i>
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div class="offer-details">
+                        <div class="detail-item">
+                          <i class='bx bx-calendar'></i>
+                          <span>Durée: {{ offer.duration || '-' }} mois</span>
+                        </div>
+                        <div class="detail-item">
+                          <i class='bx bx-book'></i>
+                          <span>Études: {{ offer.educationLevel || '-' }}</span>
+                        </div>
+                        <div class="detail-item">
+                          <i class='bx bx-calendar'></i>
+                          <span>Créée le: {{ offer.createdAt | date:'dd/MM/yyyy' }}</span>
+                        </div>
+                      </div>
+                      
+                      <div class="offer-requirements">
+                        <h4>Exigences:</h4>
+                        <p>{{ offer.requirements || '-' }}</p>
+                      </div>
+                    </div>
+                  </div>
 
                   <ng-container *ngIf="offers.length === 0">
-                    <div class="no-data-row">
-                      {{ noDataMessage }}
+                    <div class="empty-state">
+                      <i class='bx bx-file-blank'></i>
+                      <h3>Aucune offre disponible</h3>
+                      <p>Commencez par ajouter une nouvelle offre pour attirer des candidats qualifiés</p>
+                      <button class="btn-primary" (click)="openAddOfferDialog()">
+                        <i class='bx bx-plus'></i> Ajouter une offre
+                      </button>
                     </div>
                   </ng-container>
                 </div>
@@ -107,93 +106,99 @@
 
               <!-- Onglet 3 : Candidatures reçues -->
               <mat-tab label="📑 Candidatures reçues">
-
                 <ng-template mat-tab-label>
                   📑 Candidatures reçues 
                   <span *ngIf="pendingCount > 0" class="tab-notification">
                     {{ pendingCount }}
                   </span>
                 </ng-template>
-                  <!-- Ajoutez ce formulaire de recherche -->
-                <form action="#">
-                  <div class="form-input">
-                    <input type="search" placeholder="Rechercher par poste, nom, email ou téléphone..." 
-                           (input)="searchApplications($event)">
-                    <button type="button" class="search-btn"><i class='bx bx-search'></i></button>
-                  </div>
-                </form>
 
-                
+                <div class="tab-header">
+                  <div class="filters-container">
+                    <form action="#">
+                      <div class="form-input">
+                        <input type="search" placeholder="Rechercher par poste, nom, email..." 
+                              (input)="searchApplications($event)">
+                        <button type="button" class="search-btn"><i class='bx bx-search'></i></button>
+                      </div>
+                    </form>
+                    
+                    <div class="status-filters">
+                      <button class="filter-btn" [class.active]="statusFilter === 'all'" (click)="filterByStatus('all')">
+                        Toutes ({{totalCount}})
+                      </button>
+                      <button class="filter-btn" [class.active]="statusFilter === 'En attente'" (click)="filterByStatus('En attente')">
+                        En attente ({{pendingCount}})
+                      </button>
+                      <button class="filter-btn" [class.active]="statusFilter === 'Approuvé'" (click)="filterByStatus('Approuvé')">
+                        Approuvées ({{approvedCount}})
+                      </button>
+                      <button class="filter-btn" [class.active]="statusFilter === 'Rejeté'" (click)="filterByStatus('Rejeté')">
+                        Rejetées ({{rejectedCount}})
+                      </button>
+                    </div>
+                  </div>
+                  <div class="results-count">{{filteredApplications.length}} candidature(s) trouvée(s)</div>
+                </div>
                 
                 <div class="table-container">
-                  <table mat-table [dataSource]="applications" class="mat-elevation-z8">
-                    <!-- Colonne Position -->
-                    <ng-container matColumnDef="position">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Poste</th>
-                      <td mat-cell *matCellDef="let app">
-                        {{ app.position || '-' }}
-                      </td>
-                    </ng-container>
-                    <!-- Colonne Nom complet -->
-                    <ng-container matColumnDef="fullName">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom complet</th>
-                      <td mat-cell *matCellDef="let app">{{ app.fullName || '-' }}</td>
-                    </ng-container>
-                    <!-- Colonne Email -->
-                    <ng-container matColumnDef="email">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-                      <td mat-cell *matCellDef="let app">{{ app.email || '-' }}</td>
-                    </ng-container>
-                    <!-- Colonne Téléphone -->
-                    <ng-container matColumnDef="phone">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Téléphone</th>
-                      <td mat-cell *matCellDef="let app">{{ app.phone || '-' }}</td>
-                    </ng-container>
-                    <!-- Colonne CV -->
-                    <ng-container matColumnDef="cv">
-                      <th mat-header-cell *matHeaderCellDef>CV</th>
-                      <td mat-cell *matCellDef="let app">
+                  <div class="card-list">
+                    <div *ngFor="let app of filteredApplications" class="application-card" [class.approved]="app.status === 'Approuvé'" [class.rejected]="app.status === 'Rejeté'">
+                      <div class="app-header">
+                        <div class="app-candidate">
+                          <div class="avatar">{{ app.fullName?.charAt(0) || '?' }}</div>
+                          <div>
+                            <h3>{{ app.fullName || '-' }}</h3>
+                            <p>{{ app.position || '-' }}</p>
+                            <span class="status-badge" [class.pending]="app.status === 'En attente' || app.status === 'En cours de traitement'"
+                                                      [class.approved]="app.status === 'Approuvé'"
+                                                      [class.rejected]="app.status === 'Rejeté'">
+                              {{ app.status === 'En cours de traitement' ? 'En attente' : app.status }}
+                            </span>
+                          </div>
+                        </div>
+                        <div class="app-actions">
+                          <button *ngIf="app.status !== 'Approuvé'" class="btn-success" matTooltip="Approuver" (click)="updateStatus(app._id, 'Approuvé')">
+                            <i class='bx bx-check'></i> Approuver
+                          </button>
+                          <button *ngIf="app.status !== 'Rejeté'" class="btn-danger" matTooltip="Rejeter" (click)="updateStatus(app._id, 'Rejeté')">
+                            <i class='bx bx-x'></i> Rejeter
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div class="app-details">
+                        <div class="detail-item">
+                          <i class='bx bx-envelope'></i>
+                          <span>{{ app.email || '-' }}</span>
+                        </div>
+                        <div class="detail-item">
+                          <i class='bx bx-phone'></i>
+                          <span>{{ app.phone || '-' }}</span>
+                        </div>
+                        <div class="detail-item">
+                          <i class='bx bx-calendar'></i>
+                          <span>Postulé le: {{ app.createdAt | date:'dd/MM/yyyy' }}</span>
+                        </div>
+                      </div>
+                      
+                      <div class="app-documents">
                         <a *ngIf="app.cv" href="http://localhost:3000/uploads/{{app.cv}}" target="_blank" class="document-link">
-                          <mat-icon>picture_as_pdf</mat-icon> Voir CV
+                          <i class='bx bx-file'></i> Voir CV
                         </a>
-                        <span *ngIf="!app.cv">-</span>
-                      </td>
-                    </ng-container>
-                    <!-- Colonne Lettre de motivation -->
-                    <ng-container matColumnDef="coverLetter">
-                      <th mat-header-cell *matHeaderCellDef>Lettre de motivation</th>
-                      <td mat-cell *matCellDef="let app">
                         <a *ngIf="app.coverLetter" href="http://localhost:3000/uploads/{{app.coverLetter}}" target="_blank" class="document-link">
-                          <mat-icon>picture_as_pdf</mat-icon> Voir lettre
+                          <i class='bx bx-file'></i> Voir lettre de motivation
                         </a>
-                        <span *ngIf="!app.coverLetter">-</span>
-                      </td>
-                    </ng-container>
-                              <!-- Date Creation -->
-                      <ng-container matColumnDef="createdAt">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de création</th>
-                        <td mat-cell *matCellDef="let offer">
-                          {{ offer.createdAt | date:'dd/MM/yyyy HH:mm' }}
-                        </td>
-                      </ng-container>
-                    <!-- Colonne Actions -->
-                    <ng-container matColumnDef="actions">
-                      <th mat-header-cell *matHeaderCellDef>Actions</th>
-                      <td mat-cell *matCellDef="let app">
-                        <button mat-icon-button color="primary" matTooltip="Approuver" (click)="updateStatus(app._id, 'Approuvé')">
-                          <mat-icon>check</mat-icon>
-                        </button>
-                        <button mat-icon-button color="warn" matTooltip="Rejeter" (click)="updateStatus(app._id, 'Rejeté')">
-                          <mat-icon>close</mat-icon>
-                        </button>
-                      </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="appDisplayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: appDisplayedColumns;"></tr>
-                  </table>
-                  <ng-container *ngIf="applications.length === 0">
-                    <div class="no-data-row">
-                      Aucune candidature reçue
+                      </div>
+                    </div>
+                  </div>
+
+                  <ng-container *ngIf="filteredApplications.length === 0">
+                    <div class="empty-state">
+                      <i class='bx bx-user-x'></i>
+                      <h3>Aucune candidature trouvée</h3>
+                      <p *ngIf="statusFilter === 'all'">Les candidatures apparaîtront ici lorsqu'elles seront soumises pour vos offres</p>
+                      <p *ngIf="statusFilter !== 'all'">Aucune candidature avec le statut "{{statusFilter}}"</p>
                     </div>
                   </ng-container>
                 </div>
