@@ -13,8 +13,8 @@
 
     <!-- MAIN -->
     <main>
-      <div class="head-title">
-        <div class="left">
+      <div class="page-header">
+          <div class="left">
           <h1>Tableau de bord</h1>
           <ul class="breadcrumb">
             <li>
@@ -27,88 +27,108 @@
           </ul>
         </div>
 
-        <!-- Barre de recherche -->
-<!-- users.component.html -->
-
-       <form action="#">
-         <div class="form-input">
-           <input type="search" placeholder="Recherche..." (input)="search($event)">
-           <button class="search-btn"><i class='bx bx-search'></i></button>
-         </div>
-       </form>
-        <a href="users/add-user" class="btn-primary">
-          <span class="text">+ Ajouter Utilisateur</span>
-        </a>
+        <div class="header-actions">
+          <div class="search-container">
+            <i class='bx bx-search'></i>
+            <input type="search" placeholder="Rechercher un utilisateur..." (input)="search($event)">
+          </div>
+          <a href="users/add-user" class="add-button">
+            <i class='bx bx-plus'></i>
+            <span>Nouvel utilisateur</span>
+          </a>
+        </div>
       </div>
 
-      <div class="table-data">
-        <div class="order">
-          <!-- Afficher le tableau si la liste n'est pas vide -->
-          <table *ngIf="!isEmpty; else emptyMessage">
-            <thead>
-              <tr>
-                <th>Nom</th>
-                <th>Email</th>
-                <th>Rôle</th>
-                <th>Compagnie</th>
-				<th>QR Code</th>
-				<th>Actions</th>
+      <div class="card">
+        <div class="card-header">
+          <h2>Liste des utilisateurs</h2>
+          <div class="card-actions">
+            <!-- Vous pourriez ajouter des filtres ou actions groupées ici -->
+          </div>
+        </div>
 
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let user of users">
-                <td>{{ user.name }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.role }}</td>
-                <td>{{ user.company || 'N/A' }}</td>
-				<td>							
-					<div class="register">
-					     <p>
-							<a href="javascript:void(0)" (click)="generateQRCode(user._id, user.name)">
-							Télécharger QR Code
-							</a>
-						</p>
-				    </div>
-				</td>
+        <div class="card-body">
+          <div *ngIf="!isEmpty; else emptyMessage">
+            <div class="responsive-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Rôle</th>
+                    <th>Compagnie</th>
+                    <th>QR Code</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let user of users">
+                    <td data-label="Nom">
+                      <div class="user-info">
+                        <div class="user-avatar">
+                          {{ user.name.charAt(0) }}
+                        </div>
+                        <span>{{ user.name }}</span>
+                      </div>
+                    </td>
+                    <td data-label="Email">{{ user.email }}</td>
+                    <td data-label="Rôle">
+                      <span class="role-badge" [ngClass]="{
+                        'admin': user.role === 'admin',
+                        'user': user.role === 'user',
+                        'manager': user.role === 'manager'
+                      }">
+                        {{ user.role }}
+                      </span>
+                    </td>
+                    <td data-label="Compagnie">{{ user.company || 'N/A' }}</td>
+                    <td data-label="QR Code">
+                      <button class="qr-button" (click)="generateQRCode(user._id, user.name)">
+                        <i class='bx bx-qr-scan'></i>
+                        <span>Télécharger</span>
+                      </button>
+                    </td>
+                    <td data-label="Actions">
+                      <div class="action-buttons">
+                        <button class="edit-button" [routerLink]="['/users/update', user._id]">
+                          <i class='bx bx-edit'></i>
+                        </button>
+                        <button class="delete-button" (click)="deleteUser(user._id)">
+                          <i class='bx bx-trash'></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-				<td>
-					<!-- Bouton Modifier -->
-					<button class="no-border-button"  [routerLink]="['/users/update', user._id]"  style="background: none; border: none;">
-						<i class='bx bxs-message-square-edit bx-sm' style="color: #007bff;"></i>
-					  </button>
-				  
-					<!-- Bouton Supprimer -->
-					<button class="no-border-button" (click)="deleteUser(user._id)"  style="background: none; border: none;">
-					  <i class='bx bxs-trash-alt bx-sm' style="color: #007bff;"></i>
-					</button>
-				  
-				</td>
-              </tr>
-            </tbody>
-          </table>
+            <div class="pagination-container">
+              <div class="pagination">
+                <button *ngFor="let page of getPages()" 
+                        (click)="onPageChange(page)"
+                        [class.active]="page === currentPage"
+                        class="page-button">
+                  {{ page }}
+                </button>
+              </div>
+            </div>
+          </div>
 
-          <!-- Afficher un message si la liste est vide -->
           <ng-template #emptyMessage>
-            <div class="empty-message">
-              <p>Aucun utilisateur trouvé.</p>
+            <div class="empty-state">
+              <i class='bx bx-user-x'></i>
+              <h3>Aucun utilisateur trouvé</h3>
+              <p>Essayez de modifier vos critères de recherche ou ajoutez un nouvel utilisateur.</p>
+              <a href="users/add-user" class="add-button">
+                <i class='bx bx-plus'></i>
+                <span>Ajouter un utilisateur</span>
+              </a>
             </div>
           </ng-template>
-
-          <div class="pagination">
-            <button
-              *ngFor="let page of getPages()"
-              (click)="onPageChange(page)"
-              [class.active]="page === currentPage"
-            >
-              {{ page }}
-            </button>
-          </div>
         </div>
       </div>
     </main>
-    <!-- MAIN -->
   </section>
-  <!-- CONTENT -->
 </body>
 </html>
