@@ -11,12 +11,13 @@ import { GmailHelperService } from '../../services/gmail-helper.service';
 import { ToastrModule } from 'ngx-toastr'; 
 import { MatDialog } from '@angular/material/dialog';
 import { DocumentApprovalFormComponent } from '../document-approval-form/document-approval-form.component';
+import { InitialsPipe } from '../../pipes/initials.pipe';
 
 
 
 @Component({
   selector: 'app-document-request-detail',
-  imports: [SharedNavbarComponent, SharedSidebarComponent, CommonModule, RouterModule,ToastrModule],
+  imports: [SharedNavbarComponent, SharedSidebarComponent, CommonModule, RouterModule,ToastrModule,InitialsPipe],
   templateUrl: './document-request-detail.component.html',
   styleUrls: ['./document-request-detail.component.css'],
   encapsulation: ViewEncapsulation.None,
@@ -90,7 +91,7 @@ export class DocumentRequestDetailComponent implements AfterViewInit, OnInit {
       this.documentRequestsService.updateRequestStatus(id, 'Rejetée').subscribe({
         next: (updatedRequest) => {
           console.log('Demande rejetée avec succès', updatedRequest);
-          this.toastr.error('Demande rejetée','Erreur', {
+          this.toastr.success('Demande rejetée','Erreur', {
             timeOut: 1500,
             progressBar: true
           });

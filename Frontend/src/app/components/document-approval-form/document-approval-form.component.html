@@ -1,29 +1,64 @@
-<h2 mat-dialog-title style="text-align: center; width: 100%; display: block;">Approuver la demande de document</h2>
-<mat-dialog-content>
-  <form [formGroup]="approvalForm" class="approval-form">
-    <mat-form-field appearance="outline" class="full-width message-field">
-      <mat-label>Message</mat-label>
-      <textarea matInput formControlName="message" rows="4" required></textarea>
-      <mat-error *ngIf="approvalForm.get('message')?.hasError('required')">
-        Le message est requis
-      </mat-error>
-    </mat-form-field>
-
-    <div class="file-upload">
-      <input type="file" (change)="onFileSelected($event)" #fileInput style="display: none;">
-      <button mat-raised-button type="button" (click)="fileInput.click()">
-        <i class='bx bx-upload'></i> Sélectionner le document
-      </button>
-      <span class="file-name" *ngIf="selectedFile">{{ selectedFile.name }}</span>
+<div class="dialog-container">
+  <div class="dialog-header">
+    <div class="header-icon">
+      <i class='bx bx-file-blank'></i>
     </div>
-  </form>
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button (click)="onCancel()">Annuler</button>
-  <button mat-raised-button color="primary" 
-          (click)="onSubmit()" 
-          [disabled]="!approvalForm.valid || !selectedFile || isLoading">
-    <span *ngIf="!isLoading">Envoyer</span>
-    <span *ngIf="isLoading">Envoi en cours...</span>
-  </button>
-</mat-dialog-actions>
+    <h2>Validation de document</h2>
+    <p>Complétez l'approbation pour {{data.requestData.fullName}}</p>
+  </div>
+
+  <mat-dialog-content>
+    <form [formGroup]="approvalForm" class="modern-form">
+      <!-- Message Field -->
+      <div class="form-field floating-label">
+        <textarea id="message" formControlName="message" rows="3" required></textarea>
+        <label for="message">Message personnalisé</label>
+
+        <div class="underline"></div>
+      </div>
+
+      <!-- File Upload -->
+      <div class="upload-container" [class.active]="selectedFile" (click)="fileInput.click()">
+        <input type="file" (change)="onFileSelected($event)" #fileInput>
+        
+        <div class="upload-content">
+          <div class="upload-icon">
+            <i class='bx bx-cloud-upload'></i>
+            <div class="pulse-effect"></div>
+          </div>
+          
+          <div class="upload-text" *ngIf="!selectedFile">
+            <h3>Glissez-déposez votre fichier</h3>
+            <p>ou cliquez pour parcourir</p>
+            <small>Formats supportés: PDF, DOC, JPG (Max 5MB)</small>
+          </div>
+          
+          <div class="file-preview" *ngIf="selectedFile">
+            <i class='bx bx-file'></i>
+            <div class="file-info">
+              <span>{{selectedFile.name}}</span>
+              <small>{{selectedFile.size / 1024 | number:'1.0-0'}} KB</small>
+            </div>
+            <button class="remove-file" (click)="removeFile($event)">
+              <i class='bx bx-x'></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button matRipple class="cancel-btn" (click)="onCancel()">
+      Annuler
+    </button>
+    <button matRipple class="submit-btn" 
+            (click)="onSubmit()" 
+            [disabled]="!approvalForm.valid || !selectedFile || isLoading">
+      <span *ngIf="!isLoading">Finaliser l'approbation</span>
+      <span *ngIf="isLoading">
+        <i class='bx bx-loader-circle bx-spin'></i> Traitement...
+      </span>
+    </button>
+  </mat-dialog-actions>
+</div>

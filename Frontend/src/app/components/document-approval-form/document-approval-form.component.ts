@@ -83,7 +83,17 @@ export class DocumentApprovalFormComponent {
     }
   }
 
+removeFile(event: Event): void {
+  event.stopPropagation();
+  this.selectedFile = null;
+  this.fileInput.nativeElement.value = '';
+}
+
+
+
   onCancel(): void {
     this.dialogRef.close(false);
   }
+
+
 }

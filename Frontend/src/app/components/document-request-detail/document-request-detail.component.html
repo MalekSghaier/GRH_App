@@ -1,64 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-  <title>AdminHub</title>
+  <title>Détails demande | AdminHub</title>
 </head>
 <body>
   <app-shared-sidebar></app-shared-sidebar>
   <section id="content">
     <app-shared-navbar></app-shared-navbar>
 
-    <!-- MAIN -->
     <main>
       <div class="head-title">
         <div class="left">
-          <h1>Tableau de bord</h1>
+          <h1>Détails de la demande</h1>
           <ul class="breadcrumb">
-            <li>
-              <a href="#">Tableau de bord</a>
-            </li>
+            <li><a href="#">Tableau de bord</a></li>
             <li><i class='bx bx-chevron-right'></i></li>
-            <li>
-              <a class="active" href="conges">Documents</a>
-            </li>
+            <li><a href="/document-requests">Documents</a></li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li><a class="active">Détails</a></li>
           </ul>
         </div>
       </div>
 
-      <!-- Centrer le box des détails -->
-      <div class="table-data">
-        <div class="order">
-          <div *ngIf="documentRequest">
-            <h1>Détails de la demande</h1>
-            <p><strong>Nom et Prénom :</strong> {{ documentRequest.fullName }}</p>
-            <p><strong>Poste :</strong> {{ documentRequest.jobPosition }}</p>
-            <p><strong>Type de contrat :</strong> {{ documentRequest.contractType }}</p>
-            <p><strong>Email professionnel :</strong> {{ documentRequest.professionalEmail }}</p>
-            <p><strong>Type de document :</strong> {{ documentRequest.documentType }}</p>
-            <p><strong>Date de soumission :</strong> {{ documentRequest.createdAt | date: 'dd/MM/yyyy' }}</p>
-            <p><strong>État :</strong> {{ documentRequest.status }}</p>
-            <div class="button-container">
-              <!-- Bouton Rejeter -->
-              <button class="no-border-button" (click)="rejectRequest(documentRequest._id)" style="background: none; border: none;">
-                <i class='bx bx-x bx-sm' style="color: #dc3545;"></i>
-              </button>
-              <!-- Bouton Accepter -->
-              <button class="no-border-button" (click)="approveRequest()" style="background: none; border: none;">
-                <i class='bx bx-check bx-sm' style="color: #28a745;"></i>
-              </button>
-
+      <div class="document-detail-container">
+        <div class="detail-card">
+          <div class="detail-header">
+            <div class="user-avatar">
+              {{ documentRequest.fullName | initials }}
             </div>
+            <div class="user-info">
+              <h2>{{ documentRequest.fullName }}</h2>
+              <span class="document-status" [class]="documentRequest.status.toLowerCase()">
+                {{ documentRequest.status }}
+              </span>
+            </div>
+          </div>
 
+          <div class="detail-body">
+            <div class="detail-row">
+              <span class="detail-label">Type de document</span>
+              <span class="detail-value">{{ documentRequest.documentType }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Poste</span>
+              <span class="detail-value">{{ documentRequest.jobPosition }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Type de contrat</span>
+              <span class="detail-value">{{ documentRequest.contractType }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Email</span>
+              <span class="detail-value">{{ documentRequest.professionalEmail }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Date de demande</span>
+              <span class="detail-value">{{ documentRequest.createdAt | date: 'dd/MM/yyyy à HH:mm' }}</span>
+            </div>
+          </div>
 
+          <div class="detail-actions">
+            <button class="action-btn reject-btn" (click)="rejectRequest(documentRequest._id)">
+              <i class='bx bx-x'></i> Rejeter
+            </button>
+            <button class="action-btn approve-btn" (click)="approveRequest()">
+              <i class='bx bx-check'></i> Approuver
+            </button>
           </div>
         </div>
       </div>
     </main>
-    <!-- MAIN -->
   </section>
-  <!-- CONTENT -->
 </body>
 </html>

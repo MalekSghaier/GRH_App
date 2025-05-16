@@ -5,6 +5,13 @@ import { Observable } from 'rxjs';
 import { DocumentRequest } from '../models/document-request.model';
 
 
+interface DocumentStats {
+  pending: number;
+  in_progress: number;
+  approved: number;
+  rejected: number;
+}
+
 interface PaginatedDocumentRequests {
   data: DocumentRequest[];
   total: number;
@@ -43,13 +50,28 @@ export class DocumentRequestsService {
     return this.http.put<DocumentRequest>(`${this.apiUrl}/${id}/status`, { status }, { headers });
   }
 
-  getCompanyDocumentRequestsPaginated(page: number = 1, limit: number = 5): Observable<PaginatedDocumentRequests> {
-    const headers = this.getAuthHeaders();
-    return this.http.get<PaginatedDocumentRequests>(
-      `${this.apiUrl}/company/paginated?page=${page}&limit=${limit}`,
-      { headers }
-    );
+getCompanyDocumentRequestsPaginated(
+  page: number = 1, 
+  limit: number = 10,
+  status?: 'pending' | 'in_progress' | 'approved' | 'rejected'
+): Observable<{ data: DocumentRequest[]; total: number }> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
+  let url = `${this.apiUrl}/company/paginated?page=${page}&limit=${limit}`;
+  if (status) {
+    // Mapper les clés frontend aux valeurs backend attendues
+    const statusMap = {
+      'pending': 'En attente',
+      'in_progress': 'En cours de traitement',
+      'approved': 'Approuvée',
+      'rejected': 'Rejetée'
+    };
+    url += `&status=${encodeURIComponent(statusMap[status])}`;
   }
+  
+  return this.http.get<{ data: DocumentRequest[]; total: number }>(url, { headers });
+}
 
   getPendingDocsCountForCompany(): Observable<{ count: number }> {
     const headers = this.getAuthHeaders();
@@ -74,13 +96,19 @@ export class DocumentRequestsService {
     return this.http.get<{ count: number }>(`${this.apiUrl}/pending/count`, { headers });
   }
 
-  getDocumentStats(): Observable<{ pending: number; approved: number; rejected: number }> {
-    const headers = this.getAuthHeaders();
-    return this.http.get<{ pending: number; approved: number; rejected: number }>(
-      `${this.apiUrl}/company/stats`,
-      { headers }
-    );
-  }
+  // getDocumentStats(): Observable<{ pending: number; approved: number; rejected: number }> {
+  //   const headers = this.getAuthHeaders();
+  //   return this.http.get<{ pending: number; approved: number; rejected: number }>(
+  //     `${this.apiUrl}/company/stats`,
+  //     { headers }
+  //   );
+  // }
+
+getDocumentStats(): Observable<DocumentStats> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.get<DocumentStats>(`${this.apiUrl}/company/stats`, { headers });
+}
 
   approveAndSendDocument(formData: FormData): Observable<any> {
     const headers = new HttpHeaders({

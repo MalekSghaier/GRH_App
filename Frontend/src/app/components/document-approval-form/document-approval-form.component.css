@@ -1,65 +1,301 @@
-/* document-approval-form.component.css */
-.approval-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    padding: 16px;
+/* Variables couleurs */
+:root {
+  --primary: #4361ee;
+  --primary-light: #e6e9ff;
+  --secondary: #ff7d6d;
+  --text: #2b2d42;
+  --text-light: #8d99ae;
+  --background: #f8f9ff;
+  --white: #ffffff;
+  --error: #ef233c;
+  --success: #38b000;
+}
+
+/* Base */
+.dialog-container {
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  max-width: 500px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.dialog-header {
+  background: linear-gradient(135deg, var(--primary) 0%, #3a0ca3 100%);
+  color: #063361;
+  padding: 5px;
+  text-align: center;
+  position: relative;
+  gap: 2px;
+}
+
+.dialog-header h2 {
+  margin-top: 400px;
+  margin: 1px 0 1px;
+  font-weight: 600;
+  color: #1a84ef;
+}
+
+.dialog-header p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 0.9rem;
+  color: #488fd7;
+
+}
+
+.header-icon {
+  width: 60px;
+  height: 60px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.header-icon i {
+  font-size: 28px;
+}
+
+/* Form */
+.modern-form {
+  padding: 5px;
+  background: var(--white);
+}
+
+.form-field {
+  margin-bottom: 0px;
+  position: relative;
+}
+
+.floating-label textarea {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  resize: none;
+  font-family: inherit;
+  transition: all 0.3s;
+  background: var(--background);
+}
+
+.floating-label textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.floating-label label {
+  position: absolute;
+  top: 400px;
+  left: 15px;
+  color: var(--text-light);
+  transition: all 0.3s;
+  pointer-events: none;
+  background: var(--white);
+  padding: 0 5px;
+}
+.floating-label {
+  margin-top: 25px; /* Espace au-dessus du champ */
+}
+.floating-label textarea:focus + label,
+.floating-label textarea:not(:placeholder-shown) + label {
+  top: -16px;
+  left: 2px;
+  font-size: 0.8rem;
+  color: var(--primary);
+}
+
+.underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  transition: width 0.3s;
+}
+
+.floating-label textarea:focus ~ .underline {
+  width: 100%;
+}
+
+/* Upload */
+.upload-container {
+  border: 2px dashed #e0e0e0;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: var(--background);
+  margin-bottom: 20px;
+}
+
+.upload-container:hover {
+  border-color: var(--primary);
+  background: rgba(67, 97, 238, 0.05);
+}
+
+.upload-container.active {
+  border-color: var(--success);
+  background: rgba(56, 176, 0, 0.05);
+}
+
+.upload-content {
+  position: relative;
+}
+
+.upload-icon {
+  font-size: 48px;
+  color: var(--primary);
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.pulse-effect {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  background: var(--primary);
+  opacity: 0.2;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0.2; }
+  70% { transform: scale(1.3); opacity: 0; }
+  100% { transform: scale(0.8); opacity: 0; }
+}
+
+.upload-text h3 {
+  margin: 0 0 5px;
+  font-weight: 500;
+}
+
+.upload-text p {
+  margin: 0 0 10px;
+  color: var(--text-light);
+}
+
+.upload-text small {
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+
+.file-preview {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  margin-top: 15px;
+}
+
+.file-preview i {
+  font-size: 24px;
+  color: var(--primary);
+  margin-right: 12px;
+}
+
+.file-info {
+  flex: 1;
+  text-align: left;
+}
+
+.file-info span {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+.file-info small {
+  color: var(--text-light);
+  font-size: 0.8rem;
+}
+
+.remove-file {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.remove-file:hover {
+  color: var(--error);
+}
+
+/* Buttons */
+mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px 25px;
+  background: var(--background);
+  border-top: 1px solid #eee;
+}
+
+.cancel-btn, .submit-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.cancel-btn {
+  background: var(--white);
+  color: var(--text);
+  border: 1px solid #e0e0e0;
+}
+
+.cancel-btn:hover {
+  background: #f5f5f5;
+}
+
+.submit-btn {
+  background: var(--primary);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn:hover:not([disabled]) {
+  background: #228cf6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+}
+
+.submit-btn:disabled {
+  background: #adb5bd;
+  cursor: not-allowed;
+}
+
+/* Ripple effect */
+.mat-ripple-element {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .dialog-container {
+    width: 95vw;
   }
   
-  .mat-dialog-content {
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: hidden !important;
-  }
-  .mat-dialog-title {
-    text-align: center;
-    width: 100%;
-    display: block;
+  .dialog-header {
+    padding: 20px;
   }
   
-  .full-width {
-    width: 100%;
+  .modern-form {
+    padding: 20px;
   }
-  
-  /* Style spécifique pour le champ de message */
-  .message-field {
-    margin-top: 16px;
-  }
-  
-  .message-field .mat-form-field-wrapper {
-    padding-bottom: 0;
-  }
-  
-  /* Style pour le textarea */
-  textarea.mat-input-element {
-    min-height: 100px;
-    max-height: 150px;
-    resize: vertical;
-  }
-  
-  .file-upload {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1px;
-    margin: 8px 0;
-  }
-  
-  .file-name {
-    font-size: 14px;
-    color: #555;
-    text-align: center;
-    word-break: break-all;
-  }
-  
-  .mat-dialog-actions {
-    padding: 16px 0 0 0 !important;
-    margin: 0 !important;
-    justify-content: flex-end;
-  }
-  
-  /* Correction spécifique pour le label */
-  .mat-form-field-appearance-outline .mat-form-field-label {
-    top: 1.34375em;
-    margin-top: -0.25em;
-  }
+}

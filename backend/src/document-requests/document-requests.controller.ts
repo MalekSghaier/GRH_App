@@ -146,23 +146,25 @@ import { FileInterceptor } from '@nestjs/platform-express';
        return this.documentRequestsService.findAll();
     }
 
-    @Get('company/paginated')
-    @UseGuards(AuthGuard('jwt'))
-    async getCompanyDocumentRequestsPaginated(
-      @Req() req: Request & { user?: UserPayload },
-      @Query('page') page: number = 1,
-      @Query('limit') limit: number = 5
-    ) {
-      if (!req.user?.companyName) {
-        throw new UnauthorizedException('Company name not found in token');
-      }
-  
-      return this.documentRequestsService.findByCompanyPaginated(
-        req.user.companyName,
-        page,
-        limit
-      );
-    }
+@Get('company/paginated')
+@UseGuards(AuthGuard('jwt'))
+async getCompanyDocumentRequestsPaginated(
+  @Req() req: Request & { user?: UserPayload },
+  @Query('page') page: number = 1,
+  @Query('limit') limit: number = 5,
+  @Query('status') status?: RequestStatus // Utiliser l'enum directement
+) {
+  if (!req.user?.companyName) {
+    throw new UnauthorizedException('Company name not found in token');
+  }
+
+  return this.documentRequestsService.findByCompanyPaginated(
+    req.user.companyName,
+    Number(page) || 1,
+    Number(limit) || 10,
+    status
+  );
+}
     @Get('company/pending/count')
     @UseGuards(AuthGuard('jwt'))
     async countPendingDocsForCompany(@Req() req: Request & { user?: UserPayload }) {
