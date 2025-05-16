@@ -324,6 +324,72 @@
 .btn-primary i {
   font-size: 18px;
 }
+/* Ajoutez ces styles à la fin de votre fichier CSS existant */
+
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.status-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #f0f0f0;
+  border: none;
+  color: #555;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  background: #e0e0e0;
+}
+
+.filter-btn.active {
+  background: #4e73df;
+  color: white;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 5px;
+}
+
+.status-badge.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.rejected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.application-card.approved {
+  border-left: 4px solid #28a745;
+}
+
+.application-card.rejected {
+  border-left: 4px solid #dc3545;
+}
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -342,5 +408,13 @@
   
   .results-count {
     align-self: flex-start;
+  }
+    .status-filters {
+    gap: 8px;
+  }
+  
+  .filter-btn {
+    padding: 5px 10px;
+    font-size: 12px;
   }
 }

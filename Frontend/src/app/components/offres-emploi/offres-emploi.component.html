@@ -41,7 +41,6 @@
                   </div>
                 </div>
               </mat-tab>
-
               <!-- Onglet 2 : Mes offres publiées -->
               <mat-tab label="📂 Mes offres publiées">
                 <div class="tab-header">
@@ -105,6 +104,7 @@
               </mat-tab>
 
               <!-- Onglet 3 : Candidatures reçues -->
+              <!-- Onglet 3 : Candidatures reçues -->
               <mat-tab label="📑 Candidatures reçues">
                 <ng-template mat-tab-label>
                   📑 Candidatures reçues 
@@ -114,32 +114,55 @@
                 </ng-template>
 
                 <div class="tab-header">
-                  <form action="#">
-                    <div class="form-input">
-                      <input type="search" placeholder="Rechercher par poste, nom, email..." 
-                            (input)="searchApplications($event)">
-                      <button type="button" class="search-btn"><i class='bx bx-search'></i></button>
+                  <div class="filters-container">
+                    <form action="#">
+                      <div class="form-input">
+                        <input type="search" placeholder="Rechercher par poste, nom, email..." 
+                              (input)="searchApplications($event)">
+                        <button type="button" class="search-btn"><i class='bx bx-search'></i></button>
+                      </div>
+                    </form>
+                    
+                    <div class="status-filters">
+                      <button class="filter-btn" [class.active]="statusFilter === 'all'" (click)="filterByStatus('all')">
+                        Toutes ({{totalCount}})
+                      </button>
+                      <button class="filter-btn" [class.active]="statusFilter === 'En attente'" (click)="filterByStatus('En attente')">
+                        En attente ({{pendingCount}})
+                      </button>
+                      <button class="filter-btn" [class.active]="statusFilter === 'Approuvé'" (click)="filterByStatus('Approuvé')">
+                        Approuvées ({{approvedCount}})
+                      </button>
+                      <button class="filter-btn" [class.active]="statusFilter === 'Rejeté'" (click)="filterByStatus('Rejeté')">
+                        Rejetées ({{rejectedCount}})
+                      </button>
                     </div>
-                  </form>
-                  <div class="results-count">{{applications.length}} candidature(s) trouvée(s)</div>
+                  </div>
+                  <div class="results-count">{{filteredApplications.length}} candidature(s) trouvée(s)</div>
                 </div>
                 
                 <div class="table-container">
                   <div class="card-list">
-                    <div *ngFor="let app of applications" class="application-card">
+                    <div *ngFor="let app of filteredApplications" class="application-card" [class.approved]="app.status === 'Approuvé'" [class.rejected]="app.status === 'Rejeté'">
                       <div class="app-header">
                         <div class="app-candidate">
                           <div class="avatar">{{ app.fullName?.charAt(0) || '?' }}</div>
                           <div>
                             <h3>{{ app.fullName || '-' }}</h3>
                             <p>{{ app.position || '-' }}</p>
+                            <span class="status-badge" 
+                                  [class.pending]="app.status === 'En attente' || app.status === 'En cours de traitement'"
+                                  [class.approved]="app.status === 'Approuvé'"
+                                  [class.rejected]="app.status === 'Rejeté'">
+                              {{ app.status === 'En cours de traitement' ? 'En attente' : app.status }}
+                            </span>
                           </div>
                         </div>
                         <div class="app-actions">
-                          <button class="btn-success" matTooltip="Approuver" (click)="updateStatus(app._id, 'Approuvé')">
+                          <button *ngIf="app.status !== 'Approuvé'" class="btn-success" matTooltip="Approuver" (click)="updateStatus(app._id, 'Approuvé')">
                             <i class='bx bx-check'></i> Approuver
                           </button>
-                          <button class="btn-danger" matTooltip="Rejeter" (click)="updateStatus(app._id, 'Rejeté')">
+                          <button *ngIf="app.status !== 'Rejeté'" class="btn-danger" matTooltip="Rejeter" (click)="updateStatus(app._id, 'Rejeté')">
                             <i class='bx bx-x'></i> Rejeter
                           </button>
                         </div>
@@ -171,11 +194,12 @@
                     </div>
                   </div>
 
-                  <ng-container *ngIf="applications.length === 0">
+                  <ng-container *ngIf="filteredApplications.length === 0">
                     <div class="empty-state">
                       <i class='bx bx-user-x'></i>
-                      <h3>Aucune candidature reçue</h3>
-                      <p>Les candidatures apparaîtront ici lorsqu'elles seront soumises pour vos offres</p>
+                      <h3>Aucune candidature trouvée</h3>
+                      <p *ngIf="statusFilter === 'all'">Les candidatures apparaîtront ici lorsqu'elles seront soumises pour vos offres</p>
+                      <p *ngIf="statusFilter !== 'all'">Aucune candidature avec le statut "{{statusFilter}}"</p>
                     </div>
                   </ng-container>
                 </div>

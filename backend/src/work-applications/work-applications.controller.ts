@@ -104,14 +104,11 @@ async checkExistingApplication(
   );
   return { hasApplied: !!existingApplication };
 }
-
-
-
-  @Get('company/:companyName')
-   async findByCompany( @Param('companyName') companyName: string, @Query('status') status?: string): Promise<WorkApplication[]> {
-   return this.workApplicationsService.findByCompany(companyName, status)
-   
-  }
+@Get('company/:companyName')
+@UseGuards(AuthGuard('jwt'))
+async findByCompany(@Param('companyName') companyName: string, @Query('status') status?: string): Promise<WorkApplication[]> {
+  return this.workApplicationsService.findByCompany(companyName, status);
+}
 
   @Get('count/:companyName')
   async countPendingApplications( @Param('companyName') companyName: string): Promise<{ count: number }> {

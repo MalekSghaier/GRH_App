@@ -38,15 +38,18 @@ export class WorkApplicationsService {
     return workApplication;
   }
 
-  async findByCompany(companyName: string, status?: string): Promise<WorkApplication[]> {
-    const query: FilterQuery<WorkApplicationDocument> = { company: companyName };
-    if (status) {
-      query.status = status;
-    }
-    return this.workApplicationModel.find(query)
-    .sort({ createdAt: -1 }) // Tri par date décroissante
-    .exec();
+async findByCompany(companyName: string, status?: string): Promise<WorkApplication[]> {
+  const query: FilterQuery<WorkApplicationDocument> = { company: companyName };
+  
+  if (status) {
+    // Gérer la correspondance entre 'En attente' (front) et 'En cours de traitement' (back)
+    query.status = status === 'En attente' ? 'En cours de traitement' : status;
   }
+  
+  return this.workApplicationModel.find(query)
+    .sort({ createdAt: -1 })
+    .exec();
+}
 
   // Dans le service
   async findOneByEmailAndPosition(email: string,company: string,position: string): Promise<WorkApplication | null> {

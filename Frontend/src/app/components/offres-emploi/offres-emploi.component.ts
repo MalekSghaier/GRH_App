@@ -51,6 +51,12 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 export class OffresEmploiComponent implements AfterViewInit, OnInit {
   private searchTerms = new Subject<string>();
   private appSearchTerms = new Subject<string>();
+    statusFilter: string = 'all';
+  filteredApplications: any[] = [];
+  totalCount: number = 0;
+  approvedCount: number = 0;
+  rejectedCount: number = 0;
+
 
 
   offers: any[] = [];
@@ -207,20 +213,54 @@ export class OffresEmploiComponent implements AfterViewInit, OnInit {
       }
     });
   }
-  loadApplications(): void {
-    const companyName = localStorage.getItem('companyName');
-    if (!companyName) return;
-  
-    this.workApplicationsService.getApplicationsByCompany(companyName).subscribe({
-      next: (apps) => {
-        this.applications = apps.map(app => ({
-          ...app,
-          createdAt: new Date(app.createdAt) // Conversion en Date
-        }));
-      },
-      error: (err) => console.error('Erreur chargement applications', err)
-    });
+loadApplications(): void {
+  const companyName = localStorage.getItem('companyName');
+  if (!companyName) return;
+
+  this.workApplicationsService.getApplicationsByCompany(companyName).subscribe({
+    next: (apps) => {
+      console.log('Applications reçues:', apps);
+      this.applications = apps.map(app => ({
+        ...app,
+        createdAt: new Date(app.createdAt),
+        status: app.status === 'En cours de traitement' ? 'En attente' : app.status
+      }));
+      this.filteredApplications = [...this.applications];
+      this.updateCounts();
+    },
+    error: (err) => {
+      console.error('Erreur chargement applications', err);
+      this.toastr.error('Erreur lors du chargement des candidatures', 'Erreur', {
+        timeOut: 1500,
+        progressBar: true
+      });
+      this.filteredApplications = [];
+      this.updateCounts();
+    }
+  });
+}
+
+  filterByStatus(status: string): void {
+    this.statusFilter = status;
+    this.filterApplications();
   }
+
+  filterApplications(): void {
+    if (this.statusFilter === 'all') {
+      this.filteredApplications = [...this.applications];
+    } else {
+      this.filteredApplications = this.applications.filter(app => app.status === this.statusFilter);
+    }
+  }
+
+updateCounts(): void {
+  this.totalCount = this.applications.length;
+  this.pendingCount = this.applications.filter(app => 
+    app.status === 'En attente' || app.status === 'En cours de traitement'
+  ).length;
+  this.approvedCount = this.applications.filter(app => app.status === 'Approuvé').length;
+  this.rejectedCount = this.applications.filter(app => app.status === 'Rejeté').length;
+}
 
 loadPendingCount(): void {
   const companyName = localStorage.getItem('companyName');
@@ -238,34 +278,34 @@ loadPendingCount(): void {
 
 
 
-updateStatus(appId: string, status: string): void {
-  if (status === 'Rejeté') {
-    this.workApplicationsService.updateStatus(appId, status).subscribe({
-      next: () => {
-        this.toastr.error('Demande de travail rejetée', 'Succès', {
+  updateStatus(appId: string, status: string): void {
+    if (status === 'Rejeté') {
+      this.workApplicationsService.updateStatus(appId, status).subscribe({
+        next: () => {
+          this.toastr.error('Demande de travail rejetée', 'Succès', {
+            timeOut: 1500,
+            progressBar: true
+          });
+          this.loadApplications(); // Recharger les applications au lieu de recharger la page
+        },
+        error: (err) => this.toastr.error('Erreur mise à jour', 'Erreur', {
           timeOut: 1500,
           progressBar: true
-        });
-        window.location.reload();
-      },
-      error: (err) => this.toastr.error('Erreur mise à jour', 'Erreur', {
-        timeOut: 1500,
-        progressBar: true
-      })
-    });
-  } else if (status === 'Approuvé') {
-    const dialogRef = this.dialog.open(InterviewFormComponent, {
-      width: '450px',
-      data: { applicationId: appId }
-    });
+        })
+      });
+    } else if (status === 'Approuvé') {
+      const dialogRef = this.dialog.open(InterviewFormComponent, {
+        width: '450px',
+        data: { applicationId: appId }
+      });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        window.location.reload();
-      }
-    });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.loadApplications(); // Recharger les applications au lieu de recharger la page
+        }
+      });
+    }
   }
-}
   openAddOfferDialog(): void {
     const dialogRef = this.dialog.open(JobOfferFormComponent, {
       width: '600px'

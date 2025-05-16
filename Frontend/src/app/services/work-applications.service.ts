@@ -31,7 +31,7 @@ export class WorkApplicationsService {
   getApplicationsByCompany(companyName: string): Observable<any[]> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any[]>(`${this.apiUrl}/company/${companyName}?status=En cours de traitement`, { headers });
+    return this.http.get<any[]>(`${this.apiUrl}/company/${companyName}`, { headers });
   }
 
   getPendingApplicationsCount(companyName: string): Observable<{count: number}> {
@@ -39,11 +39,10 @@ export class WorkApplicationsService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<{count: number}>(`${this.apiUrl}/count/${companyName}`, { headers });
   }
-
-  updateStatus(id: string, status: string): Observable<any> {
+  updateStatus(applicationId: string, status: string): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.put(`${this.apiUrl}/${id}`, { status }, { headers });
+    return this.http.put(`${this.apiUrl}/${applicationId}`, { status }, { headers });
   }
 
   approveWithInterview(id: string, date: string, time: string): Observable<any> {
@@ -54,13 +53,9 @@ export class WorkApplicationsService {
 
   searchApplications(query: string, companyName: string): Observable<any[]> {
     const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('Aucun token trouvé !');
-    }
-  
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any[]>(
-      `${this.apiUrl}/search/${encodeURIComponent(companyName)}?query=${encodeURIComponent(query)}`, 
+      `${this.apiUrl}/search/${companyName}?query=${encodeURIComponent(query)}`, 
       { headers }
     );
   }
