@@ -1,148 +1,152 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-	<!-- Boxicons -->
-	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-	<link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
-
-	<!-- My CSS -->
-
-	<title>AdminHub</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <title>AdminHub - Profil</title>
 </head>
 <body>
-	<!-- SIDEBAR -->
-	<section id="sidebar">
-		<a  class="brand">
-			<i class='bx bxs-smile  bx-lg'></i>
-			<span class="text">SuperAdmin</span>
-		</a>
-		<ul class="side-menu top">
-			<li [class.active]="currentRoute === '/superadmin-dashboard'">
-				<a routerLink="/superadmin-dashboard">
-					<i class='bx bxs-dashboard bx-sm' ></i>
-					<span class="text">Tableau de bord</span>
-				</a>
-			</li>
-			<li [class.active]="currentRoute === '/compagnie' " >
-				<a routerLink="/compagnies">
-					<i class='bx bxs-shopping-bag-alt bx-sm' ></i>
-					<span class="text">Compagnies</span>
-				</a>
-			</li>
+  <!-- SIDEBAR (identique à l'original) -->
+  <section id="sidebar">
+    <a class="brand">
+      <i class='bx bxs-smile bx-lg'></i>
+      <span class="text">SuperAdmin</span>
+    </a>
+    <ul class="side-menu top">
+      <li [class.active]="currentRoute === '/superadmin-dashboard'">
+        <a routerLink="/superadmin-dashboard">
+          <i class='bx bxs-dashboard bx-sm'></i>
+          <span class="text">Tableau de bord</span>
+        </a>
+      </li>
+      <li [class.active]="currentRoute === '/compagnie'">
+        <a routerLink="/compagnies">
+          <i class='bx bxs-shopping-bag-alt bx-sm'></i>
+          <span class="text">Compagnies</span>
+        </a>
+      </li>
+    </ul>
+    <ul class="side-menu bottom">
+      <li class="active">
+        <a routerLink="/profil">
+          <i class='bx bxs-cog bx-sm bx-spin-hover'></i>
+          <span class="text">Paramètres</span>
+        </a>
+      </li>
+      <li>
+        <a (click)="logout()" class="logout">
+          <i class='bx bx-power-off bx-sm bx-burst-hover'></i>
+          <span class="text">Déconnexion</span>
+        </a>
+      </li>
+    </ul>
+  </section>
 
-
-		</ul>
-		<ul class="side-menu bottom">
-			<li [class.active]="currentRoute === '/profil'">
-				<a routerLink="/profil">
-					<i class='bx bxs-cog bx-sm bx-spin-hover' ></i>
-					<span class="text">Paramètres</span>
-				</a>
-			</li>
-			<li>
-				<a href="#" class="logout">
-					<i class='bx bx-power-off bx-sm bx-burst-hover' ></i>
-					<span class="text">Déconnexion</span>
-				</a>
-			</li>
-		</ul>
-	</section>
-	<!-- SIDEBAR -->
-
-
-
-	<!-- CONTENT -->
-	<section id="content">
-		<!-- NAVBAR -->
-   <nav>
-    <i class='bx bx-menu bx-sm' ></i>
-    <form action="#">
+  <!-- CONTENT -->
+  <section id="content">
+    <!-- NAVBAR (identique à l'original) -->
+    <nav>
+      <i class='bx bx-menu bx-sm'></i>
+      <form action="#">
         <div class="form-input">
+          <input type="search" placeholder="Recherche...">
+          <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
         </div>
-    </form>
-    <input type="checkbox" class="checkbox" id="switch-mode" hidden />
-    <label class="swith-lm" for="switch-mode">
+      </form>
+      <input type="checkbox" class="checkbox" id="switch-mode" hidden />
+      <label class="swith-lm" for="switch-mode">
         <i class="bx bxs-moon"></i>
         <i class="bx bx-sun"></i>
         <div class="ball"></div>
-    </label>
-
-    <!-- Notification Bell -->
-	<a href="javascript:void(0)" class="notification" id="notificationIcon">
-		<i class='bx bxs-bell bx-tada-hover'></i>
-	</a>
-
-
-    <!-- Profile Menu -->
-	<a href="javascript:void(0)" class="profile" id="profileIcon">
+      </label>
+      <a href="javascript:void(0)" class="notification" id="notificationIcon">
+        <i class='bx bxs-bell bx-tada-hover'></i>
+      </a>
+      <a href="javascript:void(0)" class="profile" id="profileIcon">
         <img src="https://cdn-icons-png.freepik.com/512/4159/4159471.png" alt="Profile">
-    </a>
-    <div class="profile-menu" id="profileMenu">
+      </a>
+      <div class="profile-menu" id="profileMenu">
         <ul>
-            <li><a routerLink="/profil">Paramètres</a></li>
-            <li><a (click)="logout()">Déconnexion</a></li>
+          <li><a routerLink="/profil">Paramètres</a></li>
+          <li><a (click)="logout()">Déconnexion</a></li>
         </ul>
-    </div>
-</nav>
-<!-- NAVBAR -->
-		<!-- MAIN -->
-		<main>
-			<div class="head-title">
-				<div class="left">
-					<h1>Paramètres</h1>
-					<ul class="breadcrumb">
-						<li>
-							<a href="#">Tableau de bord</a>
-						</li>
-						<li><i class='bx bx-chevron-right'></i></li>
-						<li>
-							<a class="active" routerLink="/profil">Paramètres</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		
-			<div class="table-data">
-				<div class="order">
-					<div class="container">
-						<div *ngIf="user">
-							<h2>Profil de {{ user.name }}</h2>
-							<div class="input-box">
-								<label>Nom :</label>
-								<div class="input-container">
-									<p>{{ user.name }}</p>
-								</div>
-							</div>
-							<div class="input-box">
-								<label>Email :</label>
-								<div class="input-container">
-									<p>{{ user.email }}</p>
-								</div>
-							</div>
-							<div class="input-box">
-								<label>Rôle :</label>
-								<div class="input-container">
-									<p>{{ user.role }}</p>
-								</div>
-							</div>
-							<div class="register">
-								<p><a href="edit-profile">Modifier données personnelles</a></p>
-							</div>
-							<div class="register">
-								<p><a href="change-password">Modifier mot de passe</a></p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</main>
-		<!-- MAIN -->
-	</section>
-	<!-- CONTENT -->
-	
-<script src="script.js"></script>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT MODERNISÉ -->
+    <main>
+	      <div class="head-title">
+        <div class="left">
+          <h1>Tableau de bord</h1>
+          <ul class="breadcrumb">
+            <li>
+              <a href="#">Tableau de bord</a>
+            </li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li>
+              <a class="active" href="parametre">Paramètres</a>
+            </li>
+          </ul>
+        </div>
+
+
+      </div>
+
+      <div class="table-data">
+        <div class="order">
+          <div class="profile-container">
+            <div *ngIf="user" class="profile-card">
+              <div class="profile-header">
+                <h2><i class='bx bx-user-circle'></i> Profil Utilisateur</h2>
+                <p>Informations personnelles et paramètres de compte</p>
+              </div>
+              
+              <div class="profile-details">
+                <div class="detail-item">
+                  <div class="detail-label">
+                    <i class='bx bx-user'></i>
+                    <span>Nom:</span>
+                  </div>
+                  <div class="detail-value">
+                    <p>{{ user.name }}</p>
+                  </div>
+                </div>
+                
+                <div class="detail-item">
+                  <div class="detail-label">
+                    <i class='bx bx-envelope'></i>
+                    <span>Email:</span>
+                  </div>
+                  <div class="detail-value">
+                    <p>{{ user.email }}</p>
+                  </div>
+                </div>
+                
+                <div class="detail-item">
+                  <div class="detail-label">
+                    <i class='bx bx-shield'></i>
+                    <span>Rôle:</span>
+                  </div>
+                  <div class="detail-value">
+                    <p>{{ user.role }}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="profile-actions">
+                <a routerLink="/edit-profile" class="btn-action primary">
+                  <i class='bx bx-edit'></i> Modifier profil
+                </a>
+                <a routerLink="/change-password" class="btn-action secondary">
+                  <i class='bx bx-lock-alt'></i> Changer mot de passe
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </section>
 </body>
 </html>
