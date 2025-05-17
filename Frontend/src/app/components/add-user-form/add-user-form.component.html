@@ -3,102 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
-    <title>AdminHub</title>
+    <title>AdminHub - Ajouter Utilisateur</title>
 </head>
 <body>
-    <!-- SIDEBAR -->
-
     <app-shared-sidebar></app-shared-sidebar>
-    <!-- SIDEBAR -->
-
-    <!-- CONTENT -->
+    
     <section id="content">
-        <!-- NAVBAR -->
-       <app-shared-navbar></app-shared-navbar>
-        <!-- NAVBAR -->
+        <app-shared-navbar></app-shared-navbar>
 
-        <!-- MAIN -->
         <main>
-            <div class="table-data">
-                <div class="order">
-                    <div class="container">
-                      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-                        <h1>Ajouter Utilisateur</h1>
-                      
-                        <!-- Nom et Prénom -->
-                        <div class="input-box">
-                          <label for="name">Nom et Prénom:</label>
-                          <div class="input-container">
-                            <input type="text" id="name" formControlName="name">
-                            <p *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched" class="error-message">
-                              Le nom et prénom sont requis.
-                            </p>
-                          </div>
-                        </div>
-                      
-                        <!-- Email -->
-                        <div class="input-box">
-                          <label for="email">E-mail:</label>
-                          <div class="input-container">
-                            <input type="email" id="email" formControlName="email">
-                            <p *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="error-message">
-                              Veuillez entrer une adresse e-mail valide.
-                            </p>
-                          </div>
-                        </div>
-                      
-                        <!-- Rôle -->
-                        <div class="input-box">
-                          <label for="role">Rôle:</label>
-                          <div class="input-container">
-                            <select id="role" formControlName="role" (change)="onRoleChange($event)">
-                              <option value="employé">Employé</option>
-                              <option value="stagiaire">Stagiaire</option>
-                            </select>
-                            <p *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched" class="error-message">
-                              Le rôle est requis.
-                            </p>
-                          </div>
-                        </div>
-                      
-                        <!-- Mot de passe -->
-                        <div class="input-box">
-                          <label for="password">Mot de passe:</label>
-                          <div class="input-container">
-                            <input type="password" id="password" formControlName="password">
-                            <p *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="error-message">
-                              Le mot de passe doit contenir au moins 6 caractères.
-                            </p>
-                          </div>
-                        </div>
-                      
-                        <div class="input-box">
-                          <label for="company">Société d'accueil:</label>
-                          <div class="input-container">
-                            <input type="text" id="company" formControlName="company" [readonly]="true"> <!-- Désactiver la modification -->
-                            <p *ngIf="userForm.get('company')?.invalid && userForm.get('company')?.touched" class="error-message">
-                              La société d'accueil est requise.
-                            </p>
-                          </div>
-                        </div>
-                      
-                        <!-- Bouton de soumission -->
-                        <div class="btn-container">
-                          <button class="btn" type="submit" [disabled]="userForm.invalid">
-                            Ajouter Utilisateur
-                          </button>
-                        </div>
-                      </form>
+            <div class="form-container">
+                <div class="form-card">
+                    <div class="form-header">
+                        <h1><i class='bx bx-user-plus'></i> Ajouter un Utilisateur</h1>
+                        <p>Remplissez le formulaire pour créer un nouveau compte utilisateur</p>
                     </div>
+
+                    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form">
+                        <!-- Nom et Prénom -->
+                        <div class="form-group">
+                            <label for="name">Nom et Prénom</label>
+                            <div class="input-wrapper" [class.error]="userForm.get('name')?.invalid && userForm.get('name')?.touched">
+                                <i class='bx bx-user'></i>
+                                <input type="text" id="name" formControlName="name" placeholder="Jean Gonnet">
+                            </div>
+                            <div *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched" class="validation-error">
+                                <i class='bx bx-error-circle'></i>
+                                <span>Le nom et prénom sont requis</span>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="email">Adresse Email</label>
+                            <div class="input-wrapper" [class.error]="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+                                <i class='bx bx-envelope'></i>
+                                <input type="email" id="email" formControlName="email" placeholder="jean.gonnet@gmail.com">
+                            </div>
+                            <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="validation-error">
+                                <i class='bx bx-error-circle'></i>
+                                <span>Veuillez entrer une adresse email valide</span>
+                            </div>
+                        </div>
+
+                        <!-- Rôle -->
+                        <div class="form-group">
+                            <label for="role">Rôle</label>
+                            <div class="input-wrapper" [class.error]="userForm.get('role')?.invalid && userForm.get('role')?.touched">
+                                <i class='bx bx-id-card'></i>
+                                <select id="role" formControlName="role" (change)="onRoleChange($event)">
+                                    <option value="" disabled selected>Sélectionnez un rôle</option>
+                                    <option value="employé">Employé</option>
+                                    <option value="stagiaire">Stagiaire</option>
+                                </select>
+                            </div>
+                            <div *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched" class="validation-error">
+                                <i class='bx bx-error-circle'></i>
+                                <span>Veuillez sélectionner un rôle</span>
+                            </div>
+                        </div>
+
+                        <!-- Mot de passe -->
+                        <div class="form-group">
+                            <label for="password">Mot de passe</label>
+                            <div class="input-wrapper" [class.error]="userForm.get('password')?.invalid && userForm.get('password')?.touched">
+                                <i class='bx bx-lock-alt'></i>
+                                <input type="password" id="password" formControlName="password" placeholder="••••••••">
+                                <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+                                    <i class='bx' [class.bx-show]="!showPassword" [class.bx-hide]="showPassword"></i>
+                                </button>
+                            </div>
+                            <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="validation-error">
+                                <i class='bx bx-error-circle'></i>
+                                <span>Le mot de passe doit contenir au moins 6 caractères</span>
+                            </div>
+                        </div>
+
+                        <!-- Société -->
+                        <div class="form-group">
+                            <label for="company">Société d'accueil</label>
+                            <div class="input-wrapper">
+                                <i class='bx bx-building'></i>
+                                <input type="text" id="company" formControlName="company" readonly>
+                            </div>
+                        </div>
+
+                        <!-- Boutons -->
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" routerLink="/users">
+                                <i class='bx bx-arrow-back'></i> Annuler
+                            </button>
+                            <button type="submit" class="btn-primary" [disabled]="userForm.invalid">
+                                <i class='bx bx-save'></i> Enregistrer
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </main>
-        <!-- MAIN -->
     </section>
-    <!-- CONTENT -->
-    <script src="script.js"></script>
 </body>
 </html>

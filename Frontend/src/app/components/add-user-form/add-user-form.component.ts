@@ -20,6 +20,8 @@ export class AddUserFormComponent implements AfterViewInit {
   userForm: FormGroup;
   isEmployeeOrIntern: boolean = false; // Variable pour gérer la visibilité du champ "company"
   companyName: string = ''; // Variable pour stocker le nom de la compagnie
+showPassword = false;
+
 
   constructor(
     private fb: FormBuilder,
@@ -50,6 +52,13 @@ export class AddUserFormComponent implements AfterViewInit {
     this.initializeSidebar();
   }
 
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+    const passwordField = document.getElementById('password') as HTMLInputElement;
+    if (passwordField) {
+        passwordField.type = this.showPassword ? 'text' : 'password';
+    }
+}
   // Méthode pour gérer le changement de rôle
   onRoleChange(event: Event): void {
     const role = (event.target as HTMLSelectElement).value;
