@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
-    <title>AdminHub</title>
+    <link rel="stylesheet" href="edit-company.css">
+    <title>AdminHub - Modifier Compagnie</title>
 </head>
 <body>
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR (identique à l'original) -->
     <section id="sidebar">
         <a class="brand">
             <i class='bx bxs-smile bx-lg'></i>
@@ -44,11 +43,10 @@
             </li>
         </ul>
     </section>
-    <!-- SIDEBAR -->
 
     <!-- CONTENT -->
     <section id="content">
-        <!-- NAVBAR -->
+        <!-- NAVBAR (identique à l'original) -->
         <nav>
             <i class='bx bx-menu bx-sm'></i>
             <a class="nav-link">Compagnies</a>
@@ -65,13 +63,10 @@
                 <div class="ball"></div>
             </label>
 
-            <!-- Notification Bell -->
             <a href="javascript:void(0)" class="notification" id="notificationIcon">
                 <i class='bx bxs-bell bx-tada-hover'></i>
             </a>
 
-
-            <!-- Profile Menu -->
             <a href="javascript:void(0)" class="profile" id="profileIcon">
                 <img src="https://cdn-icons-png.freepik.com/512/4159/4159471.png" alt="Profile">
             </a>
@@ -82,112 +77,105 @@
                 </ul>
             </div>
         </nav>
-        <!-- NAVBAR -->
 
-        <!-- MAIN -->
+        <!-- MAIN CONTENT MODERNISÉ -->
         <main>
-            <div class="table-data">
-                <div class="order">
-                    <div class="container">
-                        <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
-                            <h1>Modifier Compagnie</h1>
-
-                            <!-- Nom de la compagnie -->
-                            <div class="input-box">
-                                <label for="name">Nom Compagnie:</label>
-                                <div class="input-container">
-                                    <input type="text" id="name" formControlName="name">
-                                    <p *ngIf="companyForm.get('name')?.invalid && companyForm.get('name')?.touched" class="error-message">
-                                        Le nom de la compagnie est requis.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Adresse -->
-                            <div class="input-box">
-                                <label for="address">Adresse:</label>
-                                <div class="input-container">
-                                    <input type="text" id="address" formControlName="address">
-                                    <p *ngIf="companyForm.get('address')?.invalid && companyForm.get('address')?.touched" class="error-message">
-                                        L'adresse est requise.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Téléphone -->
-                            <div class="input-box">
-                                <label for="phone">Téléphone:</label>
-                                <div class="input-container">
-                                    <input type="text" id="phone" formControlName="phone">
-                                    <p *ngIf="companyForm.get('phone')?.invalid && companyForm.get('phone')?.touched" class="error-message">
-                                        Veuillez entrer un numéro de téléphone valide.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Matricule fiscale -->
-                            <div class="input-box">
-                                <label for="taxId">Matricule Fiscale:</label>
-                                <div class="input-container">
-                                    <input type="text" id="taxId" formControlName="taxId">
-                                    <p *ngIf="companyForm.get('taxId')?.invalid && companyForm.get('taxId')?.touched" class="error-message">
-                                        Le matricule fiscale est requis.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Email -->
-                            <div class="input-box">
-                                <label for="email">E-mail:</label>
-                                <div class="input-container">
-                                    <input type="email" id="email" formControlName="email">
-                                    <p *ngIf="companyForm.get('email')?.invalid && companyForm.get('email')?.touched" class="error-message">
-                                        Veuillez entrer une adresse e-mail valide.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Mot de passe -->
-                            <div class="input-box">
-                                <label for="password">Mot de passe:</label>
-                                <div class="input-container">
-                                    <input type="password" id="password" formControlName="password">
-                                    <p *ngIf="companyForm.get('password')?.invalid && companyForm.get('password')?.touched" class="error-message">
-                                        Le mot de passe doit contenir au moins 6 caractères.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Logo -->
-                            <div class="input-box">
-                                <label for="logo">Logo:</label>
-                                <div class="input-container">
-                                    <input type="file" id="logo" (change)="onFileChange($event, 'logo')" accept="image/*">
-                                </div>
-                            </div>
-
-                            <!-- Signature numérique -->
-                            <div class="input-box">
-                                <label for="signature">Signature :</label>
-                                <div class="input-container">
-                                    <input type="file" id="signature" (change)="onFileChange($event, 'signature')" accept="image/*">
-                                </div>
-                            </div>
-
-                            <!-- Bouton de soumission -->
-							<div class="btn-container">
-								<button class="btn" type="submit" [disabled]="companyForm.invalid">
-									Modifier Compagnie
-								</button>
-							</div>
-                        </form>
+            <div class="form-container">
+                <form class="edit-form" [formGroup]="companyForm" (ngSubmit)="onSubmit()">
+                    <div class="form-header">
+                        <h1><i class='bx bxs-edit-alt'></i> Modifier Compagnie</h1>
+                        <p>Mettez à jour les informations de la compagnie</p>
                     </div>
-                </div>
+
+                    <div class="form-grid">
+                        <!-- Ligne 1 -->
+                        <div class="form-group">
+                            <label for="name">Nom Compagnie</label>
+                            <input type="text" id="name" formControlName="name" placeholder="Entrez le nom">
+                            <div *ngIf="companyForm.get('name')?.invalid && companyForm.get('name')?.touched" class="error-message">
+                                <i class='bx bxs-error-circle'></i> Le nom est requis
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Adresse</label>
+                            <input type="text" id="address" formControlName="address" placeholder="Entrez l'adresse">
+                            <div *ngIf="companyForm.get('address')?.invalid && companyForm.get('address')?.touched" class="error-message">
+                                <i class='bx bxs-error-circle'></i> L'adresse est requise
+                            </div>
+                        </div>
+
+                        <!-- Ligne 2 -->
+                        <div class="form-group">
+                            <label for="phone">Téléphone</label>
+                            <input type="text" id="phone" formControlName="phone" placeholder="Entrez le téléphone">
+                            <div *ngIf="companyForm.get('phone')?.invalid && companyForm.get('phone')?.touched" class="error-message">
+                                <i class='bx bxs-error-circle'></i> Numéro invalide
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="taxId">Matricule Fiscale</label>
+                            <input type="text" id="taxId" formControlName="taxId" placeholder="Entrez le matricule">
+                            <div *ngIf="companyForm.get('taxId')?.invalid && companyForm.get('taxId')?.touched" class="error-message">
+                                <i class='bx bxs-error-circle'></i> Matricule requis
+                            </div>
+                        </div>
+
+                        <!-- Ligne 3 -->
+                        <div class="form-group">
+                            <label for="email">E-mail</label>
+                            <input type="email" id="email" formControlName="email" placeholder="Entrez l'email">
+                            <div *ngIf="companyForm.get('email')?.invalid && companyForm.get('email')?.touched" class="error-message">
+                                <i class='bx bxs-error-circle'></i> Email invalide
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Mot de passe</label>
+                            <input type="password" id="password" formControlName="password" placeholder="Entrez le mot de passe">
+                            <div *ngIf="companyForm.get('password')?.invalid && companyForm.get('password')?.touched" class="error-message">
+                                <i class='bx bxs-error-circle'></i> 6 caractères minimum
+                            </div>
+                        </div>
+
+                        <!-- Ligne 4 -->
+                        <div class="form-group file-group">
+                            <label for="logo">Logo</label>
+                            <div class="file-upload">
+                                <input type="file" id="logo" (change)="onFileChange($event, 'logo')" accept="image/*">
+                                <label for="logo" class="upload-label">
+                                    <i class='bx bx-cloud-upload'></i>
+                                    <span class="file-name" id="logo-name">Choisir un fichier</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group file-group">
+                            <label for="signature">Signature</label>
+                            <div class="file-upload">
+                                <input type="file" id="signature" (change)="onFileChange($event, 'signature')" accept="image/*">
+                                <label for="signature" class="upload-label">
+                                    <i class='bx bx-cloud-upload'></i>
+                                    <span class="file-name" id="signature-name">Choisir un fichier</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" routerLink="/compagnies">
+                            <i class='bx bx-x'></i> Annuler
+                        </button>
+                        <button type="submit" class="submit-btn" [disabled]="companyForm.invalid">
+                            <i class='bx bx-save'></i> Enregistrer
+                        </button>
+                    </div>
+                </form>
             </div>
         </main>
-        <!-- MAIN -->
     </section>
-    <!-- CONTENT -->
-    <script src="script.js"></script>
+
+    <script src="edit-company.js"></script>
 </body>
 </html>
