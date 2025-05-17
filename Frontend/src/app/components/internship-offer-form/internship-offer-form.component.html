@@ -1,51 +1,131 @@
-<!-- src/app/components/internship-offer-form/internship-offer-form.component.html -->
-<div class="form-wrapper">
-    <div class="form-container">
-      <form (ngSubmit)="onSubmit()" class="internship-offer-form">
-        <h2 class="form-title">Nouvelle Offre de Stage</h2>
-        
-        <mat-form-field appearance="outline">
-          <mat-label>Titre du stage</mat-label>
-          <input matInput [(ngModel)]="internshipOffer.title" name="title" required>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline">
-          <mat-label>Description du stage</mat-label>
-          <textarea matInput [(ngModel)]="internshipOffer.description" name="description" rows="3" required></textarea>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline">
-          <mat-label>Société</mat-label>
-          <input matInput [(ngModel)]="internshipOffer.company" name="company" required readonly>       
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline">
-          <mat-label>Lieu de stage</mat-label>
-          <input matInput [(ngModel)]="internshipOffer.location" name="location" required>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline">
-          <mat-label>Durée (mois)</mat-label>
-          <input matInput type="number" [(ngModel)]="internshipOffer.duration" name="duration" required min="1">
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline">
-          <mat-label>Niveau d'étude</mat-label>
-          <mat-select [(ngModel)]="internshipOffer.educationLevel" name="educationLevel" required>
-            <mat-option *ngFor="let level of educationLevels" [value]="level">
-              {{ level }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline">
-          <mat-label>Exigences du stage</mat-label>
-          <textarea matInput [(ngModel)]="internshipOffer.requirements" name="requirements" rows="3" required></textarea>
-        </mat-form-field>
-  
-        <div class="button-group">
-          <button class="btn-primary" type="submit">Enregistrer</button>
+<div class="internship-offer-container">
+  <div class="form-card">
+    <div class="form-header">
+      <h1>
+        <i class='bx bx-calendar-star'></i> Nouvelle Offre de Stage
+      </h1>
+      <p>Créez une nouvelle opportunité de stage pour les étudiants</p>
+      
+      <!-- Indicateur de scroll -->
+      <div class="scroll-indicator">
+        <i class='bx bx-chevrons-down'></i>
+        <span>Faites défiler pour voir tous les champs</span>
+      </div>
+    </div>
+
+    <div class="form-content">
+      <form (ngSubmit)="onSubmit()" class="internship-form">
+        <!-- Section Principale -->
+        <div class="form-section">
+          <div class="form-grid">
+            <!-- Titre du stage -->
+            <div class="form-group">
+              <label for="title">
+                <i class='bx bx-rename'></i> Titre du stage *
+              </label>
+              <input type="text" id="title" 
+                     [(ngModel)]="internshipOffer.title" 
+                     name="title" 
+                     required
+                     placeholder="Ex: Stage en Développement Web">
+            </div>
+
+            <!-- Société -->
+            <div class="form-group">
+              <label for="company">
+                <i class='bx bx-building'></i> Société *
+              </label>
+              <input type="text" id="company" 
+                     [(ngModel)]="internshipOffer.company" 
+                     name="company" 
+                     required 
+                     readonly
+                     placeholder="Nom de l'entreprise">
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label for="description">
+              <i class='bx bx-detail'></i> Description du stage *
+            </label>
+            <textarea id="description" 
+                      [(ngModel)]="internshipOffer.description" 
+                      name="description" 
+                      required
+                      rows="4"
+                      placeholder="Décrivez les missions principales..."></textarea>
+          </div>
+        </div>
+
+        <!-- Section Détails -->
+        <div class="form-section">
+          <h3><i class='bx bx-info-circle'></i> Détails du stage</h3>
+          
+          <div class="form-grid">
+            <!-- Lieu -->
+            <div class="form-group">
+              <label for="location">
+                <i class='bx bx-map'></i> Lieu de stage *
+              </label>
+              <input type="text" id="location" 
+                     [(ngModel)]="internshipOffer.location" 
+                     name="location" 
+                     required
+                     placeholder="Ex: Paris, Télétravail">
+            </div>
+
+            <!-- Durée -->
+            <div class="form-group">
+              <label for="duration">
+                <i class='bx bx-time-five'></i> Durée (mois) *
+              </label>
+              <input type="number" id="duration" 
+                     [(ngModel)]="internshipOffer.duration" 
+                     name="duration" 
+                     required 
+                     min="1"
+                     placeholder="6">
+            </div>
+
+            <!-- Niveau d'étude -->
+            <div class="form-group">
+              <label for="education">
+                <i class='bx bx-graduation'></i> Niveau d'étude *
+              </label>
+              <select id="education" 
+                      [(ngModel)]="internshipOffer.educationLevel" 
+                      name="educationLevel" 
+                      required>
+                <option value="" disabled selected>Sélectionnez un niveau</option>
+                <option *ngFor="let level of educationLevels" [value]="level">
+                  {{ level }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Exigences -->
+          <div class="form-group">
+            <label for="requirements">
+              <i class='bx bx-task'></i> Exigences du stage *
+            </label>
+            <textarea id="requirements" 
+                      [(ngModel)]="internshipOffer.requirements" 
+                      name="requirements" 
+                      required
+                      rows="4"
+                      placeholder="Compétences requises, connaissances..."></textarea>
+          </div>
         </div>
       </form>
     </div>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <button type="submit" class="submit-btn" (click)="onSubmit()">
+        <i class='bx bx-save'></i> Publier l'offre
+      </button>
+    </div>
   </div>
+</div>

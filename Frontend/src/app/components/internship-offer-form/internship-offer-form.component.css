@@ -1,93 +1,256 @@
-.form-wrapper {
-    height: 100%;
-    overflow-y: auto;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-  
-  .form-container {
-    display: flex;
-    justify-content: center;
-    min-height: 100%;
-    max-height: 98vh;
-    overflow-y: auto;  
-  }
-  
-  .job-offer-form {
-    width: 100%;
-    max-width: 600px;
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 20px;
-  }
-  
-  .form-title {
-    color: #007bff;
-    text-align: center;
-    margin: 0 0 16px 0;
-    font-size: 1.5rem;
-  }
-  
-  mat-form-field {
-    width: 100%;
-  }
-  .error-message {
-    font-size: 12px; 
-    color: rgb(247, 95, 95);
-    margin-top: 1px; 
-  }
-  .success-message {
-    font-size: 12px;
-    color: green;
-    margin-top: 5px; 
-  }
+:root {
+  --primary-color: #4361ee;
+  --primary-light: #e6ebff;
+  --secondary-color: #6c757d;
+  --dark-color: #2c3e50;
+  --light-color: #f8f9fa;
+  --border-color: #e0e0e0;
+  --text-color: #333;
+  --text-light: #6c757d;
+  --success-color: #28a745;
+  --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --border-radius: 10px;
+  --transition: all 0.3s ease;
+}
 
-  .btn-primary {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
+/* Structure */
+.job-offer-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  height: 100vh;
+}
+
+.form-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+/* Contenu scrollable */
+.form-content {
+  padding: 2.5rem;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+/* En-tête */
+.form-header {
+  padding: 2rem 2rem 0;
+}
+
+.form-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.75rem;
+  color: var(--dark-color);
+  margin-bottom: 0.5rem;
+}
+
+.form-header p {
+  color: var(--text-light);
+  margin: 0;
+}
+
+/* Sections */
+.form-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.form-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.form-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  color: var(--dark-color);
+  margin-bottom: 1.5rem;
+}
+
+/* Grille */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Groupes de champs */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.form-group label i {
+  font-size: 1.1rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  transition: var(--transition);
+  background-color: var(--light-color);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+  cursor: pointer;
+}
+
+/* Bouton fixé en bas */
+.form-actions {
+  padding: 1.5rem 2.5rem;
+  background: white;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 2rem;
+  background-color: var(--primary-color);
+  color: #e0e0e0;
+  background-color: #1a84ef;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.submit-btn:hover {
+  background-color: #1a84ef;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+}
+
+/* Barre de défilement */
+.form-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.form-content::-webkit-scrollbar-track {
+  background: var(--light-color);
+}
+
+.form-content::-webkit-scrollbar-thumb {
+  background-color: var(--primary-light);
+  border-radius: 4px;
+}
+
+.scroll-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  border-radius: var(--border-radius);
+  font-size: 0.85rem;
+  animation: bounce 2s infinite;
+}
+
+.scroll-indicator i {
+  font-size: 1.2rem;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Masquer l'indicateur après le premier scroll */
+.form-content.scrolled ~ .form-header .scroll-indicator {
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .job-offer-container {
+    padding: 0;
+    height: 100vh;
   }
   
-  .btn-primary:hover {
-    background-color: #0056b3;
+  .form-card {
+    max-height: 100vh;
+    border-radius: 0;
   }
-  .button-group {
-    display: flex;
+  
+  .form-content {
+    padding: 1.5rem;
+  }
+  
+  .form-header {
+    padding: 1.5rem 1.5rem 0;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-actions {
+    padding: 1rem 1.5rem;
+  }
+  
+  .submit-btn {
+    width: 100%;
     justify-content: center;
-    margin-top: 16px;
-    position: sticky;
-    bottom: 0;
-    background: white;
-    padding: 12px 0;
-    z-index: 1;
   }
-  
-  button[mat-raised-button] {
-    min-width: 120px;
-    height: 42px;
-  }
-  
-  button[mat-stroked-button] {
-    min-width: 120px;
-    height: 42px;
-  }
-  
-  @media (max-width: 600px) {
-    .form-wrapper {
-      padding: 10px;
-    }
-    
-    .button-group {
-      justify-content: center;
-      gap: 1px;
-    }
-    
-    button[mat-raised-button],
-    button[mat-stroked-button] {
-      min-width: 100px;
-    }
-  }
+}
