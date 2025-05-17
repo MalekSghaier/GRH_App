@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
+    <link rel="stylesheet" href="admin.css">
     <title>AdminHub</title>
 </head>
 <body>
@@ -37,14 +36,13 @@
                 </a>
             </li>
             <li [class.active]="currentRoute === '#'">
-                <a (click)="logout()"  class="logout">
+                <a (click)="logout()" class="logout">
                     <i class='bx bx-power-off bx-sm bx-burst-hover'></i>
                     <span class="text">Déconnexion</span>
                 </a>
             </li>
         </ul>
     </section>
-    <!-- SIDEBAR -->
 
     <!-- CONTENT -->
     <section id="content">
@@ -70,7 +68,6 @@
                 <i class='bx bxs-bell bx-tada-hover'></i>
             </a>
 
-
             <!-- Profile Menu -->
             <a href="javascript:void(0)" class="profile" id="profileIcon">
                 <img src="https://cdn-icons-png.freepik.com/512/4159/4159471.png" alt="Profile">
@@ -82,112 +79,99 @@
                 </ul>
             </div>
         </nav>
-        <!-- NAVBAR -->
 
-        <!-- MAIN -->
+        <!-- MAIN CONTENT -->
         <main>
-            <div class="table-data">
-                <div class="order">
-                    <div class="container">
-                        <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
-                            <h1>Ajouter Compagnie</h1>
-
-                            <!-- Nom de la compagnie -->
-                            <div class="input-box">
-                                <label for="name">Nom Compagnie:</label>
-                                <div class="input-container">
-                                    <input type="text" id="name" formControlName="name">
-                                    <p *ngIf="companyForm.get('name')?.invalid && companyForm.get('name')?.touched" class="error-message">
-                                        Le nom de la compagnie est requis.
-                                    </p>
-                                </div>
+            <div class="modern-container">
+                <form class="modern-form" [formGroup]="companyForm" (ngSubmit)="onSubmit()">
+                    <h1 class="form-title">Ajouter Compagnie</h1>
+                    
+                    <div class="form-grid">
+                        <!-- Row 1 -->
+                        <div class="form-group">
+                            <label for="name">Nom Compagnie</label>
+                            <input type="text" id="name" formControlName="name">
+                            <div *ngIf="companyForm.get('name')?.invalid && companyForm.get('name')?.touched" class="error-message">
+                                Le nom de la compagnie est requis.
                             </div>
-
-                            <!-- Adresse -->
-                            <div class="input-box">
-                                <label for="address">Adresse:</label>
-                                <div class="input-container">
-                                    <input type="text" id="address" formControlName="address">
-                                    <p *ngIf="companyForm.get('address')?.invalid && companyForm.get('address')?.touched" class="error-message">
-                                        L'adresse est requise.
-                                    </p>
-                                </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address">Adresse</label>
+                            <input type="text" id="address" formControlName="address">
+                            <div *ngIf="companyForm.get('address')?.invalid && companyForm.get('address')?.touched" class="error-message">
+                                L'adresse est requise.
                             </div>
-
-                            <!-- Téléphone -->
-                            <div class="input-box">
-                                <label for="phone">Téléphone:</label>
-                                <div class="input-container">
-                                    <input type="text" id="phone" formControlName="phone">
-                                    <p *ngIf="companyForm.get('phone')?.invalid && companyForm.get('phone')?.touched" class="error-message">
-                                        Veuillez entrer un numéro de téléphone valide.
-                                    </p>
-                                </div>
+                        </div>
+                        
+                        <!-- Row 2 -->
+                        <div class="form-group">
+                            <label for="phone">Téléphone</label>
+                            <input type="text" id="phone" formControlName="phone">
+                            <div *ngIf="companyForm.get('phone')?.invalid && companyForm.get('phone')?.touched" class="error-message">
+                                Veuillez entrer un numéro de téléphone valide.
                             </div>
-
-                            <!-- Matricule fiscale -->
-                            <div class="input-box">
-                                <label for="taxId">Matricule Fiscale:</label>
-                                <div class="input-container">
-                                    <input type="text" id="taxId" formControlName="taxId">
-                                    <p *ngIf="companyForm.get('taxId')?.invalid && companyForm.get('taxId')?.touched" class="error-message">
-                                        Le matricule fiscale est requis.
-                                    </p>
-                                </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="taxId">Matricule Fiscale</label>
+                            <input type="text" id="taxId" formControlName="taxId">
+                            <div *ngIf="companyForm.get('taxId')?.invalid && companyForm.get('taxId')?.touched" class="error-message">
+                                Le matricule fiscale est requis.
                             </div>
-
-                            <!-- Email -->
-                            <div class="input-box">
-                                <label for="email">E-mail:</label>
-                                <div class="input-container">
-                                    <input type="email" id="email" formControlName="email">
-                                    <p *ngIf="companyForm.get('email')?.invalid && companyForm.get('email')?.touched" class="error-message">
-                                        Veuillez entrer une adresse e-mail valide.
-                                    </p>
-                                </div>
+                        </div>
+                        
+                        <!-- Row 3 -->
+                        <div class="form-group">
+                            <label for="email">E-mail</label>
+                            <input type="email" id="email" formControlName="email">
+                            <div *ngIf="companyForm.get('email')?.invalid && companyForm.get('email')?.touched" class="error-message">
+                                Veuillez entrer une adresse e-mail valide.
                             </div>
-
-                            <!-- Mot de passe -->
-                            <div class="input-box">
-                                <label for="password">Mot de passe:</label>
-                                <div class="input-container">
-                                    <input type="password" id="password" formControlName="password">
-                                    <p *ngIf="companyForm.get('password')?.invalid && companyForm.get('password')?.touched" class="error-message">
-                                        Le mot de passe doit contenir au moins 6 caractères.
-                                    </p>
-                                </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Mot de passe</label>
+                            <input type="password" id="password" formControlName="password">
+                            <div *ngIf="companyForm.get('password')?.invalid && companyForm.get('password')?.touched" class="error-message">
+                                Le mot de passe doit contenir au moins 6 caractères.
                             </div>
-
-                            <!-- Logo -->
-                            <div class="input-box">
-                                <label for="logo">Logo:</label>
-                                <div class="input-container">
-                                    <input type="file" id="logo" (change)="onFileChange($event, 'logo')" accept="image/*">
-                                </div>
+                        </div>
+                        
+                        <!-- Row 4 -->
+                        <div class="form-group file-upload">
+                            <label for="logo">Logo</label>
+                            <div class="upload-container">
+                                <input type="file" id="logo" (change)="onFileChange($event, 'logo')" accept="image/*">
+                                <label for="logo" class="upload-label">
+                                    <i class='bx bx-cloud-upload'></i>
+                                    <span>Télécharger</span>
+                                </label>
                             </div>
-
-                            <!-- Signature numérique -->
-                            <div class="input-box">
-                                <label for="signature">Signature :</label>
-                                <div class="input-container">
-                                    <input type="file" id="signature" (change)="onFileChange($event, 'signature')" accept="image/*">
-                                </div>
+                        </div>
+                        
+                        <div class="form-group file-upload">
+                            <label for="signature">Signature</label>
+                            <div class="upload-container">
+                                <input type="file" id="signature" (change)="onFileChange($event, 'signature')" accept="image/*">
+                                <label for="signature" class="upload-label">
+                                    <i class='bx bx-cloud-upload'></i>
+                                    <span>Télécharger</span>
+                                </label>
                             </div>
-
-                            <!-- Bouton de soumission -->
-							<div class="btn-container">
-								<button class="btn" type="submit" [disabled]="companyForm.invalid">
-									Ajouter Compagnie
-								</button>
-							</div>
-                        </form>
+                        </div>
                     </div>
-                </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn" [disabled]="companyForm.invalid">
+                            <i class='bx bx-plus'></i> Ajouter Compagnie
+                        </button>
+                    </div>
+                </form>
             </div>
         </main>
-        <!-- MAIN -->
     </section>
-    <!-- CONTENT -->
-    <script src="script.js"></script>
+
+    <script src="admin.js"></script>
 </body>
 </html>

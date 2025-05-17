@@ -14,7 +14,7 @@ li {
 	--poppins: 'Poppins', sans-serif;
 	--lato: 'Lato', sans-serif;
 	--light: #F9F9F9;
-	--blue: #3C91E6;
+	--blue: #1a84ef;
 	--light-blue: #CFE8FF;
 	--grey: #eee;
 	--dark-grey: #AAAAAA;
@@ -453,7 +453,7 @@ body.dark #content nav .profile-menu li a {
 /* NAVBAR */
 /* Variables */
 :root {
-    --primary: #4361ee;
+    --primary: #1a84ef;
     --primary-light: #e6ebff;
     --secondary: #6c757d;
     --success: #28a745;
@@ -508,7 +508,7 @@ body.dark #content nav .profile-menu li a {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background-color: var(--primary);
+    background-color: #1a84ef;
     color: white;
     padding: 0.75rem 1.25rem;
     border-radius: 6px;
