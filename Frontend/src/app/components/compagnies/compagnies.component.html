@@ -1,183 +1,194 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-	<!-- Boxicons -->
-	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-	<link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
-	<!-- My CSS -->
-	<title>AdminHub</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>AdminHub | Compagnies</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-	<!-- SIDEBAR -->
-	<section id="sidebar">
-		<a  class="brand">
-			<i class='bx bxs-smile  bx-lg'></i>
-			<span class="text">SuperAdmin</span>
-		</a>
-		<ul class="side-menu top">
-			<li >
-				<a routerLink="/superadmin-dashboard">
-					<i class='bx bxs-dashboard bx-sm' ></i>
-					<span class="text">Tableau de bord</span>
-				</a>
-			</li>
-			<li class="active">
-				<a routerLink="/compagnies">
-					<i class='bx bxs-shopping-bag-alt bx-sm' ></i>
-					<span class="text">Compagnies</span>
-				</a>
-			</li>
+    <!-- SIDEBAR (version originale) -->
+    <section id="sidebar">
+        <a class="brand">
+            <i class='bx bxs-smile bx-lg'></i>
+            <span class="text">SuperAdmin</span>
+        </a>
+        <ul class="side-menu top">
+            <li>
+                <a routerLink="/superadmin-dashboard">
+                    <i class='bx bxs-dashboard bx-sm'></i>
+                    <span class="text">Tableau de bord</span>
+                </a>
+            </li>
+            <li class="active">
+                <a routerLink="/compagnies">
+                    <i class='bx bxs-shopping-bag-alt bx-sm'></i>
+                    <span class="text">Compagnies</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="side-menu bottom">
+            <li [class.active]="currentRoute === '/profil'">
+                <a routerLink="/profil">
+                    <i class='bx bxs-cog bx-sm bx-spin-hover'></i>
+                    <span class="text">Paramètres</span>
+                </a>
+            </li>
+            <li [class.active]="currentRoute === '#'">
+                <a (click)="logout()" class="logout">
+                    <i class='bx bx-power-off bx-sm bx-burst-hover'></i>
+                    <span class="text">Déconnexion</span>
+                </a>
+            </li>
+        </ul>
+    </section>
 
+    <!-- CONTENT -->
+    <section id="content">
+        <!-- NAVBAR (version originale) -->
+        <nav>
+            <i class='bx bx-menu bx-sm'></i>
+            <a class="nav-link">Compagnies</a>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Recherche..." (input)="onSearchInput($event)">
+                    <button class="search-btn"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" class="checkbox" id="switch-mode" hidden />
+            <label class="swith-lm" for="switch-mode">
+                <i class="bx bxs-moon"></i>
+                <i class="bx bx-sun"></i>
+                <div class="ball"></div>
+            </label>
+        
+            <a href="javascript:void(0)" class="notification" id="notificationIcon">
+                <i class='bx bxs-bell bx-tada-hover'></i>
+            </a>
+        
+            <a href="javascript:void(0)" class="profile" id="profileIcon">
+                <img src="https://cdn-icons-png.freepik.com/512/4159/4159471.png" alt="Profile">
+            </a>
+            <div class="profile-menu" id="profileMenu">
+                <ul>
+                    <li><a routerLink="/profil">Paramètres</a></li>
+                    <li><a href="#">Déconnexion</a></li>
+                </ul>
+            </div>
+        </nav>
 
-		</ul>
-		<ul class="side-menu bottom">
-			<li [class.active]="currentRoute === '/profil'">
-				<a routerLink="/profil">
-					<i class='bx bxs-cog bx-sm bx-spin-hover' ></i>
-					<span class="text">Paramètres</span>
-				</a>
-			</li>
-			<li [class.active]="currentRoute === '#'">
-				<a (click)="logout()" class="logout">
-					<i class='bx bx-power-off bx-sm bx-burst-hover' ></i>
-					<span class="text">Déconnexion</span>
-				</a>
-			</li>
-		</ul>
-	</section>
-	<!-- SIDEBAR -->
+        <!-- MAIN CONTENT (version modernisée) -->
+        <main class="modern-main">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Gestion des Compagnies</h1>
+                    <nav class="breadcrumb">
+                        <a href="#">Tableau de bord</a>
+                        <i class='bx bx-chevron-right'></i>
+                        <span class="active">Compagnies</span>
+                    </nav>
+                </div>
+                <a routerLink="/add-company" class="add-btn">
+                    <i class='bx bx-plus'></i>
+                    <span>Ajouter Compagnie</span>
+                </a>
+            </div>
+            
+            <div class="data-card">
+                <div class="card-header">
+                    <h2>Liste des compagnies</h2>
+                    <div class="card-info">
+                        <span>{{companies.length}} sur {{totalItems}} entrées</span>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table *ngIf="!isEmpty; else emptyMessage">
+                        <thead>
+                            <tr>
+                                <th>Logo</th>
+                                <th>Nom</th>
+                                <th>Coordonnées</th>
+                                <th>Identifiant fiscal</th>
+                                <th>Signature</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let company of companies">
+                                <td class="logo-cell">
+                                    <div class="company-logo">
+                                        <img *ngIf="company.logo" [src]="company.logo" alt="Logo">
+                                        <div *ngIf="!company.logo" class="logo-placeholder">
+                                            {{ company.name.charAt(0) }}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="company-name">
+                                    <strong>{{ company.name }}</strong>
+                                    <span>{{ company.address }}</span>
+                                </td>
+                                <td class="company-contact">
+                                    <div><i class='bx bx-envelope'></i> {{ company.email }}</div>
+                                    <div><i class='bx bx-phone'></i> {{ company.phone }}</div>
+                                </td>
+                                <td class="tax-id">
+                                    {{ company.taxId }}
+                                </td>
+                                <td class="signature-cell">
+                                    <div class="signature-preview">
+                                        <img *ngIf="company.signature" [src]="company.signature" alt="Signature">
+                                        <span *ngIf="!company.signature">-</span>
+                                    </div>
+                                </td>
+                                <td class="actions-cell">
+                                    <div class="action-buttons">
+                                        <button class="action-btn edit" [routerLink]="['/edit-company', company._id]">
+                                            <i class='bx bx-edit-alt'></i>
+                                        </button>
+                                        <button class="action-btn delete" (click)="deleteCompany(company._id)">
+                                            <i class='bx bx-trash'></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <ng-template #emptyMessage>
+                        <div class="empty-state">
+                            <i class='bx bx-building-house'></i>
+                            <h3>Aucune compagnie trouvée</h3>
+                            <p>Commencez par ajouter une nouvelle compagnie</p>
+                            <a routerLink="/add-company" class="add-btn">
+                                <i class='bx bx-plus'></i>
+                                <span>Ajouter une compagnie</span>
+                            </a>
+                        </div>
+                    </ng-template>
+                </div>
+                
+                <div class="card-footer">
+                    <div class="pagination">
+                        <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">
+                            <i class='bx bx-chevron-left'></i>
+                        </button>
+                        <button *ngFor="let page of getPages()" 
+                                (click)="onPageChange(page)"
+                                [class.active]="page === currentPage"
+                                class="page-number">
+                            {{ page }}
+                        </button>
+                        <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === getPages().length">
+                            <i class='bx bx-chevron-right'></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
 
-	<!-- CONTENT -->
-	<section id="content">
-		<!-- NAVBAR -->
-		<nav>
-			<i class='bx bx-menu bx-sm'></i>
-			<a class="nav-link">Compagnies</a>
-			<form action="#">
-				<div class="form-input">
-					<input type="search" placeholder="Recherche..." (input)="onSearchInput($event)">
-					<button class="search-btn"><i class='bx bx-search'></i></button>
-				</div>
-			</form>
-			<input type="checkbox" class="checkbox" id="switch-mode" hidden />
-			<label class="swith-lm" for="switch-mode">
-				<i class="bx bxs-moon"></i>
-				<i class="bx bx-sun"></i>
-				<div class="ball"></div>
-			</label>
-		
-			<!-- Notification Bell -->
-			<a href="javascript:void(0)" class="notification" id="notificationIcon">
-				<i class='bx bxs-bell bx-tada-hover'></i>
-			</a>
-		
-			<!-- Profile Menu -->
-			<a href="javascript:void(0)" class="profile" id="profileIcon">
-				<img src="https://cdn-icons-png.freepik.com/512/4159/4159471.png" alt="Profile">
-			</a>
-			<div class="profile-menu" id="profileMenu">
-				<ul>
-					<li><a routerLink="/profil">Paramètres</a></li>
-					<li><a href="#">Déconnexion</a></li>
-				</ul>
-			</div>
-		</nav>
-<!-- NAVBAR -->
-
-
-		<!-- MAIN -->
-		<main>
-			<div class="head-title">
-			  <div class="left">
-				<h1>Tableau de bord</h1>
-				<ul class="breadcrumb">
-				  <li>
-					<a href="#">Tableau de bord</a>
-				  </li>
-				  <li><i class='bx bx-chevron-right'></i></li>
-				  <li>
-					<a class="active" href="compagnies">Compagnies</a>
-				  </li>
-				</ul>
-			  </div>
-			  <a routerLink="/add-company" class="btn-download">
-				<i class='bx bx-message-square-add'></i>
-				<span class="text">Ajouter Compagnie</span>
-			  </a>
-			</div>
-		  
-			<div class="table-data">
-			  <div class="order">
-				<table *ngIf="!isEmpty; else emptyMessage">
-				  <thead>
-					<tr>
-					  <th>Logo</th>
-					  <th>Nom</th>
-					  <th>Adresse</th>
-					  <th>Téléphone</th>
-					  <th>Immatricule fiscale</th>
-					  <th>Email</th>
-					  <th>Signature</th>
-					  <th>Actions</th>
-					</tr>
-				  </thead>
-				  <tbody>
-					<tr *ngFor="let company of companies">
-					  <td>
-						<img *ngIf="company.logo" [src]="company.logo" alt="Logo de la compagnie" width="100" class="company-logo">
-					  </td>
-					  <td>{{ company.name }}</td>
-					  <td>{{ company.address }}</td>
-					  <td>{{ company.phone }}</td>
-					  <td>{{ company.taxId }}</td>
-					  <td>{{ company.email }}</td>
-					  <td>
-						<img *ngIf="company.signature" [src]="company.signature" alt="Signature" width="100" class="company-signature">
-						<td>
-							<!-- Bouton Modifier -->
-							<button class="no-border-button" [routerLink]="['/edit-company', company._id]" style="background: none; border: none;">
-								<i class='bx bxs-message-square-edit bx-sm' style="color: #007bff;"></i>
-							  </button>
-						  
-							<!-- Bouton Supprimer -->
-							<button class="no-border-button"  (click)="deleteCompany(company._id)" style="background: none; border: none;">
-							  <i class='bx bxs-trash-alt bx-sm' style="color: #007bff;"></i>
-							</button>
-						  
-					    </td>
-					</tr>
-				  </tbody>
-				</table>
-
-				<ng-template #emptyMessage>
-					<div class="empty-message">
-					  <p>Aucune compagnie trouvée.</p>
-					</div>
-				  </ng-template>
-
-				<div class="pagination">
-					<button
-					  *ngFor="let page of getPages()"
-					  (click)="onPageChange(page)"
-					  [class.active]="page === currentPage"
-					>
-					  {{ page }}
-					</button>
-				</div>
-				
-			  </div>
-			</div>
-		</main>
-		  
-		  
-		<!-- MAIN -->
-	</section> 
-	<!-- CONTENT -->
-	
-
-	<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

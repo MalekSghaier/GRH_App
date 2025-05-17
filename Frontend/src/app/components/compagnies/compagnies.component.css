@@ -387,7 +387,6 @@ body.dark #content nav .profile-menu li a {
 #content nav .profile-menu li:hover a {
     color: var(--dark);
 }
-/* Active State for Menus */
 #content nav .notification-menu.show,
 #content nav .profile-menu.show {
     display: block;
@@ -452,278 +451,347 @@ body.dark #content nav .profile-menu li a {
 	animation: shakeOn .7s;
 }
 /* NAVBAR */
-/* MAIN */
-#content main {
-	width: 100%;
-	padding: 36px 24px;
-	font-family: var(--poppins);
-	max-height: calc(100vh - 56px);
-	overflow-y: auto;
-}
-#content main .head-title {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	grid-gap: 16px;
-	flex-wrap: wrap;
-}
-#content main .head-title .left h1 {
-	font-size: 36px;
-	font-weight: 600;
-	margin-bottom: 10px;
-	color: var(--dark);
-}
-#content main .head-title .left .breadcrumb {
-	display: flex;
-	align-items: center;
-	grid-gap: 16px;
-}
-#content main .head-title .left .breadcrumb li {
-	color: var(--dark);
-}
-#content main .head-title .left .breadcrumb li a {
-	color: var(--dark-grey);
-	pointer-events: none;
-}
-#content main .head-title .left .breadcrumb li a.active {
-	color: var(--blue);
-	pointer-events: unset;
-}
-#content main .head-title .btn-download {
-	height: 36px;
-	padding: 0 16px;
-	border-radius: 36px;
-	background: var(--blue);
-	color: var(--light);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	grid-gap: 10px;
-	font-weight: 500;
-}
-#content main .box-info {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-	grid-gap: 24px;
-	margin-top: 36px;
-}
-#content main .box-info li {
-	padding: 24px;
-	background: var(--light);
-	border-radius: 20px;
-	display: flex;
-	align-items: center;
-	grid-gap: 24px;
-}
-#content main .box-info li .bx {
-	width: 80px;
-	height: 80px;
-	border-radius: 10px;
-	font-size: 36px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-#content main .box-info li:nth-child(1) .bx {
-	background: var(--light-blue);
-	color: var(--blue);
-}
-#content main .box-info li:nth-child(2) .bx {
-	background: var(--light-yellow);
-	color: var(--yellow);
-}
-#content main .box-info li:nth-child(3) .bx {
-	background: var(--light-orange);
-	color: var(--orange);
-}
-#content main .box-info li .text h3 {
-	font-size: 24px;
-	font-weight: 600;
-	color: var(--dark);
-}
-#content main .box-info li .text p {
-	color: var(--dark);	
-}
-#content main .table-data {
-	display: flex;
-	flex-wrap: wrap;
-	grid-gap: 24px;
-	margin-top: 24px;
-	width: 100%;
-	color: var(--dark);
-}
-#content main .table-data > div {
-	border-radius: 20px;
-	background: var(--light);
-	padding: 24px;
-	overflow-x: auto;
-}
-#content main .table-data .head {
-	display: flex;
-	align-items: center;
-	grid-gap: 16px;
-	margin-bottom: 24px;
+/* Variables */
+:root {
+    --primary: #4361ee;
+    --primary-light: #e6ebff;
+    --secondary: #6c757d;
+    --success: #28a745;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --dark: #343a40;
+    --light: #f8f9fa;
+    --sidebar-bg: #2c3e50;
+    --sidebar-text: #ecf0f1;
+    --border-color: #e0e0e0;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
 }
 
-#content main .table-data .head .bx {
-	cursor: pointer;
+/* MAIN CONTENT MODERNISÉ */
+.modern-main {
+    padding: 1.5rem;
+    background-color: #f5f7fa;
 }
 
-#content main .table-data .order {
-	flex-grow: 1;
-	flex-basis: 500px;
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
 }
 
-
-#content main .table-data .order table {
-	width: 100%;
-	border-collapse: collapse;
+.page-header .header-content h1 {
+    font-size: 1.75rem;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
 }
 
-#content main .table-data .order table th {
-	padding-bottom: 12px;
-	font-size: 13px;
-	text-align: left;
-	border-bottom: 1px solid var(--grey);
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
 }
 
-#content main .table-data .order table td {
-	padding: 16px 0;
+.breadcrumb a {
+    color: var(--secondary);
+    text-decoration: none;
 }
 
-#content main .table-data .order table tr td:first-child {
-	display: flex;
-	align-items: center;
-	grid-gap: 12px;
-	padding-left: 6px;
+.breadcrumb .active {
+    color: var(--primary);
+    font-weight: 500;
 }
 
-#content main .table-data .order table tbody tr:hover {
-	background: var(--grey);
-}
-.empty-message {
-	text-align: center;
-	margin-top: 20px;
-	font-size: 18px;
-	color: #666;
-  }
-/* Styles pour la pagination */
-.pagination {
-	display: flex;
-	justify-content: center;
-	margin-top: 20px;
-  }
-  .pagination button {
-	margin: 0 5px;
-	padding: 5px 10px;
-	border: 1px solid #ccc;
-	background-color: #fff;
-	cursor: pointer;
-	transition: background-color 0.3s ease;
-	width: 30px;
-	height: 30px;
-	border-radius: 50%;
-	object-fit: contain;
-  }
-  .pagination button:hover {
-	background-color: #f0f0f0;
-  }
-  .pagination button.active {
-	background-color: #007bff;
-	color: #fff;
-	border-color: #007bff;
-  }
-  /* Style pour le logo (image ronde) */
-.company-logo {
-	width: 50px;
-	height: 50px;
-	border-radius: 50%;
-	object-fit: contain;
-  }
-  /* Style pour la signature (image carrée) */
-  .company-signature {
-	width: 100px; /* Ajuste la taille selon tes besoins */
-	height: auto;
-	border-radius: 0; /* S'assure que l'image reste carrée */
-	object-fit: contain;
-  }
-#content main .table-data .order table tbody tr:hover {
-	background: var(--grey);
-}
-#content main .table-data .order table tr td .status {
-	font-size: 10px;
-	padding: 6px 16px;
-	color: var(--light);
-	border-radius: 20px;
-	font-weight: 700;
-}
-#content main .table-data .todo {
-	flex-grow: 1;
-	flex-basis: 300px;
-}
-#content main .table-data .todo .todo-list {
-	width: 100%;
-}
-#content main .table-data .todo .todo-list li {
-	width: 100%;
-	margin-bottom: 16px;
-	background: var(--grey);
-	border-radius: 10px;
-	padding: 14px 20px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-#content main .table-data .todo .todo-list li .bx {
-	cursor: pointer;
-}
-#content main .table-data .todo .todo-list li.completed {
-	border-left: 10px solid var(--blue);
-}
-#content main .table-data .todo .todo-list li.not-completed {
-	border-left: 10px solid var(--orange);
-}
-#content main .table-data .todo .todo-list li:last-child {
-	margin-bottom: 0;
-}
-/* MAIN */
-/* CONTENT */
-#content main .menu, #content nav .menu {
-
-    display: none;
-      list-style-type: none;
-      padding-left: 20px;
-      margin-top: 5px;
-      position: absolute;
-      background-color: #f9f9f9;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      width: 200px;
- }
- #content main .menu a , #content nav .menu a {
+.add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--primary);
     color: white;
+    padding: 0.75rem 1.25rem;
+    border-radius: 6px;
     text-decoration: none;
-    display: block;
-    padding: 8px 16px;
-}
-#content main .menu a:hover , #content nav .menu a:hover {
-    background-color: #444;
-}      
-#content main .menu-link , #content nav .menu-link {
-    margin: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    text-decoration: none;
-    color: #007bff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: var(--transition);
 }
 
-#content main .menu-link:hover, #content nav .menu-link:hover {
-    text-decoration: underline;
+.add-btn:hover {
+    background-color: #3a56d4;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
 }
-/* Media Query for Smaller Screens */
+
+/* CARD STYLES */
+.data-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.card-info {
+    font-size: 0.875rem;
+    color: var(--secondary);
+}
+
+/* TABLE STYLES */
+.table-container {
+    padding: 0 1.5rem;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: var(--light);
+}
+
+th {
+    padding: 1rem;
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--dark);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.875rem;
+}
+
+/* CELL STYLES */
+.logo-cell {
+    width: 60px;
+}
+
+.company-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-light);
+    overflow: hidden;
+}
+
+.company-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.logo-placeholder {
+    font-weight: bold;
+    color: var(--primary);
+    font-size: 1.25rem;
+}
+
+.company-name {
+    min-width: 180px;
+}
+
+.company-name strong {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.company-name span {
+    font-size: 0.8125rem;
+    color: var(--secondary);
+}
+
+.company-contact div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.company-contact i {
+    color: var(--secondary);
+    font-size: 0.9rem;
+}
+
+.tax-id {
+    font-family: monospace;
+    color: var(--dark);
+}
+
+.signature-cell {
+    width: 120px;
+}
+
+.signature-preview {
+    width: 100px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--light);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.signature-preview img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.signature-preview span {
+    font-size: 0.75rem;
+    color: var(--secondary);
+}
+
+.actions-cell {
+    width: 100px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.action-btn i {
+    font-size: 1.1rem;
+}
+
+.action-btn.edit {
+    background-color: var(--primary-light);
+    color: var(--primary);
+}
+
+.action-btn.edit:hover {
+    background-color: #d0d9ff;
+}
+
+.action-btn.delete {
+    background-color: #fde8e8;
+    color: var(--danger);
+}
+
+.action-btn.delete:hover {
+    background-color: #fad2d2;
+}
+
+/* EMPTY STATE */
+.empty-state {
+    padding: 3rem;
+    text-align: center;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: var(--secondary);
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: var(--secondary);
+    margin-bottom: 1.5rem;
+}
+
+/* PAGINATION */
+.card-footer {
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.page-btn, .page-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: white;
+    color: var(--dark);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.page-btn {
+    background-color: var(--light);
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-number:hover {
+    background-color: var(--light);
+}
+
+.page-number.active {
+    background-color: var(--primary);
+    color: white;
+}
+
 @media screen and (max-width: 768px) {
     /* Reduce width of notification and profile menu */
+	    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .company-contact div {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+    }
     #content nav .notification-menu,
     #content nav .profile-menu {
         width: 180px;

@@ -6,7 +6,6 @@ import { CompanyService } from '../../services/company.service';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
-
 @Component({
   selector: 'app-compagnies',
   standalone: true,
@@ -106,6 +105,22 @@ export class CompagniesComponent implements AfterViewInit,OnInit {
   getPages(): number[] {
     const totalPages = Math.ceil(this.totalItems / this.itemsPerPage); // Calculer le nombre total de pages
     return Array.from({ length: totalPages }, (_, i) => i + 1); // Générer un tableau [1, 2, 3, ...]
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadCompanies();
+    }
+  }
+
+
+    nextPage(): void {
+    const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+    if (this.currentPage < totalPages) {
+      this.currentPage++;
+      this.loadCompanies();
+    }
   }
 
 
