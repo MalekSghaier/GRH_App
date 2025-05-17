@@ -1,51 +1,130 @@
-<div class="form-wrapper">
-    <div class="form-container">
-      <form (ngSubmit)="onSubmit()" class="job-offer-form">
-        <h2 class="form-title">Nouvelle Offre d'Emploi</h2>
-        
-        <mat-form-field appearance="outline">
-          <mat-label>Titre du poste</mat-label>
-          <input matInput [(ngModel)]="jobOffer.title" name="title" required>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline">
-          <mat-label>Description du poste</mat-label>
-          <textarea matInput [(ngModel)]="jobOffer.description" name="description" rows="3" required></textarea>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline">
-          <mat-label>Société</mat-label>
-          <input matInput  [(ngModel)]="jobOffer.company"  name="company"  required readonly>       
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline">
-          <mat-label>Lieu de travail</mat-label>
-          <input matInput [(ngModel)]="jobOffer.location" name="location" required>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline">
-          <mat-label>Expérience requise (années)</mat-label>
-          <input matInput type="number" [(ngModel)]="jobOffer.experienceRequired" name="experienceRequired" required min="0">
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline">
-          <mat-label>Niveau d'étude</mat-label>
-          <mat-select [(ngModel)]="jobOffer.educationLevel" name="educationLevel" required>
-            <mat-option *ngFor="let level of educationLevels" [value]="level">
-              {{ level }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline">
-          <mat-label>Exigences de l'emploi</mat-label>
-          <textarea matInput [(ngModel)]="jobOffer.jobRequirements" name="jobRequirements" rows="3" required></textarea>
-        </mat-form-field>
-  
-        <div class="button-group">
-          <button class="btn-primary" type="submit">Enregistrer</button>
+<div class="job-offer-container">
+  <div class="form-card">
+    <div class="form-header">
+      <h1>
+        <i class='bx bx-briefcase-alt'></i> Nouvelle Offre d'Emploi
+      </h1>
+      <p>Remplissez les détails du poste à pourvoir</p>
 
+      <div class="scroll-indicator">
+        <i class='bx bx-chevrons-down'></i>
+        <span>Faites défiler pour voir tous les champs</span>
+      </div>
+    </div>
+
+    <div class="form-content">
+      <form (ngSubmit)="onSubmit()" class="job-form">
+        <!-- Section Principale -->
+        <div class="form-section">
+          <div class="form-grid">
+            <!-- Titre du poste -->
+            <div class="form-group">
+              <label for="title">
+                <i class='bx bx-rename'></i> Titre du poste *
+              </label>
+              <input type="text" id="title" 
+                     [(ngModel)]="jobOffer.title" 
+                     name="title" 
+                     required
+                     placeholder="Ex: Développeur Full Stack">
+            </div>
+
+            <!-- Société -->
+            <div class="form-group">
+              <label for="company">
+                <i class='bx bx-building'></i> Société *
+              </label>
+              <input type="text" id="company" 
+                     [(ngModel)]="jobOffer.company" 
+                     name="company" 
+                     required 
+                     readonly
+                     placeholder="Nom de l'entreprise">
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label for="description">
+              <i class='bx bx-detail'></i> Description du poste *
+            </label>
+            <textarea id="description" 
+                      [(ngModel)]="jobOffer.description" 
+                      name="description" 
+                      required
+                      rows="4"
+                      placeholder="Décrivez les principales missions..."></textarea>
+          </div>
+        </div>
+
+        <!-- Section Détails -->
+        <div class="form-section">
+          <h3><i class='bx bx-info-circle'></i> Détails du poste</h3>
+          
+          <div class="form-grid">
+            <!-- Lieu -->
+            <div class="form-group">
+              <label for="location">
+                <i class='bx bx-map'></i> Lieu de travail *
+              </label>
+              <input type="text" id="location" 
+                     [(ngModel)]="jobOffer.location" 
+                     name="location" 
+                     required
+                     placeholder="Ex: Paris, Télétravail">
+            </div>
+
+            <!-- Expérience -->
+            <div class="form-group">
+              <label for="experience">
+                <i class='bx bx-time'></i> Expérience requise (années) *
+              </label>
+              <input type="number" id="experience" 
+                     [(ngModel)]="jobOffer.experienceRequired" 
+                     name="experienceRequired" 
+                     required 
+                     min="0"
+                     placeholder="0">
+            </div>
+
+            <!-- Niveau d'étude -->
+            <div class="form-group">
+              <label for="education">
+                <i class='bx bx-graduation'></i> Niveau d'étude *
+              </label>
+              <select id="education" 
+                      [(ngModel)]="jobOffer.educationLevel" 
+                      name="educationLevel" 
+                      required>
+                <option value="" disabled selected>Sélectionnez un niveau</option>
+                <option *ngFor="let level of educationLevels" [value]="level">
+                  {{ level }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Exigences -->
+          <div class="form-group">
+            <label for="requirements">
+              <i class='bx bx-task'></i> Exigences du poste *
+            </label>
+            <textarea id="requirements" 
+                      [(ngModel)]="jobOffer.jobRequirements" 
+                      name="jobRequirements" 
+                      required
+                      rows="4"
+                      placeholder="Listez les compétences et qualifications requises..."></textarea>
+          </div>
         </div>
       </form>
     </div>
+
+    <!-- Actions - Maintenant fixé en bas -->
+    <div class="form-actions">
+      <button type="submit" class="submit-btn" (click)="onSubmit()">
+        <i class='bx bx-save'></i> Publier l'offre
+      </button>
+    </div>
   </div>
+</div>

@@ -9,6 +9,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { JobOffersService } from '../../services/job-offers.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ToastrService } from 'ngx-toastr';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 
 
 @Component({
@@ -21,6 +23,7 @@ import { ToastrService } from 'ngx-toastr';
     MatFormFieldModule,
     MatButtonModule,
     MatSelectModule,
+    MatCheckboxModule
   ],
   templateUrl: './job-offer-form.component.html',
   styleUrls: ['./job-offer-form.component.css']
@@ -96,4 +99,5 @@ export class JobOfferFormComponent implements OnInit {
   onCancel(): void {
     this.dialogRef.close();
   }
+
 }
