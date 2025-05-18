@@ -13,6 +13,8 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import moment from 'moment';
 import { UserService } from '../../services/user.service';
+import { MatIconModule } from '@angular/material/icon';
+
 
 
 // Définir le format de date personnalisé
@@ -37,7 +39,8 @@ export const MY_DATE_FORMATS = {
     MatInputModule,
     MatFormFieldModule,
     MatDatepickerModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './conges-request-form.component.html',
   styleUrl: './conges-request-form.component.css',

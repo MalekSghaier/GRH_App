@@ -1,15 +1,103 @@
 /* conge-form.component.css */
+.dialog-title {
+  color: #1a84ef;
+  text-align: center;
+  font-weight: 500;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
 .conge-form {
-    display: flex;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px 0;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-field {
+  width: 100%;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+  background-color: rgba(63, 81, 181, 0.05);
+  border-radius: 4px;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex:hover {
+  background-color: rgba(63, 81, 181, 0.1);
+}
+
+.solde-container {
+  margin-top: 16px;
+}
+
+.solde-card {
+  background: #f5f7ff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.solde-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.solde-icon {
+  color: #1a84ef;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.solde-value {
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.solde-warning {
+  color: #f44336;
+}
+
+.solde-warning .solde-icon {
+  color: #f44336;
+}
+
+.dialog-actions {
+  padding: 16px 0;
+  border-top: 1px solid #e0e0e0;
+  margin-top: 16px;
+}
+
+.cancel-btn {
+  color: #1a84ef;
+  border-color: #1a84ef;
+}
+
+.submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Animation pour les champs */
+.mat-form-field {
+  transition: all 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .form-row {
     flex-direction: column;
     gap: 16px;
-    padding: 16px 0;
   }
-  
-  .full-width {
-    width: 100%;
-  }
-  
-  .mat-dialog-actions {
-    padding: 16px 0 0 0;
-  }
+}
