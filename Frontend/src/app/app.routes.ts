@@ -36,6 +36,7 @@ import { ProfilEmployComponent } from './components/profil-employ/profil-employ.
 import { PointageEmployComponent } from './components/pointage-employ/pointage-employ.component';
 import { PresenceComponent } from './components/presence/presence.component';
 import { PresenceEmployComponent } from './components/presence-employ/presence-employ.component';
+import { EditProfilEmployComponent } from './components/edit-profil-employ/edit-profil-employ.component';
 
 export const routes: Routes = [
 
@@ -89,6 +90,10 @@ export const routes: Routes = [
     { 
         path: 'edit-profile', 
         component: EditProfileComponent 
+    },
+    { 
+        path: 'edit-profile-employ', 
+        component: EditProfilEmployComponent
     },
     { 
         path: 'change-password', 
@@ -196,6 +201,7 @@ export const routes: Routes = [
         path: 'presence-employ', 
         component: PresenceEmployComponent
     },
+    
 
 
 

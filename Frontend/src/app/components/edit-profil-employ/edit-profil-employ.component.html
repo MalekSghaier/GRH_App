@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Boxicons -->
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
+
+	<!-- My CSS -->
+
+	<title>AdminHub</title>
+</head>
+<body>
+	<!-- SIDEBAR -->
+  <app-shared-sidebar></app-shared-sidebar>
+
+	<!-- SIDEBAR -->
+
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+    <app-shared-navbar></app-shared-navbar>
+
+<!-- NAVBAR -->
+		<!-- MAIN -->
+<!-- MAIN -->
+<main>
+  <div class="head-title">
+    <div class="left">
+      <h1><i class='bx bx-cog'></i> Paramètres du Profil</h1>
+      <ul class="breadcrumb">
+        <li>
+          <a routerLink="/superadmin-dashboard">Tableau de bord</a>
+        </li>
+        <li><i class='bx bx-chevron-right'></i></li>
+        <li>
+          <a class="active" routerLink="/profil">Paramètres</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="table-data">
+    <div class="profile-card">
+      <div class="card-header">
+        <h2><i class='bx bx-user-pin'></i> Modifier les données personnelles</h2>
+      </div>
+      
+      <div class="card-body">
+        <!-- Message de succès -->
+        <div *ngIf="successMessage" class="alert success">
+          <i class='bx bx-check-circle'></i> {{ successMessage }}
+        </div>
+
+        <form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label>
+              <i class='bx bx-user'></i> Nom complet
+            </label>
+            <input type="text" formControlName="name" placeholder="Entrez votre nom">
+            <div *ngIf="editProfileForm.get('name')?.invalid && editProfileForm.get('name')?.touched" class="error">
+              <i class='bx bx-error-circle'></i> Le nom est requis
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <i class='bx bx-envelope'></i> Adresse email
+            </label>
+            <input type="email" formControlName="email" placeholder="Entrez votre email">
+            <div *ngIf="editProfileForm.get('email')?.invalid && editProfileForm.get('email')?.touched" class="error">
+              <i class='bx bx-error-circle'></i> Veuillez entrer un email valide
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-save" [disabled]="editProfileForm.invalid">
+              <i class='bx bx-save'></i> Enregistrer les modifications
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+<!-- MAIN -->
+		<!-- MAIN -->
+	</section>
+	<!-- CONTENT -->
+	
+<script src="script.js"></script>
+</body>
+</html>
+
