@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { DocumentRequestsService } from '../../services/document-requests.service';
+import { MatIconModule } from '@angular/material/icon';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -20,7 +21,8 @@ import { ToastrService } from 'ngx-toastr';
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './document-request-form.component.html',
   styleUrls: ['./document-request-form.component.css']

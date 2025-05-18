@@ -1,15 +1,124 @@
-/* document-request-form.component.css */
+/* Style général du dialogue */
+.dialog-title {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  color: #1a84ef;
+  padding: 16px 24px;
+  margin: 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.dialog-content {
+  padding: 20px 24px;
+}
+
+/* Formulaire */
 .request-form {
-    display: flex;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.double-fields {
+  display: flex;
+  gap: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.half-width {
+  width: calc(50% - 10px);
+}
+
+/* Champs de formulaire */
+.mat-form-field {
+  font-size: 14px;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+  background-color: rgba(63, 81, 181, 0.04);
+  border-radius: 8px;
+  padding: 0.75em 0.75em 0 0.75em;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-underline::before {
+  background-color: #1a84ef;
+}
+
+.mat-input-element {
+  caret-color: #1a84ef;
+}
+
+.mat-select-arrow {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+/* Icônes */
+.mat-icon {
+  color: #1a84ef;
+}
+
+/* Actions */
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+  margin-top: 8px;
+}
+
+.submit-button {
+  background-color: #1a84ef;
+  color: white;
+  border-radius: 20px;
+  padding: 0 20px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.submit-button:hover {
+  background-color: #1a84ef;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.submit-button:disabled {
+  background-color: #b0bec5;
+}
+
+button[mat-stroked-button] {
+  border-radius: 20px;
+  padding: 0 16px;
+}
+
+/* Animation */
+.mat-form-field-appearance-fill.mat-focused .mat-form-field-flex {
+  background-color: rgba(63, 81, 181, 0.08);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .form-row, .double-fields {
     flex-direction: column;
-    gap: 10px;
-    padding: 10px 0;
+    gap: 15px;
   }
   
-  .full-width {
+  .half-width {
     width: 100%;
   }
   
-  .mat-dialog-actions {
-    padding: 10px 0 0 0;
+  .dialog-actions {
+    flex-direction: column-reverse;
+    gap: 10px;
   }
+  
+  button {
+    width: 100%;
+  }
+}

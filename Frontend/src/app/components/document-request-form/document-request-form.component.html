@@ -1,49 +1,64 @@
-<!-- document-request-form.component.html -->
-<h2 mat-dialog-title>Nouvelle demande de document</h2>
-<mat-dialog-content>
+<h2 mat-dialog-title class="dialog-title">Nouvelle demande de document</h2>
+<mat-dialog-content class="dialog-content">
   <form [formGroup]="requestForm" class="request-form">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Nom complet</mat-label>
-      <input matInput formControlName="fullName" required>
-    </mat-form-field>
+    <div class="form-row">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Nom complet</mat-label>
+        <input matInput formControlName="fullName" required>
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Poste occupé</mat-label>
-      <input matInput formControlName="jobPosition" required>
-    </mat-form-field>
+    <div class="form-row">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Poste occupé</mat-label>
+        <input matInput formControlName="jobPosition" required>
+        <mat-icon matSuffix>work</mat-icon>
+      </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Type de contrat</mat-label>
-      <mat-select formControlName="contractType" required>
-        <mat-option *ngFor="let type of contractTypes" [value]="type">
-          {{type}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="form-row double-fields">
+      <mat-form-field appearance="fill" class="half-width">
+        <mat-label>Type de contrat</mat-label>
+        <mat-select formControlName="contractType" required>
+          <mat-option *ngFor="let type of contractTypes" [value]="type">
+            {{type}}
+          </mat-option>
+        </mat-select>
+        <mat-icon matSuffix>assignment</mat-icon>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Email professionnel</mat-label>
-      <input matInput formControlName="professionalEmail" type="email" required>
-      <mat-error *ngIf="requestForm.get('professionalEmail')?.hasError('email')">
-        Email invalide
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="fill" class="half-width">
+        <mat-label>Type de document</mat-label>
+        <mat-select formControlName="documentType" required>
+          <mat-option *ngFor="let type of documentTypes" [value]="type">
+            {{type}}
+          </mat-option>
+        </mat-select>
+        <mat-icon matSuffix>description</mat-icon>
+      </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Type de document</mat-label>
-      <mat-select formControlName="documentType" required>
-        <mat-option *ngFor="let type of documentTypes" [value]="type">
-          {{type}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="form-row">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Email professionnel</mat-label>
+        <input matInput formControlName="professionalEmail" type="email" required>
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error *ngIf="requestForm.get('professionalEmail')?.hasError('email')">
+          Veuillez entrer un email valide
+        </mat-error>
+      </mat-form-field>
+    </div>
   </form>
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()">Annuler</button>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-stroked-button color="warn" (click)="onCancel()">
+    <mat-icon>close</mat-icon> Annuler
+  </button>
   <button mat-raised-button color="primary" 
           (click)="onSubmit()" 
-          [disabled]="!requestForm.valid">
-    Envoyer
+          [disabled]="!requestForm.valid"
+          class="submit-button">
+    <mat-icon>send</mat-icon> Envoyer la demande
   </button>
 </mat-dialog-actions>
