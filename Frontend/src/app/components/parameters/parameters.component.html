@@ -26,55 +26,77 @@
             </li>
           </ul>
         </div>
-
-
       </div>
 
-      <div class="table-data">
-        <div class="order">
-            <div class="container">
-                <div *ngIf="company">
-                    <h2>Profil de {{ company.name }}</h2>
-                    <div class="input-box">
-                        <label>Nom:</label>
-                        <div class="input-container">
-                            <p>{{ company.name }}</p>
-                        </div>
-                    </div>
-                    <div class="input-box">
-                        <label>Adresse:</label>
-                        <div class="input-container">
-                            <p>{{ company.address }}</p>
-                        </div>
-                    </div>
-                    <div class="input-box">
-                        <label>Téléphone:</label>
-                        <div class="input-container">
-                            <p>{{ company.phone }}</p>
-                        </div>
-                    </div>
-                    <div class="input-box">
-                        <label>Matricule Fiscale:</label>
-                        <div class="input-container">
-                            <p>{{ company.taxId }}</p>
-                        </div>
-                    </div>
-                    <div class="input-box">
-                        <label>Email :</label>
-                        <div class="input-container">
-                            <p>{{ company.email }}</p>
-                        </div>
-                    </div>
-                    <div class="register">
-                        <p><a href="edit-company-profile">Modifier données personnelles</a></p>
-                    </div>
-                    <div class="register">
-                        <p><a href="change-password-profile">Modifier mot de passe</a></p>
-                    </div>
-                </div>
+      <div class="profile-container">
+        <div *ngIf="company" class="profile-card">
+          <div class="profile-header">
+            <h2><i class='bx bx-buildings'></i> Profil de {{ company.name }}</h2>
+            <p>Informations de la compagnie et paramètres</p>
+          </div>
+          
+          <div class="profile-details">
+            <div class="detail-item">
+              <div class="detail-label">
+                <i class='bx bx-building'></i>
+                <span>Nom:</span>
+              </div>
+              <div class="detail-value">
+                <p>{{ company.name }}</p>
+              </div>
             </div>
+            
+            <div class="detail-item">
+              <div class="detail-label">
+                <i class='bx bx-map'></i>
+                <span>Adresse:</span>
+              </div>
+              <div class="detail-value">
+                <p>{{ company.address }}</p>
+              </div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-label">
+                <i class='bx bx-phone'></i>
+                <span>Téléphone:</span>
+              </div>
+              <div class="detail-value">
+                <p>{{ company.phone }}</p>
+              </div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-label">
+                <i class='bx bx-id-card'></i>
+                <span>Matricule Fiscale:</span>
+              </div>
+              <div class="detail-value">
+                <p>{{ company.taxId }}</p>
+              </div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-label">
+                <i class='bx bx-envelope'></i>
+                <span>Email:</span>
+              </div>
+              <div class="detail-value">
+                <p>{{ company.email }}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="profile-actions">
+            <a href="edit-company-profile" class="btn-action primary">
+              <i class='bx bx-edit'></i> Modifier données personnelles
+            </a>
+            <a href="change-password-profile" class="btn-action secondary">
+              <i class='bx bx-lock-alt'></i> Modifier mot de passe
+            </a>
+          </div>
         </div>
-    </div>
+      </div>
     </main>
     <!-- MAIN -->
   </section>
