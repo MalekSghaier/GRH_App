@@ -1,226 +1,414 @@
+/* Styles généraux */
 .tab-content {
-    padding: 20px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.tab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.results-count {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Style des cartes */
+.card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.request-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #eaeaea;
+  position: relative;
+}
+
+.request-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.request-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 12px 0 0 12px;
+}
+
+.request-card.approved::before {
+  background-color: #28a745;
+}
+
+.request-card.rejected::before {
+  background-color: #dc3545;
+}
+
+.request-card.in-progress::before {
+  background-color: #ffc107;
+}
+
+.request-card.pending::before {
+  background-color: #fd7e14;
+}
+
+/* En-tête des cartes */
+.request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.request-info h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+  font-weight: 600;
+}
+
+.request-info p {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.request-status {
+  margin-left: 10px;
+}
+
+/* Détails des cartes */
+.request-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.detail-item i {
+  color: #666;
+  font-size: 16px;
+}
+
+/* Statut */
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-badge.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.in-progress {
+  background: #fff8e1;
+  color: #ff8f00;
+}
+
+.status-badge.approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.rejected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Actions */
+.request-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-success, .btn-danger {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-success {
+  background: #e6f7ee;
+  color: #28a745;
+}
+
+.btn-danger {
+  background: #fdecea;
+  color: #dc3545;
+}
+
+.btn-success:hover {
+  background: #d4edda;
+}
+
+.btn-danger:hover {
+  background: #f8d7da;
+}
+
+/* Documents */
+.document-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #1a84ef;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #f5f8ff;
+  transition: all 0.2s;
+}
+
+.document-link:hover {
+  background: #e0e7ff;
+  text-decoration: none;
+}
+
+.document-link i {
+  font-size: 16px;
+}
+
+/* Filtres */
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.status-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #f0f0f0;
+  border: none;
+  color: #555;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  background: #e0e0e0;
+}
+
+.filter-btn.active {
+  background: #1a84ef;
+  color: white;
+}
+
+/* Notification d'onglet */
+.tab-notification {
+  background: #e74a3b;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+/* État vide */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  background: #f9fafb;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.empty-state i {
+  font-size: 60px;
+  color: #d1d5db;
+  margin-bottom: 20px;
+}
+
+.empty-state h3 {
+  font-size: 18px;
+  color: #374151;
+  margin-bottom: 10px;
+}
+
+.empty-state p {
+  color: #6b7280;
+  margin-bottom: 20px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* Barre de recherche */
+.form-input {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 400px;
+}
+
+.form-input input {
+  flex-grow: 1;
+  padding: 0 16px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-input button {
+  width: 40px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a84ef;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.form-input button i {
+  font-size: 18px;
+}
+/* Bouton de suppression circulaire */
+.btn-delete-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  background: #f8d7da;
+  color: #dc3545;
+  margin-left: auto; /* Pousse le bouton à droite */
+}
+
+.btn-delete-circle:hover {
+  background: #f5c6cb;
+  color: #721c24;
+  transform: scale(1.1);
+}
+
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-right: 10px; /* Espace entre les boutons et le bouton de suppression */
+}
+
+/* Bouton principal */
+.btn-primary {
+  background: #1a84ef;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background: #3a56b0;
+  transform: translateY(-2px);
+}
+
+.btn-primary i {
+  font-size: 18px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card-list {
+    grid-template-columns: 1fr;
   }
   
-  h2 {
-    color: #333;
+  .tab-header {
+    flex-direction: column;
+    align-items: stretch;
   }
   
-  .btn-primary {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  
-  .btn-primary:hover {
-    background-color: #0056b3;
-  }
-  .table-container {
-    width: 100%;
-    overflow-x: auto; /* Permet d'éviter les débordements */
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  th, td {
-    text-align: left;
-    padding: 12px;
-  }
-  
-  th {
-    background-color: #f4f4f4; /* Met un fond pour différencier les colonnes */
-  }
-  
-  .mat-elevation-z8 {
-    box-shadow: none; /* Supprime l'ombre excessive */
-  }
-  
-  .table-container {
-    width: 100%;
-    overflow-x: auto;
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  td, th {
-    vertical-align: middle !important;
-    padding: 12px;
-  }
-  .error-message {
-      font-size: 12px; 
-      color: rgb(247, 95, 95);
-      margin-top: 1px; 
-  }
-  .success-message {
-      font-size: 12px;
-      color: green;
-      margin-top: 5px; 
-  }
-  
-  td.mat-column-title{
-    width: 185px;
-  
-  }
-  
-  .tab-notification {
-    background: var(--red);
-    color: var(--light);
-    border-radius: 50%;
-    right: 20px;
-    width: 20px;
-    height: 20px;
-    padding: 2px 6px;
-    font-size: 12px;
-    font-weight: 700;
-    margin-left: 5px;
-    vertical-align: top;
-    border: 2px solid var(--light);
-    font-weight: 700;
-    font-size: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  
-  /* Style pour la barre de recherche */
   .form-input {
-      display: flex;
-      align-items: center;
-      height: 36px;
-      background: var(--light) ;
-      border-radius: 36px;
-      overflow: hidden;
-    }
-    
-    .form-input input {
-      flex-grow: 1;
-    text-align: right;
-  
-      padding: 0 16px;
-      height: 100%;
-      border: none;
-      background: var(--light);
-      outline: none;
-      color: var(--dark);
-    }
-    
-    .form-input button {
-      background-color: #007bff;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-  
-  .mat-cell {
-    padding: 8px 16px;
+    max-width: 100%;
   }
   
-  .mat-header-cell {
-    font-weight: bold;
-    background-color: #f5f5f5;
+  .results-count {
+    align-self: flex-start;
   }
   
-  td.mat-column-title,
-  td.mat-column-experienceRequired,
-  td.mat-column-educationLevel,
-  td.mat-column-jobRequirements,
-  td.mat-column-actions {
-    display: table-cell !important;
+  .status-filters {
+    gap: 8px;
+    flex-direction: column;
   }
   
-  td.mat-column-position,
-  td.mat-column-fullName,
-  td.mat-column-email,
-  td.mat-column-phone,
-  td.mat-column-cv,
-  td.mat-column-coverLetter,
-  td.mat-column-actions {
-    display: table-cell !important;
+  .filter-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    width: 100%;
   }
-  tr.mat-row,
-  tr.mat-header-row {
-    border-bottom: 1px solid #ddd !important;
-  }
-  
-  /* Empêche le désalignement des icônes */
-  td.mat-column-actions {
-    text-align: center;
-    width: 120px;
-  }
-  
-  
-  
-  th {
-    background-color: #f4f4f4;
-    font-weight: bold;
-  }
-  
-  .mat-elevation-z8 {
-    box-shadow: none; /* Enlève l'effet d'ombre excessif */
-  }
-  
-  .mat-header-row {
-    background: #f9fafb !important;
-  }
-  
-  .mat-row:hover {
-    background: #f1f1f1 !important; /* Ajoute un effet au survol */
-  }
-  
-  
-  
-  
-  
-  /* Style pour les liens PDF */
-  .document-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .document-link:hover {
-    text-decoration: underline;
-  }
-  
-  .document-link mat-icon {
-    font-size: 18px;
-    height: 18px;
-    width: 18px;
-  }
-  
-  td.mat-column-documentType,
-  td.mat-column-createdAt,
-  td.mat-column-status,
-  td.mat-column-actions {
-    display: table-cell !important;
-  } 
-   .no-data-row {
-    padding: 20px;
-    text-align: center;
-    color: #666;
-    font-style: italic;
-  }
-  
+}

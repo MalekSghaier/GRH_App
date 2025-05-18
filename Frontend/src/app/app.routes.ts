@@ -35,6 +35,7 @@ import { WorkDetailsComponent } from './components/work-details/work-details.com
 import { ProfilEmployComponent } from './components/profil-employ/profil-employ.component';
 import { PointageEmployComponent } from './components/pointage-employ/pointage-employ.component';
 import { PresenceComponent } from './components/presence/presence.component';
+import { PresenceEmployComponent } from './components/presence-employ/presence-employ.component';
 
 export const routes: Routes = [
 
@@ -190,6 +191,12 @@ export const routes: Routes = [
         path: 'presence', 
         component: PresenceComponent
     },
+
+    { 
+        path: 'presence-employ', 
+        component: PresenceEmployComponent
+    },
+
 
 
 
