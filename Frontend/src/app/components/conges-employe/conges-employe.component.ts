@@ -59,6 +59,12 @@ export class CongesEmployeComponent implements  AfterViewInit ,OnInit{
   dataSource = new MatTableDataSource<any>();
   noDataMessage = "Aucune demande de congé trouvée";
   soldeConges: number = 0;
+  filteredConges: any[] = [];
+  statusFilter: string = 'all';
+  totalCount: number = 0;
+  pendingCount: number = 0;
+  approvedCount: number = 0;
+  rejectedCount: number = 0;
 
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -113,12 +119,76 @@ export class CongesEmployeComponent implements  AfterViewInit ,OnInit{
     this.congesService.findRequestsByUser().subscribe({
       next: (conges) => {
         this.dataSource.data = conges;
+        this.filteredConges = [...conges];
+        this.updateCounts();
       },
       error: (err) => {
         console.error('Erreur lors du chargement des congés', err);
       }
     });
   }
+
+filterByStatus(status: string): void {
+  this.statusFilter = status;
+  this.filterConges();
+}
+
+filterConges(): void {
+  if (this.statusFilter === 'all') {
+    this.filteredConges = [...this.dataSource.data];
+  } else {
+    this.filteredConges = this.dataSource.data.filter(conge => conge.status === this.statusFilter);
+  }
+}
+
+updateCounts(): void {
+  this.totalCount = this.dataSource.data.length;
+  this.pendingCount = this.dataSource.data.filter(c => c.status === 'pending').length;
+  this.approvedCount = this.dataSource.data.filter(c => c.status === 'approved').length;
+  this.rejectedCount = this.dataSource.data.filter(c => c.status === 'rejected').length;
+}
+
+getStatusLabel(status: string): string {
+  switch(status) {
+    case 'pending': return 'En attente';
+    case 'approved': return 'Approuvé';
+    case 'rejected': return 'Rejeté';
+    default: return status;
+  }
+}
+
+calculateDuration(startDate: string, endDate: string): number {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const diffTime = Math.abs(end.getTime() - start.getTime());
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+}
+
+search(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  const filterValue = input.value.toLowerCase();
+  
+  if (!filterValue) {
+    this.filterConges();
+    return;
+  }
+
+  this.filteredConges = this.dataSource.data.filter(conge => 
+    (conge.reason?.toLowerCase().includes(filterValue) ||
+     conge.startDate?.toLowerCase().includes(filterValue) ||
+     conge.endDate?.toLowerCase().includes(filterValue)) &&
+    (this.statusFilter === 'all' || conge.status === this.statusFilter)
+  );
+}
+
+getStatusIcon(status: string): string {
+  switch(status) {
+    case 'pending': return 'bx bx-time';
+    case 'approved': return 'bx bx-check-circle';
+    case 'rejected': return 'bx bx-x-circle';
+    default: return '';
+  }
+}
 
   deleteConge(id: string): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette demande de congé ?')) {

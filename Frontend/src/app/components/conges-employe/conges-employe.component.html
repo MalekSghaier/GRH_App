@@ -27,102 +27,141 @@
       <div class="table-data">
         <div class="order">
           <div class="container">
-
-            <div class="head-title">
-              <div class="left">
-                <div class="solde-display">
-                  <span>Solde disponible: <strong>{{ soldeConges }} jours</strong></span>
-                </div>
-                <!-- ... reste du code -->
+            <div class="solde-info">
+              <div class="solde-display">
+                <i class='bx bx-calendar'></i>
+                <span>Solde disponible: <strong>{{ soldeConges }} jours</strong></span>
+                <span class="solde-remaining" *ngIf="soldeConges < 5">
+                  (Solde faible)
+                </span>
               </div>
             </div>
 
-            <mat-tab-group>
-                <!-- Onglet 1 : Ajouter un congé -->
-                <mat-tab label="📌 Demander un congé">
-                  <div class="tab-content">
-                    <h2>Nouvelle demande de congé</h2>
-                    <button class="btn-primary" (click)="openAddCongesDialog()">+ Demander</button>
-                  </div>
-                </mat-tab>
-              
-                <!-- Onglet 2 : Mes congés -->
-                <mat-tab label="📂 Mes demandes de congé">
-                  <form action="#">
-                    <div class="form-input">
-                      <input type="search" placeholder="Rechercher par période ou statut...">
-                      <button type="button" class="search-btn"><i class='bx bx-search'></i></button>
+            <mat-tab-group animationDuration="200ms">
+              <!-- Onglet 1 : Demander un congé -->
+              <mat-tab label="📌 Demander un congé">
+                <div class="tab-content">
+                  <div class="empty-state">
+                    <div class="empty-icon">
+                      <i class='bx bx-calendar-plus'></i>
                     </div>
-                  </form>
-                  
-                  <div class="table-container">
-                    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-                      <!-- Colonne Date de début -->
-                      <ng-container matColumnDef="startDate">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de début</th>
-                        <td mat-cell *matCellDef="let conge">{{ conge.startDate | date:'dd/MM/yyyy' }}</td>
-                      </ng-container>
+                    <h3>Nouvelle demande de congé</h3>
+                    <p>Créez une nouvelle demande pour vos congés</p>
+                    <button class="btn-primary pulse" (click)="openAddCongesDialog()">
+                      <i class='bx bx-plus'></i> Demander un congé
+                    </button>
+                  </div>
+                </div>
+              </mat-tab>
               
-                      <!-- Colonne Date de fin -->
-                      <ng-container matColumnDef="endDate">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de fin</th>
-                        <td mat-cell *matCellDef="let conge">{{ conge.endDate | date:'dd/MM/yyyy' }}</td>
-                      </ng-container>
-              
-                      <!-- Colonne Motif -->
-                      <ng-container matColumnDef="reason">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Motif</th>
-                        <td mat-cell *matCellDef="let conge">{{ conge.reason }}</td>
-                      </ng-container>
-              
-                      <!-- Colonne Statut -->
-                      <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
-                        <td mat-cell *matCellDef="let conge">
-                          <span [class]="getStatusClass(conge.status)">
+              <!-- Onglet 2 : Mes congés -->
+              <mat-tab label="📂 Mes demandes">
+                <ng-template mat-tab-label>
+                  <span class="tab-label-content">
+                    <i class='bx bx-folder'></i> Mes demandes
+                    <span *ngIf="pendingCount > 0" class="tab-notification">
+                      {{ pendingCount }}
+                    </span>
+                  </span>
+                </ng-template>
+
+                <div class="tab-header">
+                  <div class="filters-container">
+                    <form action="#">
+                      <div class="form-input">
+                        <input type="search" placeholder="Rechercher par période, motif..." 
+                              (input)="search($event)">
+                        <button type="button" class="search-btn">
+                          <i class='bx bx-search'></i>
+                        </button>
+                      </div>
+                    </form>
+                    
+                    <div class="status-filters">
+                      <button class="filter-btn" [class.active]="statusFilter === 'all'" (click)="filterByStatus('all')">
+                        <i class='bx bx-list-ul'></i> Toutes ({{totalCount}})
+                      </button>
+                      <button class="filter-btn" [class.active]="statusFilter === 'pending'" (click)="filterByStatus('pending')">
+                        <i class='bx bx-time'></i> En attente ({{pendingCount}})
+                      </button>
+                      <button class="filter-btn" [class.active]="statusFilter === 'approved'" (click)="filterByStatus('approved')">
+                        <i class='bx bx-check-circle'></i> Approuvées ({{approvedCount}})
+                      </button>
+                      <button class="filter-btn" [class.active]="statusFilter === 'rejected'" (click)="filterByStatus('rejected')">
+                        <i class='bx bx-x-circle'></i> Rejetées ({{rejectedCount}})
+                      </button>
+                    </div>
+                  </div>
+                  <div class="results-count">
+                    <i class='bx bx-filter-alt'></i> {{filteredConges.length}} demande(s) trouvée(s)
+                  </div>
+                </div>
+                
+                <div class="table-container">
+                  <div class="card-list">
+                    <div *ngFor="let conge of filteredConges" class="conge-card"
+                         [class.approved]="conge.status === 'approved'"
+                         [class.rejected]="conge.status === 'rejected'"
+                         [class.pending]="conge.status === 'pending'">
+                      <div class="conge-header">
+                        <div class="conge-dates">
+                          <div class="date-range">
+                            <i class='bx bx-calendar'></i>
+                            <span class="date">{{ conge.startDate | date:'dd/MM/yyyy' }}</span>
+                            <i class='bx bx-chevron-right'></i>
+                            <span class="date">{{ conge.endDate | date:'dd/MM/yyyy' }}</span>
+                          </div>
+                          <div class="duration">
+                            <i class='bx bx-time-five'></i> {{ calculateDuration(conge.startDate, conge.endDate) }} jours
+                          </div>
+                        </div>
+                        <div class="conge-status">
+                          <span class="status-badge"
+                                [class.pending]="conge.status === 'pending'"
+                                [class.approved]="conge.status === 'approved'"
+                                [class.rejected]="conge.status === 'rejected'">
+                            <i class="status-icon" [class]="getStatusIcon(conge.status)"></i>
                             {{ conge.status === 'pending' ? 'En attente' : 
                                conge.status === 'approved' ? 'Approuvé' : 'Rejeté' }}
                           </span>
-                        </td>
-                      </ng-container>
-              
-                      <!-- Colonne Actions -->
-                      <ng-container matColumnDef="actions">
-                        <th mat-header-cell *matHeaderCellDef>Actions</th>
-                        <td mat-cell *matCellDef="let conge">
-                          <button mat-icon-button color="warn" 
-                                  matTooltip="Supprimer" 
-                                  (click)="deleteConge(conge._id)"
-                                  >
-                            <mat-icon>delete</mat-icon>
-                          </button>
-                        </td>
-                      </ng-container>
-              
-                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                    </table>
-              
-                    <mat-paginator [pageSizeOptions]="[4, 8, 16]" showFirstLastButtons></mat-paginator>
-              
-                    <ng-container *ngIf="dataSource.data.length === 0">
-                      <div class="no-data-row">
-                        {{ noDataMessage }}
+                        </div>
                       </div>
-                    </ng-container>
+                      
+                      <div class="conge-details">
+                        <div class="detail-item">
+                          <i class='bx bx-note'></i>
+                          <span class="reason">{{ conge.reason || 'Aucun motif spécifié' }}</span>
+                        </div>
+                      </div>
+                      
+                      <div class="conge-actions">
+                        <button class="btn-delete-circle" matTooltip="Supprimer" (click)="deleteConge(conge._id)">
+                          <i class='bx bx-trash'></i>
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </mat-tab>
-              </mat-tab-group>
 
-           </div>
-        
-
-
+                  <ng-container *ngIf="filteredConges.length === 0">
+                    <div class="empty-state">
+                      <div class="empty-icon">
+                        <i class='bx bx-calendar-off'></i>
+                      </div>
+                      <h3>Aucune demande trouvée</h3>
+                      <p *ngIf="statusFilter === 'all'">Vous n'avez aucune demande de congé</p>
+                      <p *ngIf="statusFilter !== 'all'">Aucune demande avec le statut "{{getStatusLabel(statusFilter)}}"</p>
+                      <button class="btn-primary" (click)="openAddCongesDialog()">
+                        <i class='bx bx-plus'></i> Nouvelle demande
+                      </button>
+                    </div>
+                  </ng-container>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
         </div>
       </div>
     </main>
-    <!-- MAIN -->
   </section>
-  <!-- CONTENT -->
 </body>
 </html>
