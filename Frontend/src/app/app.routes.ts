@@ -33,7 +33,6 @@ import { AllInternshipsComponent } from './all-internships/all-internships.compo
 import { AllWorksComponent } from './all-works/all-works.component';
 import { WorkDetailsComponent } from './components/work-details/work-details.component';
 import { ProfilEmployComponent } from './components/profil-employ/profil-employ.component';
-import { PointageEmployComponent } from './components/pointage-employ/pointage-employ.component';
 import { PresenceComponent } from './components/presence/presence.component';
 import { PresenceEmployComponent } from './components/presence-employ/presence-employ.component';
 import { EditProfilEmployComponent } from './components/edit-profil-employ/edit-profil-employ.component';
@@ -190,11 +189,6 @@ export const routes: Routes = [
     {
         path:'profil-employ',
         component: ProfilEmployComponent
-    },
-
-    { 
-        path: 'pointage-employ', 
-        component: PointageEmployComponent
     },
     
     { 
