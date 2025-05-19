@@ -2,7 +2,14 @@ import { Component, AfterViewInit, ViewEncapsulation, OnInit } from '@angular/co
 import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component';
 import { SharedSidebarComponent } from '../shared-sidebar-Employ/shared-sidebar.component';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
+
+
+interface Holiday {
+  name: string;
+  date: Date;
+}
 @Component({
   selector: 'app-employee-dashboard',
   imports: [SharedNavbarComponent,SharedSidebarComponent,CommonModule],
@@ -17,24 +24,78 @@ export class EmployeeDashboardComponent implements AfterViewInit, OnInit {
   shiftProgress: number = 65; // Pourcentage de progression
   currentTime: string = '';
   currentDate: string = '';
+  officeTemperature: number = 0;
+  nextHoliday: Holiday = {
+    name: '',
+    date: new Date()
+  };
+  arrivedCount: number = 0;
+
+
+  constructor(private http: HttpClient) {}
+
   
   getCircleOffset(): number {
     const circumference = 2 * Math.PI * 50; // Correspond au rayon (r) du cercle
     return circumference - (Math.round(this.shiftProgress) / 100) * circumference;
   }
 
-    ngOnInit(): void {
+  ngOnInit(): void {
     this.updateTime();
     this.calculateShiftProgress();
-    
-    // Mettre à jour toutes les minutes
-    setInterval(() => {
-      this.updateTime();
-      this.calculateShiftProgress();
-    }, 60000);
+    this.loadEnvironmentData();
+    this.calculateNextHoliday();
+
+  setInterval(() => {
+    this.updateTime();
+    this.calculateShiftProgress();
+  }, 60000);
+
   }
 
-    private updateTime(): void {
+  loadEnvironmentData(): void {
+  this.arrivedCount = 2;
+
+  this.getMonastirTemperature();
+
+}
+
+    getMonastirTemperature(): void {
+    // Simulation - en production, utiliser une API météo
+    this.officeTemperature = 25; // Valeur par défaut
+    
+    // Exemple avec OpenWeatherMap (à décommenter et configurer)
+    /*
+    const apiKey = 'VOTRE_CLE_API';
+    this.http.get(`https://api.openweathermap.org/data/2.5/weather?q=Monastir,TN&units=metric&appid=${apiKey}`)
+      .subscribe((data: any) => {
+        this.officeTemperature = Math.round(data.main.temp);
+      }, () => {
+        this.officeTemperature = 25; // Valeur par défaut en cas d'erreur
+      });
+    */
+  }
+
+    calculateNextHoliday(): void {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Filtrer les jours fériés à venir
+    const upcomingHolidays = this.tunisiaHolidays
+      .filter(h => new Date(h.date) >= today)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    
+    if (upcomingHolidays.length > 0) {
+      this.nextHoliday = upcomingHolidays[0];
+    } else {
+      // Si aucun jour férié restant cette année, prendre le premier de l'année suivante
+      this.nextHoliday = {
+        name: 'Jour de l\'an',
+        date: new Date(today.getFullYear() + 1, 0, 1)
+      };
+    }
+  }
+  private updateTime(): void {
     const now = new Date();
     
     // Formatage de l'heure
@@ -71,6 +132,17 @@ export class EmployeeDashboardComponent implements AfterViewInit, OnInit {
       this.remainingTime = '0h 0m';
     }
   }
+  tunisiaHolidays: Holiday[] = [
+    { name: 'Jour de l\'an', date: new Date('2025-01-01') },
+    { name: 'Fête de la Révolution', date: new Date('2025-01-14') },
+    { name: 'Fête de l\'Indépendance', date: new Date('2025-03-20') },
+    { name: 'Fête du Travail', date: new Date('2025-05-01') },
+    { name: 'Fête de la République', date: new Date('2025-07-25') },
+    { name: 'Fête de la Femme', date: new Date('2025-08-13') },
+    { name: 'Aïd el-Fitr', date: new Date('2025-04-21') }, // Date variable
+    { name: 'Aïd el-Adha', date: new Date('2025-06-08') }, // Date variable
+    { name: 'Mouled', date: new Date('2025-09-04') }, // Date variable
+  ];
 
   ngAfterViewInit(): void {
     this.initializeSidebar();

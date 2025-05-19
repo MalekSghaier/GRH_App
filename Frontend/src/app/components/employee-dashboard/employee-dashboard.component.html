@@ -40,34 +40,67 @@
                     <span class="text">Exporter PDF</span>
                 </a>
             </div>
+            <div class="quick-actions">
+                <div class="environment-widget">
+                    <div class="environment-item">
+                        <div class="environment-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="environment-content">
+                            <h3>Collègues présents</h3>
+                            <p>{{ arrivedCount }} collègues aujourd'hui</p>
+                        </div>
+                    </div>
+        
+                    <div class="environment-item">
+                        <div class="environment-icon">
+                            <i class="fas fa-thermometer-half"></i>
+                        </div>
+                        <div class="environment-content">
+                            <h3>Température bureau</h3>
+                            <p>{{ officeTemperature }}°C à Monastir</p>
+                        </div>
+                    </div>
+        
+                    <div class="environment-item">
+                        <div class="environment-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div class="environment-content">
+                            <h3>Prochain jour férié</h3>
+                            <p>{{ nextHoliday.name }} ({{ nextHoliday.date | date:'dd/MM/yyyy' }})</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Status Cards -->
             <div class="dashboard-cards">
-<div class="status-card">
-    <div class="card-header">
-        <h3>Statut actuel</h3>
-        <div class="status-badge" [class.present]="isPresent">
-            {{ isPresent ? 'En poste' : 'Absent' }}
-        </div>
-    </div>
-    <div class="card-body">
-        <div class="time-info">
-            <i class="fas fa-clock"></i>
-            <span>{{ currentTime }} • {{ currentDate }}</span>
-        </div>
-        
-        <!-- Conteneur flex pour aligner les éléments -->
-        <div class="progress-time-container">
-            <!-- Temps restant à gauche -->
-            <div class="time-remaining-highlight">
-                <div class="time-icon">
-                    <i class="fas fa-hourglass-half"></i>
+            <div class="status-card">
+                <div class="card-header">
+                    <h3>Statut actuel</h3>
+                    <div class="status-badge" [class.present]="isPresent">
+                        {{ isPresent ? 'En poste' : 'Absent' }}
+                    </div>
                 </div>
-                <div class="time-text">
-                    <span class="label">Temps restant</span>
-                    <span class="value">{{ remainingTime }}</span>
-                </div>
-            </div>
+                <div class="card-body">
+                    <div class="time-info">
+                        <i class="fas fa-clock"></i>
+                        <span>{{ currentTime }} • {{ currentDate }}</span>
+                    </div>
+                    
+                    <!-- Conteneur flex pour aligner les éléments -->
+                    <div class="progress-time-container">
+                        <!-- Temps restant à gauche -->
+                        <div class="time-remaining-highlight">
+                            <div class="time-icon">
+                                <i class="fas fa-hourglass-half"></i>
+                            </div>
+                            <div class="time-text">
+                                <span class="label">Temps restant</span>
+                                <span class="value">{{ remainingTime }}</span>
+                            </div>
+                        </div>
             
             <!-- Cercle de progression à droite -->
             <div class="circular-progress">
@@ -115,9 +148,9 @@
                 </div>
             </div>
 
-            <!-- Quick Actions -->
-            <div class="quick-actions">
-            </div>
+
+
+
 
             <!-- Recent Activity -->
             <div class="recent-activity">
