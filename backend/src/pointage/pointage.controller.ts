@@ -70,11 +70,13 @@ export class PointageController {
     }
     return this.pointageService.enregistrerPointageFace(body.userId);
   }
-
-  @Get('monthly')
-  async getMonthlyPointages( @Req() req: RequestWithUser, @Query('month') month: number, @Query('year') year: number) {
+@Get('monthly')
+async getMonthlyPointages(@Query('userId') userId: string,@Query('month') month: number,  @Query('year') year: number) {
+  if (!userId) {
+    throw new BadRequestException('User ID is required');
+  }
   return this.pointageService.getPointagesByMonth(
-    req.user._id, 
+    userId, 
     Number(month), 
     Number(year)
   );

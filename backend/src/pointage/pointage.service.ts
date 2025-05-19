@@ -66,6 +66,8 @@ export class PointageService {
     };
   }
 
+  
+
   async getPointagesUtilisateur(userId: string) {
     return this.pointageModel.find({ userId })
       .sort({ date: -1 })

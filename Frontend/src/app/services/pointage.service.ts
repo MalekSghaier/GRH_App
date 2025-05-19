@@ -23,13 +23,14 @@ enregistrerPointage(userId: string): Observable<any> {
     return this.http.get<any[]>(`${this.apiUrl}/user/${userId}`, { headers });
   }
 
-  getMonthlyPointages(userId: string, month: number, year: number): Observable<any[]> {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any[]>(
-      `${this.apiUrl}/monthly?month=${month}&year=${year}`, { headers }
-    );
-  }
+getMonthlyPointages(userId: string, month: number, year: number): Observable<any[]> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.get<any[]>(
+    `${this.apiUrl}/monthly?userId=${userId}&month=${month}&year=${year}`, 
+    { headers }
+  );
+}
 
   enregistrerPointageFace(userId: string): Observable<any> {
   return this.http.post(`${this.apiUrl}/scan-face`, { userId });

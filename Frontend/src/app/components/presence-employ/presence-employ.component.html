@@ -8,25 +8,102 @@
 </head>
 <body>
   <app-shared-sidebar></app-shared-sidebar>
-  <section id="content">
-    <app-shared-navbar></app-shared-navbar>
+<section id="content">
+  <app-shared-navbar></app-shared-navbar>
 
-    <!-- MAIN -->
-    <main>
-      <div class="head-title">
-        <div class="left">
-          <h1>Suivi de présence</h1>
-          <ul class="breadcrumb">
-            <li><a href="employee-dashboard">Tableau de bord</a></li>
-            <li><i class='bx bx-chevron-right'></i></li>
-            <li><a class="active" href="#">Suivi de présence</a></li>
-          </ul>
+  <main>
+    <div class="head-title">
+      <div class="left">
+        <h1>Mon historique de présence</h1>
+        <ul class="breadcrumb">
+          <li><a href="employee-dashboard">Tableau de bord</a></li>
+          <li><i class='bx bx-chevron-right'></i></li>
+          <li><a class="active" href="#">Historique de présence</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="presence-container">
+      <!-- Filtres -->
+      <div class="filters-card">
+        <div class="filter-group">
+          <label for="month">Mois :</label>
+          <select id="month" [(ngModel)]="selectedMonth" (change)="onMonthYearChange()">
+            <option *ngFor="let month of months" [value]="month.value">{{ month.name }}</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="year">Année :</label>
+          <select id="year" [(ngModel)]="selectedYear" (change)="onMonthYearChange()">
+            <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="date">Recherche par date :</label>
+          <input type="date" id="date" [(ngModel)]="searchDate" (change)="filterByDate()">
+          <button class="clear-btn" (click)="searchDate = ''; filterByDate()">
+            <i class='bx bx-x'></i>
+          </button>
         </div>
       </div>
 
-    </main>
-    <!-- MAIN -->
-  </section>
+      <!-- Liste des pointages -->
+      <div class="timeline-container" *ngIf="!isLoading; else loading">
+        <div *ngIf="errorMessage" class="error-message">
+          <i class='bx bx-error-circle'></i>
+          {{ errorMessage }}
+        </div>
+
+        <div *ngIf="!errorMessage && filteredPointages.length === 0" class="no-data">
+          <i class='bx bx-calendar-x'></i>
+          <p>Aucun pointage trouvé pour cette période</p>
+        </div>
+
+        <div class="timeline" *ngIf="filteredPointages.length > 0">
+          <div class="timeline-item" *ngFor="let pointage of filteredPointages">
+            <div class="timeline-date">
+              <div class="day">{{ pointage.date | date:'dd' }}</div>
+              <div class="month">{{ pointage.date | date:'MMM' }}</div>
+              <div class="year">{{ pointage.date | date:'yyyy' }}</div>
+            </div>
+
+            <div class="timeline-content" [class]="'status-' + getStatusColor(pointage.entree, pointage.sortie)">
+              <div class="timeline-header">
+                <span class="source-badge" [class]="pointage.source === 'qr' ? 'qr-badge' : 'face-badge'">
+                  {{ pointage.source === 'qr' ? 'QR Code' : 'Reconnaissance faciale' }}
+                </span>
+                <span class="work-hours">
+                  <i class='bx bx-time'></i>
+                  {{ formatHeuresTravail(pointage) }}
+                </span>
+              </div>
+
+              <div class="time-slots">
+                <div class="time-slot entry">
+                  <i class='bx bx-log-in-circle'></i>
+                  <span>Entrée : {{ pointage.entree || '--:--:--' }}</span>
+                </div>
+                <div class="time-slot exit">
+                  <i class='bx bx-log-out-circle'></i>
+                  <span>Sortie : {{ pointage.sortie || '--:--:--' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #loading>
+        <div class="loading-spinner">
+          <i class='bx bx-loader-circle bx-spin'></i>
+          <span>Chargement de l'historique...</span>
+        </div>
+      </ng-template>
+    </div>
+  </main>
+</section>
   <!-- CONTENT -->
 </body>
 </html>
