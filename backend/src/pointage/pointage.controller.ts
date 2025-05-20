@@ -91,4 +91,16 @@ async getPointagesByDate(@Query('date') date: string) {
   }
   return this.pointageService.getPointagesByDate(date);
 }
+
+@Get('working-days')
+async getWorkingDays(
+  @Query('userId') userId: string,
+  @Query('month') month: number,
+  @Query('year') year: number
+) {
+  if (!userId || !month || !year) {
+    throw new BadRequestException('User ID, month and year are required');
+  }
+  return this.pointageService.getJoursTravailles(userId, year, month);
+}
 }

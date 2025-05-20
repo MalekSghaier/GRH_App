@@ -3,6 +3,9 @@ import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component'
 import { SharedSidebarComponent } from '../shared-sidebar-Employ/shared-sidebar.component';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { CalendarComponent } from '../calendar/calendar.component';
+import { AuthService } from '../../services/auth.service';
+
 
 
 
@@ -12,7 +15,7 @@ interface Holiday {
 }
 @Component({
   selector: 'app-employee-dashboard',
-  imports: [SharedNavbarComponent,SharedSidebarComponent,CommonModule],
+  imports: [SharedNavbarComponent,SharedSidebarComponent,CommonModule,CalendarComponent],
   templateUrl: './employee-dashboard.component.html',
   styleUrl: './employee-dashboard.component.css',
   encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
@@ -30,9 +33,16 @@ export class EmployeeDashboardComponent implements AfterViewInit, OnInit {
     date: new Date()
   };
   arrivedCount: number = 0;
+  currentUserId: string = '';
 
 
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient,private authService: AuthService) {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.currentUserId = user.id;
+    }
+  }
 
   
   getCircleOffset(): number {

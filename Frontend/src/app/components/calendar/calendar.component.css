@@ -1,0 +1,65 @@
+.calendar-container {
+  max-width: 400px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.calendar-header button {
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.day-header {
+  text-align: center;
+  font-weight: bold;
+  padding: 5px;
+}
+
+.day-cell {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+}
+
+.day-cell.worked-full-day {
+  background-color: #e6f7ff;
+}
+
+.day-cell.worked-half-day {
+  background-color: #f0f8ff;
+}
+
+.day-indicator {
+  position: absolute;
+  bottom: 2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.day-indicator.full {
+  background-color: #1890ff;
+}
+
+.day-indicator.half {
+  background-color: #69c0ff;
+}

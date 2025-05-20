@@ -48,4 +48,13 @@ getPointagesByDate(date: string): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/by-date?date=${date}`, { headers });
 }
 
+getWorkingDays(userId: string, month: number, year: number): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.get<any[]>(
+    `${this.apiUrl}/working-days?userId=${userId}&month=${month}&year=${year}`,
+    { headers }
+  );
+}
+
 }

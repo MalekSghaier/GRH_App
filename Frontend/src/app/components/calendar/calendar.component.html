@@ -1,0 +1,25 @@
+<div class="calendar-container">
+  <div class="calendar-header">
+    <button (click)="prevMonth()">&lt;</button>
+    <h3>{{ monthNames[currentMonth - 1] }} {{ currentYear }}</h3>
+    <button (click)="nextMonth()">&gt;</button>
+  </div>
+  
+  <div class="calendar-grid">
+    <div class="day-header">Lun</div>
+    <div class="day-header">Mar</div>
+    <div class="day-header">Mer</div>
+    <div class="day-header">Jeu</div>
+    <div class="day-header">Ven</div>
+    <div class="day-header">Sam</div>
+    <div class="day-header">Dim</div>
+    
+    <ng-container *ngFor="let day of days">
+      <div class="day-cell" [class]="getDayClass(day.status)">
+        {{ day.day }}
+        <div *ngIf="day.status === 'complet'" class="day-indicator full"></div>
+        <div *ngIf="day.status === 'entree'" class="day-indicator half"></div>
+      </div>
+    </ng-container>
+  </div>
+</div>

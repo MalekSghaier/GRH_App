@@ -306,4 +306,39 @@ async getPointagesByDate(date: string) {
     throw error;
   }
 }
+
+async getJoursTravailles(userId: string, year: number, month: number): Promise<{date: string, status: 'complet' | 'entree' | 'absent'}[]> {
+  const startDate = new Date(year, month - 1, 1);
+  const endDate = new Date(year, month, 0);
+  
+  const pointages = await this.pointageModel.find({
+    userId,
+    date: {
+      $gte: moment(startDate).format('YYYY-MM-DD'),
+      $lte: moment(endDate).format('YYYY-MM-DD')
+    }
+  }).exec();
+
+  const joursTravailles: Record<string, 'complet' | 'entree' | 'absent'> = {};
+
+  // Initialiser tous les jours comme absents
+  const currentDate = new Date(startDate);
+  while (currentDate <= endDate) {
+    const dateStr = moment(currentDate).format('YYYY-MM-DD');
+    joursTravailles[dateStr] = 'absent';
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  // Marquer les jours avec pointage
+  pointages.forEach(pointage => {
+    const dateStr = pointage.date;
+    if (pointage.entree && pointage.sortie) {
+      joursTravailles[dateStr] = 'complet';
+    } else if (pointage.entree) {
+      joursTravailles[dateStr] = 'entree';
+    }
+  });
+
+  return Object.entries(joursTravailles).map(([date, status]) => ({ date, status }));
+}
 }
