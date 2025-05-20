@@ -373,4 +373,22 @@ async calculatePonctualiteScore(userId: string): Promise<{ score: number; totalD
     onTimeDays
   };
 }
+
+async getPointageStats(userId: string): Promise<{ qrCount: number; faceCount: number }> {
+  const [qrCount, faceCount] = await Promise.all([
+    this.pointageModel.countDocuments({ 
+      userId, 
+      source: PointageSource.QR 
+    }).exec(),
+    this.pointageModel.countDocuments({ 
+      userId, 
+      source: PointageSource.FACE 
+    }).exec()
+  ]);
+
+  return {
+    qrCount,
+    faceCount
+  };
+}
 }

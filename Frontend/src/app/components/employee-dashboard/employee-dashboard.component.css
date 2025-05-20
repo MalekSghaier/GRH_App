@@ -32,7 +32,7 @@ body {
 }
 
 /* Status Card */
-.status-card, .Calender-content , .ponct-card
+.status-card, .Calender-content ,.stats-card, .ponct-card
 {
   background: var(--white);
   border-radius: var(--border-radius);
@@ -263,9 +263,28 @@ body {
 	margin-top: 10px;
     transition: var(--transition);
 	height: 270px;
+    display: flex;
 }
 
 .stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Stats Cards */
+.pointage-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 40px;
+	margin-top: 10px;
+    margin-bottom: 10px;
+    transition: var(--transition);
+	height: 270px;
+    width: 405px;
+}
+
+.pointage-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }

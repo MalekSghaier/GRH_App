@@ -111,4 +111,12 @@ async getPonctualiteScore(@Param('userId') userId: string) {
   }
   return this.pointageService.calculatePonctualiteScore(userId);
 }
+
+@Get('pointage-stats/:userId')
+async getPointageStats(@Param('userId') userId: string) {
+  if (!userId) {
+    throw new BadRequestException('User ID is required');
+  }
+  return this.pointageService.getPointageStats(userId);
+}
 }

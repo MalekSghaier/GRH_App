@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { AuthService } from '../../services/auth.service';
 import { PonctualiteWidgetComponent } from '../../ponctualite-widget/ponctualite-widget.component';
+import { PointageStatsChartComponent } from '../../pointage-stats-chart/pointage-stats-chart.component';
 
 
 
@@ -17,7 +18,14 @@ interface Holiday {
 }
 @Component({
   selector: 'app-employee-dashboard',
-  imports: [SharedNavbarComponent,SharedSidebarComponent,CommonModule,CalendarComponent,PonctualiteWidgetComponent ],
+  imports: [
+    SharedNavbarComponent,
+    SharedSidebarComponent,
+    CommonModule,
+    CalendarComponent,
+    PonctualiteWidgetComponent ,
+    PointageStatsChartComponent 
+],
   templateUrl: './employee-dashboard.component.html',
   styleUrl: './employee-dashboard.component.css',
   encapsulation: ViewEncapsulation.None // Désactive l'encapsulation

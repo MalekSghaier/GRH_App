@@ -66,4 +66,13 @@ getPonctualiteScore(userId: string): Observable<{ score: number; totalDays: numb
   );
 }
 
+getPointageStats(userId: string): Observable<{ qrCount: number; faceCount: number }> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.get<{ qrCount: number; faceCount: number }>(
+    `${this.apiUrl}/pointage-stats/${userId}`,
+    { headers }
+  );
+}
+
 }
