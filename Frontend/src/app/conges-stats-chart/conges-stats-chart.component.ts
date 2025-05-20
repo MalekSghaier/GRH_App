@@ -114,9 +114,9 @@ export class CongesStatsChartComponent implements OnInit {
           label: 'Demandes de congé',
           data: [data.approved, data.pending, data.rejected],
           backgroundColor: [
-            '#1a84ef',  // Bleu foncé pour approuvés
-            '#5aa8f2',  // Bleu moyen pour en attente
-            '#9ac8f7'   // Bleu clair pour refusés
+            '#1a84ef',  
+            '#5aa8f2',  
+            '#9ac8f7'   
           ],
           borderColor: [
             '#1a84ef',
