@@ -1,65 +1,141 @@
 .calendar-container {
-  max-width: 400px;
+  max-width: 100%;
   margin: 0 auto;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 16px;
 }
 
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.calendar-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .calendar-header button {
-  background: none;
+  background: #f5f5f5;
   border: none;
-  font-size: 1.2em;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.calendar-header button:hover {
+  background: #e0e0e0;
 }
 
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
+  gap: 8px;
 }
 
 .day-header {
   text-align: center;
-  font-weight: bold;
-  padding: 5px;
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: #666;
+  padding: 4px 0;
+  text-transform: uppercase;
 }
 
 .day-cell {
-  height: 30px;
+  aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  border-radius: 4px;
-  background-color: #f0f0f0;
+  border-radius: 8px;
+  background-color: transparent;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  cursor: pointer;
 }
 
-.day-cell.worked-full-day {
-  background-color: #e6f7ff;
+.day-cell:hover:not(.empty) {
+  background-color: #f5f5f5;
 }
 
-.day-cell.worked-half-day {
-  background-color: #f0f8ff;
+.day-cell.empty {
+  visibility: hidden;
 }
 
-.day-indicator {
+.day-cell.today {
+  font-weight: bold;
+  color: #1890ff;
+}
+
+.day-cell.worked-full-day .day-number {
+  color: white;
+  background-color: #1890ff;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.day-cell.worked-half-day .day-number {
+  position: relative;
+}
+
+.day-cell.worked-half-day .day-number::after {
+  content: '';
   position: absolute;
-  bottom: 2px;
-  width: 6px;
-  height: 6px;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 3px;
+  background-color: #69c0ff;
+  border-radius: 2px;
+}
+
+.day-cell.absent-day {
+  color: #999;
+}
+
+/* Légende */
+.calendar-legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  font-size: 0.8rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
 }
 
-.day-indicator.full {
+.legend-color.full {
   background-color: #1890ff;
 }
 
-.day-indicator.half {
+.legend-color.half {
   background-color: #69c0ff;
 }

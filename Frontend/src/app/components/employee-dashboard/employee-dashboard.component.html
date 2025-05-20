@@ -42,6 +42,7 @@
             </div>
             <div class="quick-actions">
                 <div class="environment-widget">
+                    
                     <div class="environment-item">
                         <div class="environment-icon">
                             <i class="fas fa-users"></i>
@@ -128,13 +129,6 @@
         </div>
     </div>
             </div>
-
-                <div class="stats-card">
-                    <div class="stats-content">
-                            <app-calendar [userId]="currentUserId"></app-calendar>
-                    </div>
-                </div>
-
                 <div class="stats-card">
                     <div class="stats-icon">
                         <i class="fas fa-tasks"></i>
@@ -143,6 +137,11 @@
 
                     </div>
                 </div>
+                    <div class="Calender-content">
+                            <app-calendar [userId]="currentUserId"></app-calendar>
+                    </div>
+
+
             </div>
             <!-- Recent Activity -->
             <div class="recent-activity">

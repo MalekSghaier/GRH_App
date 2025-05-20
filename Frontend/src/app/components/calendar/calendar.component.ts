@@ -84,4 +84,15 @@ export class CalendarComponent {
       default: return '';
     }
   }
+
+  isToday(day: number | null): boolean {
+  if (!day) return false;
+  
+  const today = new Date();
+  return (
+    day === today.getDate() && 
+    this.currentMonth === today.getMonth() + 1 && 
+    this.currentYear === today.getFullYear()
+  );
+}
 }
