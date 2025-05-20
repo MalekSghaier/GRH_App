@@ -1,8 +1,6 @@
 // pointage.controller.ts
-import { Controller, Post, Req, Get, Query, Body, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Get, Query, Body, BadRequestException } from '@nestjs/common';
 import { PointageService } from './pointage.service';
-import { RequestWithUser } from 'express';
-
 @Controller('pointage')
 export class PointageController {
   constructor(private readonly pointageService: PointageService) {}
