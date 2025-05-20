@@ -1,5 +1,5 @@
 // pointage.controller.ts
-import { Controller, Post, Get, Query, Body, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Get, Query, Body, BadRequestException, Param } from '@nestjs/common';
 import { PointageService } from './pointage.service';
 @Controller('pointage')
 export class PointageController {
@@ -102,5 +102,13 @@ async getWorkingDays(
     throw new BadRequestException('User ID, month and year are required');
   }
   return this.pointageService.getJoursTravailles(userId, year, month);
+}
+
+@Get('ponctualite-score/:userId')
+async getPonctualiteScore(@Param('userId') userId: string) {
+  if (!userId) {
+    throw new BadRequestException('User ID is required');
+  }
+  return this.pointageService.calculatePonctualiteScore(userId);
 }
 }

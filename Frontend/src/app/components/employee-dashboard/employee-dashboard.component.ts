@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { AuthService } from '../../services/auth.service';
+import { PonctualiteWidgetComponent } from '../../ponctualite-widget/ponctualite-widget.component';
+
 
 
 
@@ -15,16 +17,16 @@ interface Holiday {
 }
 @Component({
   selector: 'app-employee-dashboard',
-  imports: [SharedNavbarComponent,SharedSidebarComponent,CommonModule,CalendarComponent],
+  imports: [SharedNavbarComponent,SharedSidebarComponent,CommonModule,CalendarComponent,PonctualiteWidgetComponent ],
   templateUrl: './employee-dashboard.component.html',
   styleUrl: './employee-dashboard.component.css',
   encapsulation: ViewEncapsulation.None // Désactive l'encapsulation
 })
 export class EmployeeDashboardComponent implements AfterViewInit, OnInit {
-  isPresent: boolean = true; // À remplacer par la logique réelle
+  isPresent: boolean = true; 
   currentTimeIcon: string = '🌞';
   remainingTime: string = '2h15';
-  shiftProgress: number = 65; // Pourcentage de progression
+  shiftProgress: number = 65; 
   currentTime: string = '';
   currentDate: string = '';
   officeTemperature: number = 0;

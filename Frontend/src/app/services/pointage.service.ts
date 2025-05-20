@@ -57,4 +57,13 @@ getWorkingDays(userId: string, month: number, year: number): Observable<any> {
   );
 }
 
+getPonctualiteScore(userId: string): Observable<{ score: number; totalDays: number; onTimeDays: number }> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.get<{ score: number; totalDays: number; onTimeDays: number }>(
+    `${this.apiUrl}/ponctualite-score/${userId}`,
+    { headers }
+  );
+}
+
 }

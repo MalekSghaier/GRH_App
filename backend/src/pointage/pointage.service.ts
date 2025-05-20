@@ -341,4 +341,36 @@ async getJoursTravailles(userId: string, year: number, month: number): Promise<{
 
   return Object.entries(joursTravailles).map(([date, status]) => ({ date, status }));
 }
+
+async calculatePonctualiteScore(userId: string): Promise<{ score: number; totalDays: number; onTimeDays: number }> {
+  // 1. Récupérer tous les pointages de l'utilisateur
+  const allPointages = await this.pointageModel.find({ userId }).exec();
+
+  // 2. Filtrer pour n'avoir que les jours avec entrée enregistrée
+  const joursAvecEntree = allPointages.filter(p => p.entree);
+
+  if (joursAvecEntree.length === 0) {
+    return { score: 100, totalDays: 0, onTimeDays: 0 }; // Score parfait si aucun historique
+  }
+
+  // 3. Calculer le nombre de jours à l'heure
+  let onTimeDays = 0;
+  const heureLimite = '08:10:00'; // 15 minutes de tolérance
+
+  joursAvecEntree.forEach(pointage => {
+    const heureEntree = pointage.entree;
+    if (heureEntree <= heureLimite) {
+      onTimeDays++;
+    }
+  });
+
+  // 4. Calculer le score (pourcentage de jours à l'heure)
+  const score = Math.round((onTimeDays / joursAvecEntree.length) * 100);
+
+  return {
+    score,
+    totalDays: joursAvecEntree.length,
+    onTimeDays
+  };
+}
 }
