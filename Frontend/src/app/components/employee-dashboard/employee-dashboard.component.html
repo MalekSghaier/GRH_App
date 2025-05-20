@@ -55,11 +55,11 @@
         
                     <div class="environment-item">
                         <div class="environment-icon">
-                            <i class="fas fa-thermometer-half"></i>
+                           <i class="fas fa-umbrella-beach"></i>
                         </div>
                         <div class="environment-content">
-                            <h3>Température bureau</h3>
-                            <p>{{ officeTemperature }}°C à Monastir</p>
+                             <h3>Solde de congés</h3>
+                             <p>{{ soldeConges }} jours disponibles</p>
                         </div>
                     </div>
         
@@ -137,13 +137,15 @@
                     <app-calendar [userId]="currentUserId"></app-calendar>
                 </div>
             </div>
-            <div class="pointage-card">
-                   <app-pointage-stats-chart [userId]="currentUserId"></app-pointage-stats-chart>
+            <div class="stats-row">
+                <div class="pointage-card">
+                    <app-pointage-stats-chart [userId]="currentUserId"></app-pointage-stats-chart>
+                </div>
+                <div class="conges-card">
+                    <app-conges-stats-chart [userId]="currentUserId"></app-conges-stats-chart>
+                </div>
             </div>
-            <!-- Recent Activity -->
-            <div class="recent-activity">
-
-            </div>
+            
         </main>
         <!-- MAIN -->
     </section>

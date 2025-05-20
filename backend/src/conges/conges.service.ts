@@ -1,7 +1,7 @@
 //service.ts
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { IConge } from '../schemas/conge.schema';
 import { UsersService } from '../users/users.service'; // Importez le service User
 import { User, UserDocument} from '../schemas/user.schema';
@@ -16,9 +16,6 @@ export class CongesService {
 
 ) {}
 
-  //async create(userId: string, data: Partial<IConge>): Promise<IConge> {
-  //  return this.congeModel.create({ ...data, userId });
-  //}
 
   async create(userId: string, data: Partial<IConge>): Promise<IConge> {
     // Vérification que les dates sont bien définies
@@ -108,11 +105,6 @@ export class CongesService {
      return this.congeModel.countDocuments({ status: 'pending' }).exec();
   }
 
- // async update(id: string, data: Partial<IConge>): Promise<IConge> {
- //   const conge = await this.congeModel.findByIdAndUpdate(id, data, { new: true });
-  ////  if (!conge) throw new NotFoundException("Congé non trouvé");
- //   return conge;
- // }
 
   async delete(id: string): Promise<void> {
     const result = await this.congeModel.findByIdAndDelete(id);
@@ -269,4 +261,38 @@ async findByCompanyPaginated(
   
     return result;
   }
+
+  async getUserCongesStats(userId: string): Promise<{
+  approved: number;
+  pending: number;
+  rejected: number;
+}> {
+  const results = await this.congeModel.aggregate([
+    {
+      $match: { userId: new mongoose.Types.ObjectId(userId) }
+    },
+    {
+      $group: {
+        _id: "$status",
+        count: { $sum: 1 }
+      }
+    }
+  ]);
+
+  // Initialiser les compteurs
+  const stats = {
+    approved: 0,
+    pending: 0,
+    rejected: 0
+  };
+
+  // Remplir les stats
+  results.forEach(result => {
+    if (result._id === 'approved') stats.approved = result.count;
+    if (result._id === 'pending') stats.pending = result.count;
+    if (result._id === 'rejected') stats.rejected = result.count;
+  });
+
+  return stats;
+}
 }

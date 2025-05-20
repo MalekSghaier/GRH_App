@@ -34,7 +34,7 @@ export class CongesController {
      throw new UnauthorizedException('Company name not found in token');
   }
   return this.congesService.getMonthlyCongesStats(req.user.companyName);
-}
+  }
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
@@ -58,6 +58,12 @@ export class CongesController {
     const count = await this.congesService.countPendingByCompany(req.user.companyName);
     return { count };
   }
+
+  @Get('user/stats/:userId')
+  @UseGuards(AuthGuard('jwt'))
+  async getUserCongesStats(@Param('userId') userId: string) {
+    return this.congesService.getUserCongesStats(userId);
+}
 
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))

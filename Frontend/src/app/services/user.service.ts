@@ -180,7 +180,6 @@ export class UserService {
     return this.http.get<number>(`${this.apiUrl}/count-interns`, { headers });
   }
 
-  // user.service.ts
   generateQrCodeAndSendEmail(userId: string): Observable<any> {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -189,5 +188,14 @@ export class UserService {
   
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.post(`${this.apiUrl}/${userId}/send-qrcode`, {}, { headers });
+  }
+
+    getSoldeConges(userId: string): Observable<{ soldeConges: number }> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<{ soldeConges: number }>(
+      `${this.apiUrl}/solde-conges/${userId}`,
+      { headers }
+    );
   }
 }

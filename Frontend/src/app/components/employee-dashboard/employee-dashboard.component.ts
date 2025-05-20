@@ -7,6 +7,10 @@ import { CalendarComponent } from '../calendar/calendar.component';
 import { AuthService } from '../../services/auth.service';
 import { PonctualiteWidgetComponent } from '../../ponctualite-widget/ponctualite-widget.component';
 import { PointageStatsChartComponent } from '../../pointage-stats-chart/pointage-stats-chart.component';
+import { UserService } from '../../services/user.service';
+import { CongesStatsChartComponent } from '../../conges-stats-chart/conges-stats-chart.component';
+
+
 
 
 
@@ -24,7 +28,8 @@ interface Holiday {
     CommonModule,
     CalendarComponent,
     PonctualiteWidgetComponent ,
-    PointageStatsChartComponent 
+    PointageStatsChartComponent ,
+    CongesStatsChartComponent
 ],
   templateUrl: './employee-dashboard.component.html',
   styleUrl: './employee-dashboard.component.css',
@@ -44,10 +49,16 @@ export class EmployeeDashboardComponent implements AfterViewInit, OnInit {
   };
   arrivedCount: number = 0;
   currentUserId: string = '';
+  soldeConges: number = 0;
 
 
 
-  constructor(private http: HttpClient,private authService: AuthService) {
+
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private userService:UserService
+  ) {
     const user = this.authService.getCurrentUser();
     if (user) {
       this.currentUserId = user.id;
@@ -65,6 +76,8 @@ export class EmployeeDashboardComponent implements AfterViewInit, OnInit {
     this.calculateShiftProgress();
     this.loadEnvironmentData();
     this.calculateNextHoliday();
+    this.loadSoldeConges();
+
 
   setInterval(() => {
     this.updateTime();
@@ -73,27 +86,21 @@ export class EmployeeDashboardComponent implements AfterViewInit, OnInit {
 
   }
 
-  loadEnvironmentData(): void {
-  this.arrivedCount = 2;
-
-  this.getMonastirTemperature();
-
-}
-
-    getMonastirTemperature(): void {
-    // Simulation - en production, utiliser une API météo
-    this.officeTemperature = 25; // Valeur par défaut
-    
-    // Exemple avec OpenWeatherMap (à décommenter et configurer)
-    /*
-    const apiKey = 'VOTRE_CLE_API';
-    this.http.get(`https://api.openweathermap.org/data/2.5/weather?q=Monastir,TN&units=metric&appid=${apiKey}`)
-      .subscribe((data: any) => {
-        this.officeTemperature = Math.round(data.main.temp);
-      }, () => {
-        this.officeTemperature = 25; // Valeur par défaut en cas d'erreur
+    loadSoldeConges(): void {
+    if (this.currentUserId) {
+      this.userService.getSoldeConges(this.currentUserId).subscribe({
+        next: (data) => {
+          this.soldeConges = data.soldeConges;
+        },
+        error: (err) => {
+          console.error('Erreur lors du chargement du solde de congés', err);
+        }
       });
-    */
+    }
+  }
+
+  loadEnvironmentData(): void {
+  this.arrivedCount = 1;
   }
 
     calculateNextHoliday(): void {

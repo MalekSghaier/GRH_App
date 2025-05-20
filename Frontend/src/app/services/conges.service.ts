@@ -74,7 +74,6 @@ getCompanyCongesPaginated(
     return this.http.put(`${this.apiUrl}/${id}`, { status }, { headers });
   }
 
-  // src/app/services/conges.service.ts
 
 getMonthlyCongesStats(): Observable<{month: string, count: number}[]> {
   const token = localStorage.getItem('token');
@@ -106,6 +105,16 @@ delete(id: string): Observable<void> {
 
 countPendingConges(): Observable<number> {
   return this.http.get<number>(`${this.apiUrl}/count-pending`);
+}
+
+getUserCongesStats(userId: string): Observable<{approved: number;pending: number;rejected: number;}> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.get<{
+    approved: number;
+    pending: number;
+    rejected: number;
+  }>(`${this.apiUrl}/user/stats/${userId}`, { headers });
 }
 
 

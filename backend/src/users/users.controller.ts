@@ -86,6 +86,16 @@ async getQrCodeForUser(
   return { qrCode };
 }
 
+  @Get('solde-conges/:userId')
+  @UseGuards(AuthGuard('jwt'))
+  async getSoldeConges(@Param('userId') userId: string): Promise<{ soldeConges: number }> {
+    const user = await this.usersService.findById(userId);
+    if (!user) {
+      throw new NotFoundException('Utilisateur non trouvé');
+    }
+    return { soldeConges: user.soldeConges };
+  }
+
 
   @Put('my-info')
   @UseGuards(AuthGuard('jwt')) // Protection avec JWT
