@@ -35,7 +35,7 @@
                         </li>
                     </ul>
                 </div>
-                <a href="#" class="btn-download">
+				<a href="javascript:void(0)" class="btn-download" (click)="printDashboard()">
                     <i class="fas fa-file-pdf"></i>
                     <span class="text">Exporter PDF</span>
                 </a>
@@ -139,10 +139,10 @@
             </div>
             <div class="stats-row">
                 <div class="pointage-card">
-                    <app-pointage-stats-chart [userId]="currentUserId"></app-pointage-stats-chart>
+                    <app-pointage-stats-chart id="pointageChart" [userId]="currentUserId"></app-pointage-stats-chart>
                 </div>
                 <div class="conges-card">
-                    <app-conges-stats-chart [userId]="currentUserId"></app-conges-stats-chart>
+                    <app-conges-stats-chart id="congesChart"[userId]="currentUserId"></app-conges-stats-chart>
                 </div>
             </div>
             

@@ -9,6 +9,7 @@ import { PonctualiteWidgetComponent } from '../../ponctualite-widget/ponctualite
 import { PointageStatsChartComponent } from '../../pointage-stats-chart/pointage-stats-chart.component';
 import { UserService } from '../../services/user.service';
 import { CongesStatsChartComponent } from '../../conges-stats-chart/conges-stats-chart.component';
+import { Chart, ChartTypeRegistry } from 'chart.js';
 
 
 
@@ -218,4 +219,78 @@ export class EmployeeDashboardComponent implements AfterViewInit, OnInit {
       }
     }
   }
+
+  printDashboard(): void {
+  // Préparation des données
+  document.body.setAttribute('data-print-date', new Date().toLocaleString('fr-FR'));
+  
+  // Créer un conteneur spécial pour l'impression
+  const printContainer = document.createElement('div');
+  printContainer.className = 'print-container';
+
+  // Première ligne : Statut actuel et Score de Ponctualité
+  const firstRow = document.createElement('div');
+  firstRow.className = 'print-row';
+  
+  // Section Statut actuel
+  const statusSection = this.createStatSection(
+    'Statut actuel', 
+    this.isPresent ? 'Présent' : 'Absent',
+    this.isPresent ? '🟢' : '🔴'
+  );
+  firstRow.appendChild(statusSection);
+  
+
+
+  // Ajouter le conteneur au body
+  document.body.appendChild(printContainer);
+  document.body.classList.add('print-mode');
+
+  // Forcer la mise à jour des graphiques
+  setTimeout(() => {
+    // Imprimer après un court délai
+    setTimeout(() => {
+      window.print();
+      
+      // Nettoyage
+      printContainer.remove();
+      document.body.classList.remove('print-mode');
+      document.body.removeAttribute('data-print-date');
+    }, 500);
+  }, 100);
+}
+
+private createStatSection(title: string, value: string, icon: string = ''): HTMLElement {
+  const section = document.createElement('div');
+  section.className = 'print-section stat-section';
+  
+  const iconDiv = document.createElement('div');
+  iconDiv.className = 'stat-icon';
+  iconDiv.textContent = icon;
+  iconDiv.style.fontSize = '24px';
+  iconDiv.style.textAlign = 'center';
+  iconDiv.style.marginBottom = '0px';
+  
+  const valueDiv = document.createElement('div');
+  valueDiv.className = 'stat-value';
+  valueDiv.textContent = value;
+  valueDiv.style.fontSize = '20px';
+  valueDiv.style.fontWeight = 'bold';
+  valueDiv.style.textAlign = 'center';
+  valueDiv.style.margin = '0px 0';
+  
+  const titleDiv = document.createElement('div');
+  titleDiv.className = 'stat-title';
+  titleDiv.textContent = title;
+  titleDiv.style.textAlign = 'center';
+  titleDiv.style.fontSize = '16px';
+  titleDiv.style.color = '#555';
+  
+  section.appendChild(iconDiv);
+  section.appendChild(valueDiv);
+  section.appendChild(titleDiv);
+  
+  return section;
+}
+
 }

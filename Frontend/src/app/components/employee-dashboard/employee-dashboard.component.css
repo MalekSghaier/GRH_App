@@ -586,6 +586,166 @@ body.dark .stats-progress {
     background-color: #333;
 }
 
+/* Styles pour l'impression */
+/* Styles pour l'impression */
+@media print {
+  body.print-mode {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: white !important;
+    color: black !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 100% !important;
+  }
+  
+  body.print-mode * {
+    visibility: visible !important;
+  }
+  
+  body.print-mode #sidebar,
+  body.print-mode nav,
+  body.print-mode .head-title,
+  body.print-mode .breadcrumb,
+  body.print-mode .btn-download {
+    display: none !important;
+  }
+  
+  .print-container {
+    width: 700px !important;
+    max-width: 210mm !important; /* Format A4 */
+    margin: 0 auto !important;
+    padding: 1mm !important; /* Marges de 15mm */
+    background: white !important;
+    box-shadow: none !important;
+  }
+  
+  .print-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    margin-bottom: 0px !important;
+    page-break-inside: avoid !important;
+    width: 50% !important;
+  }
+  
+  .print-row.full-width {
+    flex-direction: column !important;
+    width: 50% !important;
+  }
+  
+  .print-section {
+    flex: 1 !important;
+    padding: 15px !important;
+    margin: 0 1px !important;
+    border: 1px solid #eee !important;
+    border-radius: 8px !important;
+    background: white !important;
+    page-break-inside: avoid !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+  
+  .stat-section {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 100px !important;
+    width: 100px;
+    text-align: center !important;
+  }
+  
+  .stat-icon {
+    font-size: 24px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .stat-value {
+    font-size: 20px !important;
+    font-weight: bold !important;
+    margin: 5px 0 !important;
+  }
+  
+  .stat-title {
+    font-size: 16px !important;
+    color: #555 !important;
+  }
+  
+  .chart-section, .calendar-section {
+    width: 50% !important;
+    min-height: 100px !important;
+    margin: 0px 0 !important;
+  }
+  
+  .chart-section h2, .calendar-section h2 {
+    text-align: center !important;
+    margin-bottom: 15px !important;
+    color: #333 !important;
+    font-size: 18px !important;
+  }
+  
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  @page {
+    size: A4 ;
+    margin: 1mm;
+  }
+}
+
+/* Styles pour la prévisualisation à l'écran */
+.print-mode:not(:print) {
+  background: white !important;
+  padding: 20px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-height: 100vh !important;
+}
+
+.print-mode:not(:print) #sidebar,
+.print-mode:not(:print) nav,
+.print-mode:not(:print) .head-title,
+.print-mode:not(:print) .breadcrumb,
+.print-mode:not(:print) .btn-download {
+  display: none !important;
+}
+
+.print-mode:not(:print) .print-container {
+  width: 100% !important;
+  max-width: 210mm !important;
+  margin: 0 auto !important;
+  padding: 20px !important;
+  background: white !important;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2) !important;
+}
+
+/* Styles pour la prévisualisation à l'écran */
+.print-mode:not(:print) {
+  background: white !important;
+  padding: 20px !important;
+}
+
+.print-mode:not(:print) #sidebar,
+.print-mode:not(:print) nav,
+.print-mode:not(:print) .head-title,
+.print-mode:not(:print) .breadcrumb,
+.print-mode:not(:print) .btn-download {
+  display: none !important;
+}
+
+.print-mode:not(:print) .print-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
 /* Ajustements pour mobile */
 @media (max-width: 480px) {
     .progress-time-container {
