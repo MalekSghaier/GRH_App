@@ -164,12 +164,12 @@
 }
 
 .btn-primary {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: #1a84ef;
+    color: #ffffff;
 }
 
 .btn-primary:hover {
-    background-color: #3a56d4;
+    background-color: #1574d4;
     transform: translateY(-2px);
 }
 

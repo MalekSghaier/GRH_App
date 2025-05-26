@@ -263,7 +263,7 @@ mat-dialog-actions {
 }
 
 .submit-btn {
-  background: var(--primary);
+  background: #1a84ef;
   color: white;
   position: relative;
   overflow: hidden;

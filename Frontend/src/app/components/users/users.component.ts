@@ -22,7 +22,7 @@ export class UsersComponent implements AfterViewInit, OnInit {
   users: any[] = []; 
   isEmpty: boolean = false; 
   currentPage: number = 1;
-  itemsPerPage: number = 5;
+  itemsPerPage: number = 4;
   totalItems: number = 0;
   private searchTerms = new Subject<string>();
   private currentCompanyName: string | null = null;

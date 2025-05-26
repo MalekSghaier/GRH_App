@@ -58,7 +58,7 @@
               <div class="conge-dates">
                 <div class="date-range">
                   <i class='bx bx-calendar'></i>
-                  {{ conge.startDate | date:'shortDate' }} - {{ conge.endDate | date:'shortDate' }}
+                  {{ conge.startDate | date:'dd/MM/yy' }} - {{ conge.endDate | date:'dd/MM/yy' }}
                 </div>
                 <div class="duration">
                   {{ calculateDuration(conge.startDate, conge.endDate) }} jours

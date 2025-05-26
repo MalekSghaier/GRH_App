@@ -75,14 +75,14 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
 
-  gap: 25px;
+  gap: 16px;
 }
 
 .conge-card {
-  min-width: 400px; 
+  min-width: 390px; 
   background: #fff;
   border-radius: 12px;
-  padding: 25px;
+  padding: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   border: 1px solid var(--medium-gray);

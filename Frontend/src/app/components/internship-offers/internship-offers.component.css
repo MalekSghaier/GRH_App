@@ -87,24 +87,38 @@
 }
 
 /* Détails des cartes */
-.offer-details, .app-details {
+.offer-details {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 15px;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+.app-details {
+  display: flex; /* Changez de grid à flex */
+  flex-wrap: wrap; /* Permet le retour à la ligne sur petits écrans */
+  gap: 30px; /* Espace entre les éléments */
   margin-bottom: 15px;
 }
 
+/* Ou */
+.detail-item i.bx-phone {
+  margin-right: 0px;
+}
 .detail-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px; 
   font-size: 14px;
   color: #555;
+
+
 }
 
 .detail-item i {
   color: #666;
   font-size: 16px;
+  gap: 0; 
+
 }
 
 /* Exigences */

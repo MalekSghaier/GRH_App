@@ -3,11 +3,15 @@ import { Component, OnInit } from '@angular/core';
 import { SharedNavbarComponent } from '../shared-navbar/shared-navbar.component';
 import { SharedSidebarComponent } from '../shared-sidebar-Employ/shared-sidebar.component';
 import { PointageService } from '../../services/pointage.service';
+import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin, lastValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-presence-employ',
@@ -43,7 +47,12 @@ export class PresenceEmployComponent implements OnInit {
 
   constructor(
     private pointageService: PointageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar,
+    private userService:UserService,
+    private toastr: ToastrService,
+
+
   ) {
     // Générer les 5 dernières années
     const currentYear = new Date().getFullYear();
@@ -139,4 +148,29 @@ formatHeuresTravail(pointage: any): string {
     if (!sortie) return 'warning'; // En cours de travail
     return 'success'; // Journée complète
   }
+
+  downloadQrCode(): void {
+  const user = this.authService.getCurrentUser();
+  if (!user || !user.id) {
+    this.snackBar.open('Utilisateur non identifié', 'Fermer', { duration: 3000 });
+    return;
+  }
+
+  this.userService.generateQrCodeAndSendEmail(user.id).subscribe({
+    next: () => {
+      this.toastr.success('QR Code envoyé par email avec succès', 'QR Code Envoyé', {
+        timeOut: 1500,
+        progressBar: true
+      });
+    },
+    error: (err) => {
+      console.error('Erreur lors de la génération du QR Code:', err);
+      this.snackBar.open(
+        err.error?.message || 'Erreur lors de la génération du QR Code', 
+        'Fermer', 
+        { duration: 3000 }
+      );
+    }
+  });
+}
 }
