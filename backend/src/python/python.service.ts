@@ -4,6 +4,8 @@ import { spawn } from 'child_process';
 
 @Injectable()
 export class PythonService {
+
+  //Exécute le script test_final.py
   async runPythonScript(): Promise<string> {
     return new Promise((resolve, reject) => {
       const pythonProcess = spawn('C:\\Users\\HP\\Desktop\\IA\\new-venv\\Scripts\\python', ['test_final.py'], {

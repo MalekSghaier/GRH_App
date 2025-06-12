@@ -15,7 +15,7 @@ export class PythonController {
   constructor(private readonly pythonService: PythonService,
     private usersService: UsersService
   ) {}
-
+  //launch test_final.py
   @Get('launch')
   async runScript(): Promise<PythonScriptResponse> {
     try {
@@ -37,6 +37,7 @@ export class PythonController {
     }
   }
 
+  //launch capture_image.py
   @Get('capture')
   async captureImage(): Promise<any> {
       try {
