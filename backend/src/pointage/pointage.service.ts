@@ -15,7 +15,7 @@ export class PointageService {
 
   async enregistrerPointage(userId: string) {
     const user = await this.userModel.findById(userId).exec();
-      if (!user) {
+    if (!user) {
         throw new NotFoundException('Utilisateur non trouvé');
     }
     
@@ -98,8 +98,6 @@ async getPointagesByMonth(userId: string, month: number, year: number) {
         code: 'USER_NOT_FOUND'
       });
     }
-
-
     const dateAuj = moment().format('YYYY-MM-DD');
     const heureActuelle = moment().format('HH:mm:ss');
 

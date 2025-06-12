@@ -54,35 +54,6 @@ export class DocumentRequestsService {
   async countPendingDocs(): Promise<number> {
     return this.documentRequestModel.countDocuments({ status: 'En attente' }).exec();
  }
-
-//  async findByCompanyPaginated(company: string,page: number = 1,limit: number = 5): Promise<{ data: DocumentRequestDocument[]; total: number }> {
-//   // Trouver les utilisateurs de la compagnie
-//   const users = await this.userModel.find({
-//     company,
-//     role: { $in: ['employé', 'stagiaire'] }
-//   }).select('_id').lean();
-//   const userIds = users.map(user => user._id);
-//   const skip = (page - 1) * limit;
-//   const [data, total] = await Promise.all([
-//     this.documentRequestModel.find({ 
-//       userId: { $in: userIds },
-//       status: 'En attente' // Filtre ajouté ici
-//     })
-//     .populate('userId', 'name email role company')
-//     .skip(skip)
-//     .limit(limit)
-//     .sort({ createdAt: -1 })
-//     .exec(),
-    
-//     this.documentRequestModel.countDocuments({ 
-//       userId: { $in: userIds },
-//       status: 'En attente' 
-//     }).exec()
-//   ]);
-
-//   return { data, total };
-// }
-
 async findByCompanyPaginated(
   company: string,
   page: number = 1,
@@ -140,36 +111,6 @@ async delete(id: string): Promise<{ message: string }> {
   }
   return { message: 'Demande de document supprimée avec succès' };
 }
-
-// async getDocumentStatsByCompany(company: string): Promise<{
-//   pending: number;
-//   approved: number;
-//   rejected: number;
-// }> {
-//   const users = await this.userModel.find({
-//     company,
-//     role: { $in: ['employé', 'stagiaire'] }
-//   }).select('_id').lean();
-
-//   const userIds = users.map(user => user._id);
-
-//   const [pending, approved, rejected] = await Promise.all([
-//     this.documentRequestModel.countDocuments({ 
-//       userId: { $in: userIds },
-//       status: RequestStatus.PENDING
-//     }),
-//     this.documentRequestModel.countDocuments({ 
-//       userId: { $in: userIds },
-//       status: RequestStatus.APPROVED
-//     }),
-//     this.documentRequestModel.countDocuments({ 
-//       userId: { $in: userIds },
-//       status: RequestStatus.REJECTED
-//     })
-//   ]);
-
-//   return { pending, approved, rejected };
-// }
 
 async getDocumentStatsByCompany(company: string): Promise<{
   pending: number;

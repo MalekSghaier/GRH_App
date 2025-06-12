@@ -73,7 +73,6 @@ async sendEmailWithAttachment(data: {
   }
 }
 
-// Ajoutez cette méthode à votre EmailService
 async sendPlainEmail(data: {
   to: string;
   subject: string;

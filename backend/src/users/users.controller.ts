@@ -21,11 +21,7 @@ export class UsersController {
   (
     private readonly usersService: UsersService,
     private readonly pointageService: PointageService,
-
-    
   ) { }
-
-
 
   @Get('my-info')
   @UseGuards(AuthGuard('jwt')) 
@@ -36,7 +32,6 @@ export class UsersController {
       throw new NotFoundException("Utilisateur non trouvé");
     }
   
-    // Vérification explicite que `userId` est bien une chaîne de caractères (string)
     if (typeof userId !== 'string') {
       throw new NotFoundException("ID d'utilisateur invalide");
     }

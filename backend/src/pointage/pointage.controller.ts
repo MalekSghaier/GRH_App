@@ -5,24 +5,6 @@ import { PointageService } from './pointage.service';
 export class PointageController {
   constructor(private readonly pointageService: PointageService) {}
 
-// @Post('scan-qr-data')
-// async scanQrData(@Body() body: { qrData: string }) {
-//   if (!body.qrData) {
-//     throw new BadRequestException('QR data is required');
-//   }
-  
-//   try {
-//     const qrContent = JSON.parse(body.qrData);
-//     if (!qrContent.id) {
-//       throw new BadRequestException('Invalid QR code content');
-//     }
-    
-//     return this.pointageService.enregistrerPointage(qrContent.id);
-//   } catch (error) {
-//     throw new BadRequestException('Invalid QR code format');
-//   }
-// }
-
   @Post('scan-qr-data')
   async scanQrData(@Body() body: { qrData: string }) {
     if (!body.qrData) {
@@ -49,14 +31,6 @@ export class PointageController {
       });
     }
   }
-
-  // @Post('scan-face')
-  // async scanFace(@Body() body: { userId: string }) {
-  //   if (!body.userId) {
-  //     throw new BadRequestException('User ID is required');
-  //   }
-  //   return this.pointageService.enregistrerPointageFace(body.userId);
-  // }
 
   @Post('scan-face')
   async scanFace(@Body() body: { userId: string }) {
@@ -85,18 +59,15 @@ async getMonthlyPointages(@Query('userId') userId: string,@Query('month') month:
   }
 
   @Get('by-date')
-async getPointagesByDate(@Query('date') date: string) {
+ async getPointagesByDate(@Query('date') date: string) {
   if (!date) {
     throw new BadRequestException('La date est requise');
   }
   return this.pointageService.getPointagesByDate(date);
 }
 
-@Get('working-days')
-async getWorkingDays(
-  @Query('userId') userId: string,
-  @Query('month') month: number,
-  @Query('year') year: number
+  @Get('working-days')
+  async getWorkingDays( @Query('userId') userId: string, @Query('month') month: number, @Query('year') year: number
 ) {
   if (!userId || !month || !year) {
     throw new BadRequestException('User ID, month and year are required');
