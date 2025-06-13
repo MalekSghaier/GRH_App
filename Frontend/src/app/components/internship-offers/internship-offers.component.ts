@@ -230,7 +230,6 @@ export class InternshipOffersComponent implements AfterViewInit, OnInit {
     }
   }
 
-  // Méthodes pour les candidatures
   loadApplications(): void {
     const companyName = localStorage.getItem('companyName');
     if (!companyName) return;

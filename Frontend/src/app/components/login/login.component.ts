@@ -103,83 +103,6 @@ export class LoginComponent {
       });
   }
 
-
-
-// pointageRF() {
-//   this.toastr.info('Lancement de la reconnaissance faciale...', 'Veuillez patienter', {
-//     timeOut: 3000,
-//     progressBar: true
-//   });
-
-//   this.http.get<any>('http://localhost:3000/python/launch')
-//     .subscribe({
-//       next: (response) => {
-//         if (response.status === 'success' && response.image_id) {
-//           // Trouver l'utilisateur par image
-//           this.http.get<any>(`http://localhost:3000/python/find-by-image/${response.image_id}`)
-//             .subscribe({
-//               next: (userResponse) => {
-//                 if (!userResponse || !userResponse._id) { // Vérification ajoutée
-//                   throw new Error('User information incomplete');
-//                 }
-                
-//                 // Effectuer le pointage avec le bon format de données
-//                 this.http.post<any>(
-//                   'http://localhost:3000/pointage/scan-face', 
-//                   { userId: userResponse._id }, // Format correct des données
-//                   { 
-//                     headers: { 
-//                       'Authorization': `Bearer ${localStorage.getItem('token')}` 
-//                     } 
-//                   }
-//                 ).subscribe({
-//                   next: (pointageResponse) => {
-//                     this.toastr.success(
-//                       `${pointageResponse.message} pour ${userResponse.name}`,
-//                       'Pointage enregistré',
-//                       { timeOut: 5000, progressBar: true }
-//                     );
-//                   },
-//                   error: (pointageErr) => {
-//                     this.toastr.error(
-//                       pointageErr.error?.message || 'Erreur lors du pointage',
-//                       'Erreur',
-//                       { timeOut: 5000, progressBar: true }
-//                     );
-//                   }
-//                 });
-//               },
-//               error: (userErr) => {
-//                 console.error('Erreur utilisateur:', userErr);
-//                 this.toastr.warning(
-//                   'Utilisateur reconnu mais informations non trouvées',
-//                   'Attention',
-//                   { timeOut: 5000, progressBar: true }
-//                 );
-//               }
-//             });
-//         } else if (response.status === 'info') {
-//           this.openNewUserDialog();
-//         } else {
-//           this.toastr.warning(response.message || 'Réponse inattendue', 'Attention', {
-//             timeOut: 5000,
-//             progressBar: true
-//           });
-//         }
-//       },
-//       error: (err) => {
-//         console.error('Erreur HTTP:', err);
-//         this.toastr.error(
-//           err.error?.message || err.message || 'Erreur de communication avec le serveur',
-//           'Erreur',
-//           { timeOut: 5000, progressBar: true }
-//         );
-//       }
-//     });
-// }
-
-// Dans login.component.ts - méthode pointageRF modifiée
-
 pointageRF() {
   this.toastr.info('Lancement de la reconnaissance faciale...', 'Veuillez patienter', {
     timeOut: 3000,
@@ -189,14 +112,16 @@ pointageRF() {
   this.http.get<any>('http://localhost:3000/python/launch')
     .subscribe({
       next: (response) => {
+        //Reconnaissance réussie
         if (response.status === 'success' && response.image_id) {
+          //Recherche de l'utilisateur
           this.http.get<any>(`http://localhost:3000/python/find-by-image/${response.image_id}`)
             .subscribe({
               next: (userResponse) => {
                 if (!userResponse?._id) {
                   throw new Error('Informations utilisateur incomplètes');
                 }
-                
+                //Enregistrement du pointage
                 this.http.post<any>(
                   'http://localhost:3000/pointage/scan-face', 
                   { userId: userResponse._id },
@@ -238,8 +163,10 @@ pointageRF() {
                 );
               }
             });
+            //Nouvel utilisateur
         } else if (response.status === 'info') {
           this.openNewUserDialog();
+          //Réponse inattendue
         } else {
           this.toastr.warning(
             response.message || 'Réponse inattendue du serveur de reconnaissance',
